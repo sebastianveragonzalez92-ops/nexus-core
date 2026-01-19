@@ -157,11 +157,28 @@ export default function Settings() {
                       />
                     </div>
                   </div>
+                  <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Shield className="w-4 h-4 text-indigo-600" />
+                      <span className="text-sm font-semibold text-indigo-900">
+                        Rol: {user?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-indigo-700">
+                      {user?.role === 'admin' 
+                        ? 'Tienes acceso completo a todas las funcionalidades de la plataforma'
+                        : 'Tienes acceso estándar a la plataforma'}
+                    </p>
+                  </div>
                   <p className="text-sm text-slate-500">
                     Para cambiar tu nombre o correo, contacta al administrador.
                   </p>
                 </CardContent>
               </Card>
+            )}
+
+            {activeSection === 'users' && (
+              <InviteUserCard currentUser={user} />
             )}
 
             {activeSection === 'notifications' && (
