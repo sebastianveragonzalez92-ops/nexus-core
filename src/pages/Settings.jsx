@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, User, Shield, Bell, Database, Globe, Save, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, User, Shield, Bell, Database, Globe, Save, LogOut, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import InviteUserCard from '@/components/settings/InviteUserCard';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 const settingsSections = [
   { id: 'profile', label: 'Perfil', icon: User },
+  { id: 'users', label: 'Usuarios', icon: Users },
   { id: 'notifications', label: 'Notificaciones', icon: Bell },
   { id: 'security', label: 'Seguridad', icon: Shield },
   { id: 'data', label: 'Datos', icon: Database },
