@@ -5,13 +5,14 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Sparkles
+  Menu, X, ChevronRight, Sparkles, Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
   { name: 'Módulos', page: 'Modules', icon: Layers },
+  { name: 'Tutor IA', page: 'Tutor', icon: Bot },
   { name: 'Actividad', page: 'Activity', icon: Activity },
   { name: 'Configuración', page: 'Settings', icon: Settings },
 ];
