@@ -27,6 +27,11 @@ export default function Settings() {
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
+    company_name: '',
+    position: '',
+    department: '',
+    employee_id: '',
+    phone: '',
     notifications_enabled: true,
     email_alerts: true,
     auto_sync: true,
@@ -40,6 +45,11 @@ export default function Settings() {
         ...prev,
         full_name: u.full_name || '',
         email: u.email || '',
+        company_name: u.company_name || '',
+        position: u.position || '',
+        department: u.department || '',
+        employee_id: u.employee_id || '',
+        phone: u.phone || '',
         notifications_enabled: u.notifications_enabled ?? true,
         email_alerts: u.email_alerts ?? true,
         auto_sync: u.auto_sync ?? true,
@@ -51,6 +61,11 @@ export default function Settings() {
   const handleSave = async () => {
     setIsSaving(true);
     await base44.auth.updateMe({
+      company_name: formData.company_name,
+      position: formData.position,
+      department: formData.department,
+      employee_id: formData.employee_id,
+      phone: formData.phone,
       notifications_enabled: formData.notifications_enabled,
       email_alerts: formData.email_alerts,
       auto_sync: formData.auto_sync,
@@ -157,6 +172,65 @@ export default function Settings() {
                       />
                     </div>
                   </div>
+
+                  <Separator />
+                  
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-4">Información de la Empresa</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="company_name">Empresa</Label>
+                        <Input
+                          id="company_name"
+                          value={formData.company_name}
+                          onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                          placeholder="Nombre de la empresa"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="employee_id">N° Empleado</Label>
+                        <Input
+                          id="employee_id"
+                          value={formData.employee_id}
+                          onChange={(e) => setFormData({ ...formData, employee_id: e.target.value })}
+                          placeholder="ID-12345"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="position">Cargo</Label>
+                        <Input
+                          id="position"
+                          value={formData.position}
+                          onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                          placeholder="Ej: Técnico de Mantenimiento"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="department">Departamento/Área</Label>
+                        <Input
+                          id="department"
+                          value={formData.department}
+                          onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                          placeholder="Ej: Operaciones"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Teléfono</Label>
+                        <Input
+                          id="phone"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+56 9 1234 5678"
+                          className="rounded-xl"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-200">
                     <div className="flex items-center gap-2 mb-2">
                       <Shield className="w-4 h-4 text-indigo-600" />
@@ -170,9 +244,6 @@ export default function Settings() {
                         : 'Tienes acceso estándar a la plataforma'}
                     </p>
                   </div>
-                  <p className="text-sm text-slate-500">
-                    Para cambiar tu nombre o correo, contacta al administrador.
-                  </p>
                 </CardContent>
               </Card>
             )}
