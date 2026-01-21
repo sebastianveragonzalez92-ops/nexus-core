@@ -49,8 +49,7 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
     }
   };
 
-  const handleSwitchChange = (e) => {
-    e.stopPropagation();
+  const handleSwitchChange = () => {
     onToggle(module);
   };
 
