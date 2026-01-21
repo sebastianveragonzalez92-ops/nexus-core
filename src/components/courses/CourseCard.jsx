@@ -27,13 +27,17 @@ export default function CourseCard({ course, index, onEdit, onDelete }) {
   const TypeIcon = typeIcons[course.type] || FileText;
   const navigate = useNavigate();
 
+  const handleCardClick = () => {
+    window.location.href = createPageUrl('CourseDetail') + `?id=${course.id}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group cursor-pointer"
-      onClick={() => navigate(createPageUrl('CourseDetail') + `?id=${course.id}`)}
+      onClick={handleCardClick}
     >
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
