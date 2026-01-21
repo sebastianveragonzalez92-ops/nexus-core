@@ -26,6 +26,10 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  const brandColor = user?.company_primary_color || '#6366f1';
+  const brandName = user?.company_name || 'ModulaX';
+  const brandLogo = user?.company_logo;
+
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [currentPageName]);
@@ -59,11 +63,21 @@ export default function Layout({ children, currentPageName }) {
           {/* Logo */}
           <div className="flex items-center justify-between p-6 border-b border-slate-100">
             <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-200">
-                <Sparkles className="w-5 h-5 text-white" />
+              <div 
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg overflow-hidden"
+                style={{ 
+                  background: brandLogo ? '#fff' : `linear-gradient(to bottom right, ${brandColor}, ${brandColor}dd)`,
+                  boxShadow: `0 10px 15px -3px ${brandColor}33`
+                }}
+              >
+                {brandLogo ? (
+                  <img src={brandLogo} alt="Logo" className="w-full h-full object-contain p-1" />
+                ) : (
+                  <Sparkles className="w-5 h-5 text-white" />
+                )}
               </div>
               {!isCollapsed && (
-                <span className="font-bold text-xl text-slate-900 tracking-tight">ModulaX</span>
+                <span className="font-bold text-xl text-slate-900 tracking-tight">{brandName}</span>
               )}
             </Link>
             <button
@@ -85,10 +99,14 @@ export default function Layout({ children, currentPageName }) {
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                     isActive
-                      ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-lg shadow-indigo-200"
+                      ? "text-white shadow-lg"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
                     isCollapsed && "justify-center px-3"
                   )}
+                  style={isActive ? {
+                    background: `linear-gradient(to right, ${brandColor}, ${brandColor}dd)`,
+                    boxShadow: `0 10px 15px -3px ${brandColor}33`
+                  } : {}}
                 >
                   <Icon className={cn("w-5 h-5 shrink-0", isActive && "text-white")} />
                   {!isCollapsed && <span className="font-medium">{name}</span>}
@@ -149,10 +167,19 @@ export default function Layout({ children, currentPageName }) {
               <Menu className="w-5 h-5 text-slate-600" />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div 
+                className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden"
+                style={{ 
+                  background: brandLogo ? '#fff' : `linear-gradient(to bottom right, ${brandColor}, ${brandColor}dd)`
+                }}
+              >
+                {brandLogo ? (
+                  <img src={brandLogo} alt="Logo" className="w-full h-full object-contain p-0.5" />
+                ) : (
+                  <Sparkles className="w-4 h-4 text-white" />
+                )}
               </div>
-              <span className="font-bold text-slate-900">ModulaX</span>
+              <span className="font-bold text-slate-900">{brandName}</span>
             </div>
             <div className="w-9" />
           </div>

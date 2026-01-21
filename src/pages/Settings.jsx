@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, User, Shield, Bell, Database, Globe, Save, LogOut, Users } from 'lucide-react';
+import { Settings as SettingsIcon, User, Shield, Bell, Database, Globe, Save, LogOut, Users, Upload, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,10 +24,13 @@ export default function Settings() {
   const [user, setUser] = useState(null);
   const [activeSection, setActiveSection] = useState('profile');
   const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
     company_name: '',
+    company_logo: '',
+    company_primary_color: '#6366f1',
     position: '',
     department: '',
     employee_id: '',
@@ -37,6 +40,7 @@ export default function Settings() {
     auto_sync: true,
     offline_mode: true,
   });
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then((u) => {
@@ -46,6 +50,8 @@ export default function Settings() {
         full_name: u.full_name || '',
         email: u.email || '',
         company_name: u.company_name || '',
+        company_logo: u.company_logo || '',
+        company_primary_color: u.company_primary_color || '#6366f1',
         position: u.position || '',
         department: u.department || '',
         employee_id: u.employee_id || '',
@@ -58,10 +64,28 @@ export default function Settings() {
     }).catch(() => {});
   }, []);
 
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingLogo(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData({ ...formData, company_logo: file_url });
+      toast.success('Logo cargado');
+    } catch (error) {
+      toast.error('Error al cargar logo');
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
   const handleSave = async () => {
     setIsSaving(true);
     await base44.auth.updateMe({
       company_name: formData.company_name,
+      company_logo: formData.company_logo,
+      company_primary_color: formData.company_primary_color,
       position: formData.position,
       department: formData.department,
       employee_id: formData.employee_id,
@@ -177,6 +201,43 @@ export default function Settings() {
                   
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-4">Información de la Empresa</h4>
+                    
+                    {/* Logo Upload */}
+                    <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                      <Label className="mb-3 block">Logo de la Empresa</Label>
+                      <div className="flex items-center gap-4">
+                        <div className="w-20 h-20 rounded-xl bg-white border-2 border-slate-200 flex items-center justify-center overflow-hidden">
+                          {formData.company_logo ? (
+                            <img src={formData.company_logo} alt="Logo" className="w-full h-full object-contain" />
+                          ) : (
+                            <Image className="w-8 h-8 text-slate-300" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            className="hidden"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploadingLogo}
+                            className="rounded-xl"
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            {isUploadingLogo ? 'Cargando...' : 'Subir Logo'}
+                          </Button>
+                          <p className="text-xs text-slate-500 mt-2">
+                            PNG o JPG, máximo 2MB
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="company_name">Empresa</Label>
@@ -187,6 +248,24 @@ export default function Settings() {
                           placeholder="Nombre de la empresa"
                           className="rounded-xl"
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="company_color">Color Principal</Label>
+                        <div className="flex gap-2">
+                          <input
+                            id="company_color"
+                            type="color"
+                            value={formData.company_primary_color}
+                            onChange={(e) => setFormData({ ...formData, company_primary_color: e.target.value })}
+                            className="w-12 h-10 rounded-xl cursor-pointer"
+                          />
+                          <Input
+                            value={formData.company_primary_color}
+                            onChange={(e) => setFormData({ ...formData, company_primary_color: e.target.value })}
+                            placeholder="#6366f1"
+                            className="rounded-xl flex-1"
+                          />
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="employee_id">N° Empleado</Label>
