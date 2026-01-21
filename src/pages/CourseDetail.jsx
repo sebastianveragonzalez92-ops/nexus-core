@@ -267,8 +267,8 @@ export default function CourseDetail() {
                         </video>
                       ) : course.content_url.match(/\.(pdf)$/i) ? (
                         <iframe
-                          src={`${course.content_url}#toolbar=0&navpanes=0&scrollbar=0`}
-                          className="w-full h-[600px] rounded-xl border border-slate-200"
+                          src={`https://docs.google.com/viewer?url=${encodeURIComponent(course.content_url)}&embedded=true`}
+                          className="w-full h-[700px] rounded-xl border border-slate-200"
                           title="Contenido del curso"
                         />
                       ) : course.content_url.includes('youtube.com') || course.content_url.includes('youtu.be') ? (
@@ -279,23 +279,18 @@ export default function CourseDetail() {
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                         />
+                      ) : course.content_url.match(/\.(doc|docx|xls|xlsx|ppt|pptx)$/i) ? (
+                        <iframe
+                          src={`https://docs.google.com/viewer?url=${encodeURIComponent(course.content_url)}&embedded=true`}
+                          className="w-full h-[700px] rounded-xl border border-slate-200"
+                          title="Contenido del curso"
+                        />
                       ) : (
-                        <div className="w-full aspect-video rounded-xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center gap-4">
-                          <FileText className="w-12 h-12 text-slate-400" />
-                          <div className="text-center">
-                            <p className="text-slate-700 font-medium mb-2">Contenido disponible</p>
-                            <a 
-                              href={course.content_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-indigo-600 hover:underline flex items-center gap-2 justify-center"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Play className="w-4 h-4" />
-                              Ver en nueva pestaña
-                            </a>
-                          </div>
-                        </div>
+                        <iframe
+                          src={course.content_url}
+                          className="w-full h-[700px] rounded-xl border border-slate-200"
+                          title="Contenido del curso"
+                        />
                       )}
                     </div>
                   ) : (
