@@ -8,78 +8,70 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 
-export default function TutorChat({ conversationId, onConversationCreated }) {
+export default function TutorChat({ conversationId, onConversationCreated, initialPrompt }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(initialPrompt || '');
   const [isLoading, setIsLoading] = useState(false);
+  const [agentConversation, setAgentConversation] = useState(null);
   const messagesEndRef = useRef(null);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  useEffect(() => {
+    const initConversation = async () => {
+      if (!hasInitialized.current) {
+        hasInitialized.current = true;
+        try {
+          const conv = await base44.agents.createConversation({
+            agent_name: 'tutor_tecnico',
+            metadata: {
+              name: 'Consulta Tutor',
+              description: 'Conversación con tutor técnico'
+            }
+          });
+          setAgentConversation(conv);
+          
+          if (initialPrompt) {
+            setTimeout(() => handleSend(), 100);
+          }
+        } catch (error) {
+          console.error('Error creating conversation:', error);
+        }
+      }
+    };
+    initConversation();
+  }, []);
 
-    const userMessage = { role: 'user', content: input.trim(), timestamp: new Date().toISOString() };
-    setMessages(prev => [...prev, userMessage]);
+  useEffect(() => {
+    if (!agentConversation) return;
+    
+    const unsubscribe = base44.agents.subscribeToConversation(agentConversation.id, (data) => {
+      const formattedMessages = data.messages.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date().toISOString(),
+        tool_calls: msg.tool_calls
+      }));
+      setMessages(formattedMessages);
+    });
+
+    return () => unsubscribe();
+  }, [agentConversation]);
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading || !agentConversation) return;
+
     setInput('');
     setIsLoading(true);
 
     try {
-      // Obtener contexto de FAQs y SOPs
-      const faqs = await base44.entities.FAQ.list('-helpful_count', 10);
-      const sops = await base44.entities.SOP.filter({ status: 'active' }, '-created_date', 10);
-
-      // Construir contexto para la IA
-      const context = `
-Eres un tutor técnico experto en mantenimiento industrial y capacitación.
-
-BASE DE CONOCIMIENTO:
-
-FAQs más útiles:
-${faqs.map(faq => `P: ${faq.question}\nR: ${faq.answer}\nCategoría: ${faq.category}`).join('\n\n')}
-
-SOPs disponibles:
-${sops.map(sop => `${sop.code} - ${sop.title}\nCategoría: ${sop.category}\nDescripción: ${sop.description || 'N/A'}`).join('\n\n')}
-
-INSTRUCCIONES:
-- Responde de forma clara y práctica
-- Si la pregunta es sobre un procedimiento, referencia el SOP correspondiente
-- Para diagnóstico de fallas, solicita información específica del equipo
-- Usa formato markdown para mejor legibilidad
-- Si no sabes algo, recomienda contactar a un supervisor
-
-Pregunta del usuario: ${input.trim()}
-`;
-
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: context,
-        add_context_from_internet: false,
+      await base44.agents.addMessage(agentConversation, {
+        role: 'user',
+        content: input.trim()
       });
-
-      const assistantMessage = {
-        role: 'assistant',
-        content: response,
-        timestamp: new Date().toISOString()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-
-      // Guardar conversación si no existe
-      if (!conversationId) {
-        const conversation = await base44.entities.TutorConversation.create({
-          user_email: (await base44.auth.me()).email,
-          type: 'general',
-          messages: [...messages, userMessage, assistantMessage],
-        });
-        onConversationCreated?.(conversation.id);
-      } else {
-        // Actualizar conversación existente
-        await base44.entities.TutorConversation.update(conversationId, {
-          messages: [...messages, userMessage, assistantMessage],
-        });
-      }
     } catch (error) {
       const errorMessage = {
         role: 'assistant',

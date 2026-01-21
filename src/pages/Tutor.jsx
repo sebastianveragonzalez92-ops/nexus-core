@@ -8,17 +8,11 @@ import { Card } from '@/components/ui/card';
 export default function Tutor() {
   const [conversationId, setConversationId] = useState(null);
   const [showChat, setShowChat] = useState(false);
+  const [selectedPrompt, setSelectedPrompt] = useState(null);
 
   const handleQuickAction = (prompt) => {
+    setSelectedPrompt(prompt);
     setShowChat(true);
-    // El prompt se pasará al chat cuando se monte
-    setTimeout(() => {
-      const textarea = document.querySelector('textarea');
-      if (textarea) {
-        textarea.value = prompt;
-        textarea.focus();
-      }
-    }, 100);
   };
 
   return (
@@ -130,6 +124,7 @@ export default function Tutor() {
             <TutorChat
               conversationId={conversationId}
               onConversationCreated={setConversationId}
+              initialPrompt={selectedPrompt}
             />
           </motion.div>
         )}
