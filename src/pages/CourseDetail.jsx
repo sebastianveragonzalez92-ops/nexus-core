@@ -259,6 +259,7 @@ export default function CourseDetail() {
                       {course.type === 'video' || course.content_url.match(/\.(mp4|webm|ogg)$/i) ? (
                         <video 
                           controls 
+                          controlsList="nodownload"
                           className="w-full aspect-video rounded-xl bg-slate-900"
                           src={course.content_url}
                         >
@@ -266,16 +267,35 @@ export default function CourseDetail() {
                         </video>
                       ) : course.content_url.match(/\.(pdf)$/i) ? (
                         <iframe
-                          src={course.content_url}
-                          className="w-full aspect-video rounded-xl border border-slate-200"
+                          src={`${course.content_url}#toolbar=0&navpanes=0&scrollbar=0`}
+                          className="w-full h-[600px] rounded-xl border border-slate-200"
                           title="Contenido del curso"
+                        />
+                      ) : course.content_url.includes('youtube.com') || course.content_url.includes('youtu.be') ? (
+                        <iframe
+                          src={course.content_url.replace('watch?v=', 'embed/')}
+                          className="w-full aspect-video rounded-xl border-0"
+                          title="Contenido del curso"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
                         />
                       ) : (
-                        <iframe
-                          src={course.content_url}
-                          className="w-full aspect-video rounded-xl border border-slate-200"
-                          title="Contenido del curso"
-                        />
+                        <div className="w-full aspect-video rounded-xl border border-slate-200 bg-slate-50 flex flex-col items-center justify-center gap-4">
+                          <FileText className="w-12 h-12 text-slate-400" />
+                          <div className="text-center">
+                            <p className="text-slate-700 font-medium mb-2">Contenido disponible</p>
+                            <a 
+                              href={course.content_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-indigo-600 hover:underline flex items-center gap-2 justify-center"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Play className="w-4 h-4" />
+                              Ver en nueva pestaña
+                            </a>
+                          </div>
+                        </div>
                       )}
                     </div>
                   ) : (
