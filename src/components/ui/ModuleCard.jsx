@@ -1,12 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { createPageUrl } from '@/utils';
 import { 
   Box, BarChart3, MessageSquare, Zap, Link2, 
   Settings, Users, FileText, Calendar, Bell,
-  Database, Shield, Globe, Layers, Cpu
+  Database, Shield, Globe, Layers, Cpu, ArrowRight
 } from 'lucide-react';
 
 const iconMap = {
@@ -23,22 +25,26 @@ const categoryColors = {
   integration: 'bg-rose-50 text-rose-700 border-rose-200',
 };
 
+const pageMap = {
+  'Capacitación': 'Courses',
+  'Capacitaciones': 'Courses',
+  'Training': 'Courses',
+  'LMS': 'Courses',
+  'Tutor': 'Tutor',
+  'Tutor IA': 'Tutor',
+  'Actividad': 'Activity',
+  'Activity': 'Activity',
+  'Configuración': 'Settings',
+  'Settings': 'Settings',
+};
+
 export default function ModuleCard({ module, onToggle, index = 0 }) {
   const IconComponent = iconMap[module.icon] || Box;
   const isActive = module.status === 'active';
+  const targetPage = pageMap[module.name];
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
-      whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      className={cn(
-        "group relative p-6 rounded-3xl border transition-all duration-300",
-        "bg-white hover:shadow-xl hover:shadow-slate-200/50",
-        isActive ? "border-slate-200" : "border-slate-100 opacity-60"
-      )}
-    >
+  const CardContent = (
+    <>
       {/* Status indicator */}
       <div className={cn(
         "absolute top-4 right-4 w-2 h-2 rounded-full transition-colors",
@@ -76,12 +82,56 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
         >
           {module.category}
         </Badge>
-        <Switch
-          checked={isActive}
-          onCheckedChange={() => onToggle(module)}
-          className="data-[state=checked]:bg-indigo-500"
-        />
+        <div className="flex items-center gap-2">
+          {isActive && targetPage && (
+            <ArrowRight className="w-4 h-4 text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+          )}
+          <Switch
+            checked={isActive}
+            onCheckedChange={(e) => {
+              e?.preventDefault?.();
+              onToggle(module);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="data-[state=checked]:bg-indigo-500"
+          />
+        </div>
       </div>
+    </>
+  );
+
+  const cardClasses = cn(
+    "group relative p-6 rounded-3xl border transition-all duration-300",
+    "bg-white hover:shadow-xl hover:shadow-slate-200/50",
+    isActive ? "border-slate-200" : "border-slate-100 opacity-60",
+    isActive && targetPage && "cursor-pointer"
+  );
+
+  if (isActive && targetPage) {
+    return (
+      <Link to={createPageUrl(targetPage)}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.05, duration: 0.4 }}
+          whileHover={{ y: -2, transition: { duration: 0.2 } }}
+          className={cardClasses}
+        >
+          {CardContent}
+        </motion.div>
+      </Link>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className={cardClasses}
+    >
+      {CardContent}
     </motion.div>
   );
 }
