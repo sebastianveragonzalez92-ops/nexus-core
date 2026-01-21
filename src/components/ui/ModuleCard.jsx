@@ -43,8 +43,33 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
   const isActive = module.status === 'active';
   const targetPage = pageMap[module.name];
 
-  const CardContent = (
-    <>
+  const handleCardClick = (e) => {
+    if (isActive && targetPage) {
+      window.location.href = createPageUrl(targetPage);
+    }
+  };
+
+  const handleSwitchChange = (e) => {
+    e.stopPropagation();
+    onToggle(module);
+  };
+
+  const cardClasses = cn(
+    "group relative p-6 rounded-3xl border transition-all duration-300",
+    "bg-white hover:shadow-xl hover:shadow-slate-200/50",
+    isActive ? "border-slate-200" : "border-slate-100 opacity-60",
+    isActive && targetPage && "cursor-pointer"
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      className={cardClasses}
+      onClick={handleCardClick}
+    >
       {/* Status indicator */}
       <div className={cn(
         "absolute top-4 right-4 w-2 h-2 rounded-full transition-colors",
@@ -82,56 +107,17 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
         >
           {module.category}
         </Badge>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
           {isActive && targetPage && (
             <ArrowRight className="w-4 h-4 text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
           )}
           <Switch
             checked={isActive}
-            onCheckedChange={(e) => {
-              e?.preventDefault?.();
-              onToggle(module);
-            }}
-            onClick={(e) => e.stopPropagation()}
+            onCheckedChange={handleSwitchChange}
             className="data-[state=checked]:bg-indigo-500"
           />
         </div>
       </div>
-    </>
-  );
-
-  const cardClasses = cn(
-    "group relative p-6 rounded-3xl border transition-all duration-300",
-    "bg-white hover:shadow-xl hover:shadow-slate-200/50",
-    isActive ? "border-slate-200" : "border-slate-100 opacity-60",
-    isActive && targetPage && "cursor-pointer"
-  );
-
-  if (isActive && targetPage) {
-    return (
-      <Link to={createPageUrl(targetPage)}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05, duration: 0.4 }}
-          whileHover={{ y: -2, transition: { duration: 0.2 } }}
-          className={cardClasses}
-        >
-          {CardContent}
-        </motion.div>
-      </Link>
-    );
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
-      whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      className={cardClasses}
-    >
-      {CardContent}
     </motion.div>
   );
 }
