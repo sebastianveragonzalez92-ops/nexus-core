@@ -4,6 +4,8 @@ import { Edit, Trash2, Video, FileText, Award, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const typeIcons = {
   video: Video,
@@ -23,13 +25,15 @@ const categoryColors = {
 
 export default function CourseCard({ course, index, onEdit, onDelete }) {
   const TypeIcon = typeIcons[course.type] || FileText;
+  const navigate = useNavigate();
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group"
+      className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all group cursor-pointer"
+      onClick={() => navigate(createPageUrl('CourseDetail') + `?id=${course.id}`)}
     >
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
@@ -80,7 +84,10 @@ export default function CourseCard({ course, index, onEdit, onDelete }) {
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => onEdit(course)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(course);
+              }}
               className="h-8 w-8 p-0"
             >
               <Edit className="w-4 h-4" />
@@ -88,7 +95,10 @@ export default function CourseCard({ course, index, onEdit, onDelete }) {
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => onDelete(course.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(course.id);
+              }}
               className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700"
             >
               <Trash2 className="w-4 h-4" />
