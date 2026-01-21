@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save } from 'lucide-react';
+import { X, Save, Upload, FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
 
 export default function CourseModal({ course, onClose }) {
   const queryClient = useQueryClient();
@@ -25,6 +26,7 @@ export default function CourseModal({ course, onClose }) {
     content_url: course?.content_url || '',
     offline_available: course?.offline_available || false,
   });
+  const [uploading, setUploading] = useState(false);
 
   const saveMutation = useMutation({
     mutationFn: (data) => {
@@ -42,6 +44,22 @@ export default function CourseModal({ course, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     saveMutation.mutate(formData);
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData({ ...formData, content_url: file_url });
+      toast.success('Archivo subido exitosamente');
+    } catch (error) {
+      toast.error('Error al subir archivo');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -150,12 +168,49 @@ export default function CourseModal({ course, onClose }) {
               </div>
 
               <div>
-                <Label>URL del Contenido</Label>
-                <Input
-                  value={formData.content_url}
-                  onChange={(e) => setFormData({ ...formData, content_url: e.target.value })}
-                  placeholder="https://..."
-                />
+                <Label>Contenido del Curso</Label>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      value={formData.content_url}
+                      onChange={(e) => setFormData({ ...formData, content_url: e.target.value })}
+                      placeholder="URL del contenido o sube un archivo..."
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('file-upload').click()}
+                      disabled={uploading}
+                      className="shrink-0"
+                    >
+                      {uploading ? (
+                        <>
+                          <Upload className="w-4 h-4 mr-2 animate-spin" />
+                          Subiendo...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Subir
+                        </>
+                      )}
+                    </Button>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                      accept="video/*,application/pdf,.zip,.scorm"
+                    />
+                  </div>
+                  {formData.content_url && (
+                    <div className="flex items-center gap-2 text-sm text-emerald-600">
+                      <FileCheck className="w-4 h-4" />
+                      <span>Archivo configurado</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center justify-between py-3 px-4 bg-slate-50 rounded-xl">
