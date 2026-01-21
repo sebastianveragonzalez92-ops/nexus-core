@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
-  { name: 'Módulos', page: 'Modules', icon: Layers },
+  { name: 'Capacitaciones', page: 'Courses', icon: Layers },
   { name: 'Tutor IA', page: 'Tutor', icon: Bot },
   { name: 'Actividad', page: 'Activity', icon: Activity },
   { name: 'Configuración', page: 'Settings', icon: Settings },
