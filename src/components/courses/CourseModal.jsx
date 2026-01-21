@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Upload, FileCheck } from 'lucide-react';
+import { X, Save, Upload, FileCheck, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,8 +25,30 @@ export default function CourseModal({ course, onClose }) {
     certification_validity_days: course?.certification_validity_days || 365,
     content_url: course?.content_url || '',
     offline_available: course?.offline_available || false,
+    external_resources: course?.external_resources || [],
   });
   const [uploading, setUploading] = useState(false);
+
+  const addResource = () => {
+    setFormData({
+      ...formData,
+      external_resources: [
+        ...formData.external_resources,
+        { title: '', url: '', type: 'link' }
+      ]
+    });
+  };
+
+  const updateResource = (index, field, value) => {
+    const updated = [...formData.external_resources];
+    updated[index][field] = value;
+    setFormData({ ...formData, external_resources: updated });
+  };
+
+  const removeResource = (index) => {
+    const updated = formData.external_resources.filter((_, i) => i !== index);
+    setFormData({ ...formData, external_resources: updated });
+  };
 
   const saveMutation = useMutation({
     mutationFn: (data) => {
@@ -267,6 +289,71 @@ export default function CourseModal({ course, onClose }) {
                     <SelectItem value="archived">Archivado</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* External Resources */}
+              <div className="pt-4 border-t border-slate-200">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <Label className="font-semibold">Recursos Externos</Label>
+                    <p className="text-xs text-slate-500">Enlaces a artículos, videos o documentos</p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addResource}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Añadir Recurso
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {formData.external_resources.map((resource, index) => (
+                    <div key={index} className="flex gap-2 p-3 bg-slate-50 rounded-xl">
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          placeholder="Título del recurso"
+                          value={resource.title}
+                          onChange={(e) => updateResource(index, 'title', e.target.value)}
+                          className="bg-white"
+                        />
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="URL"
+                            value={resource.url}
+                            onChange={(e) => updateResource(index, 'url', e.target.value)}
+                            className="flex-1 bg-white"
+                          />
+                          <Select
+                            value={resource.type}
+                            onValueChange={(value) => updateResource(index, 'type', value)}
+                          >
+                            <SelectTrigger className="w-32 bg-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="article">Artículo</SelectItem>
+                              <SelectItem value="video">Video</SelectItem>
+                              <SelectItem value="document">Documento</SelectItem>
+                              <SelectItem value="link">Enlace</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeResource(index)}
+                        className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
