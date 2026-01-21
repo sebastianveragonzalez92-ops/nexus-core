@@ -9,14 +9,23 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const navItems = [
-  { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
-  { name: 'Capacitaciones', page: 'Courses', icon: Layers },
-  { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
-  { name: 'Tutor IA', page: 'Tutor', icon: Bot },
-  { name: 'Actividad', page: 'Activity', icon: Activity },
-  { name: 'Configuración', page: 'Settings', icon: Settings },
-];
+const getNavItems = (userRole) => {
+  const baseItems = [
+    { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
+    { name: 'Capacitaciones', page: 'Courses', icon: Layers },
+    { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+    { name: 'Tutor IA', page: 'Tutor', icon: Bot },
+    { name: 'Actividad', page: 'Activity', icon: Activity },
+  ];
+
+  if (userRole === 'admin') {
+    baseItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
+  }
+
+  baseItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
+  
+  return baseItems;
+};
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -30,6 +39,7 @@ export default function Layout({ children, currentPageName }) {
   const brandColor = user?.company_primary_color || '#6366f1';
   const brandName = user?.company_name || 'ModulaX';
   const brandLogo = user?.company_logo;
+  const navItems = getNavItems(user?.role);
 
   useEffect(() => {
     setIsSidebarOpen(false);

@@ -1,0 +1,210 @@
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { 
+  GraduationCap, Users, MessageSquare, TrendingUp, 
+  BarChart3, BookOpen, Award
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import StudentProgressTable from '../components/instructor/StudentProgressTable';
+import QuizAttemptsReview from '../components/instructor/QuizAttemptsReview';
+import ForumModeration from '../components/instructor/ForumModeration';
+import CourseAnalytics from '../components/instructor/CourseAnalytics';
+import CourseContentManager from '../components/instructor/CourseContentManager';
+
+export default function InstructorDashboard() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ['courses'],
+    queryFn: () => base44.entities.Course.list('-created_date'),
+  });
+
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['all-enrollments'],
+    queryFn: () => base44.entities.Enrollment.list('-created_date'),
+  });
+
+  const { data: quizAttempts = [] } = useQuery({
+    queryKey: ['all-quiz-attempts'],
+    queryFn: () => base44.entities.QuizAttempt.list('-created_date'),
+  });
+
+  const { data: discussions = [] } = useQuery({
+    queryKey: ['all-discussions'],
+    queryFn: () => base44.entities.DiscussionPost.list('-created_date'),
+  });
+
+  // Calculate stats
+  const totalStudents = new Set(enrollments.map(e => e.user_email)).size;
+  const completedCourses = enrollments.filter(e => e.status === 'completed').length;
+  const averageScore = quizAttempts.length > 0 
+    ? Math.round(quizAttempts.reduce((sum, a) => sum + a.score, 0) / quizAttempts.length)
+    : 0;
+  const activeDiscussions = discussions.length;
+
+  if (user && user.role !== 'admin') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 flex items-center justify-center p-6">
+        <Card className="max-w-md">
+          <CardContent className="py-12 text-center">
+            <GraduationCap className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+            <h2 className="text-xl font-bold text-slate-900 mb-2">
+              Acceso Restringido
+            </h2>
+            <p className="text-slate-600">
+              Este panel está disponible solo para instructores y administradores.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500">
+              <GraduationCap className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">Panel del Instructor</h1>
+              <p className="text-slate-600">Gestiona cursos, estudiantes y analíticas</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <Card className="border-l-4 border-l-blue-500">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Total Estudiantes</p>
+                    <p className="text-2xl font-bold text-slate-900">{totalStudents}</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-blue-50">
+                    <Users className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <Card className="border-l-4 border-l-green-500">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Cursos Completados</p>
+                    <p className="text-2xl font-bold text-slate-900">{completedCourses}</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-green-50">
+                    <Award className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <Card className="border-l-4 border-l-amber-500">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Promedio Quizzes</p>
+                    <p className="text-2xl font-bold text-slate-900">{averageScore}%</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-amber-50">
+                    <TrendingUp className="w-6 h-6 text-amber-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <Card className="border-l-4 border-l-purple-500">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Discusiones Activas</p>
+                    <p className="text-2xl font-bold text-slate-900">{activeDiscussions}</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-purple-50">
+                    <MessageSquare className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Main Content Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Tabs defaultValue="analytics" className="space-y-6">
+            <TabsList className="bg-white border border-slate-200 p-1">
+              <TabsTrigger value="analytics">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Analíticas
+              </TabsTrigger>
+              <TabsTrigger value="progress">
+                <Users className="w-4 h-4 mr-2" />
+                Progreso Estudiantes
+              </TabsTrigger>
+              <TabsTrigger value="quizzes">
+                <Award className="w-4 h-4 mr-2" />
+                Quizzes
+              </TabsTrigger>
+              <TabsTrigger value="forum">
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Moderación Foro
+              </TabsTrigger>
+              <TabsTrigger value="content">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Gestión de Contenido
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="analytics">
+              <CourseAnalytics courses={courses} enrollments={enrollments} quizAttempts={quizAttempts} />
+            </TabsContent>
+
+            <TabsContent value="progress">
+              <StudentProgressTable courses={courses} enrollments={enrollments} />
+            </TabsContent>
+
+            <TabsContent value="quizzes">
+              <QuizAttemptsReview />
+            </TabsContent>
+
+            <TabsContent value="forum">
+              <ForumModeration discussions={discussions} courses={courses} />
+            </TabsContent>
+
+            <TabsContent value="content">
+              <CourseContentManager courses={courses} />
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

@@ -6,6 +6,7 @@ import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
 import CourseDetail from './pages/CourseDetail';
 import MyCourses from './pages/MyCourses';
+import InstructorDashboard from './pages/InstructorDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "Tutor": Tutor,
     "CourseDetail": CourseDetail,
     "MyCourses": MyCourses,
+    "InstructorDashboard": InstructorDashboard,
 }
 
 export const pagesConfig = {
