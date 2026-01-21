@@ -43,7 +43,7 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
   const isActive = module.status === 'active';
   const targetPage = pageMap[module.name];
 
-  const handleCardClick = (e) => {
+  const handleCardClick = () => {
     if (isActive && targetPage) {
       window.location.href = createPageUrl(targetPage);
     }
