@@ -5,8 +5,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Play, CheckCircle, Clock, Award, 
-  FileText, Users, BookOpen, Download, Upload
+  FileText, Users, BookOpen, Download, Upload, MessageSquare, Brain
 } from 'lucide-react';
+import QuizViewer from '../components/courses/QuizViewer';
+import DiscussionForum from '../components/courses/DiscussionForum';
+import ExternalResources from '../components/courses/ExternalResources';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +38,13 @@ export default function CourseDetail() {
   });
 
   const course = courses.find(c => c.id === courseId);
+
+  // Fetch quizzes
+  const { data: quizzes = [] } = useQuery({
+    queryKey: ['quizzes', courseId],
+    queryFn: () => base44.entities.Quiz.filter({ course_id: courseId }, 'order'),
+    enabled: !!courseId,
+  });
 
   // Fetch enrollment
   const { data: enrollments = [] } = useQuery({
@@ -244,8 +254,16 @@ export default function CourseDetail() {
           <Tabs defaultValue="content" className="space-y-4">
             <TabsList className="bg-white border border-slate-200 p-1">
               <TabsTrigger value="content">Contenido</TabsTrigger>
+              <TabsTrigger value="quizzes">
+                <Brain className="w-4 h-4 mr-2" />
+                Quizzes ({quizzes.length})
+              </TabsTrigger>
+              <TabsTrigger value="discussion">
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Foro
+              </TabsTrigger>
+              <TabsTrigger value="resources">Recursos</TabsTrigger>
               <TabsTrigger value="details">Detalles</TabsTrigger>
-              <TabsTrigger value="materials">Materiales</TabsTrigger>
             </TabsList>
 
             <TabsContent value="content" className="space-y-4">
@@ -345,36 +363,54 @@ export default function CourseDetail() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="materials" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Materiales del Curso</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {course.content_url ? (
-                    <div className="space-y-3">
-                      <a 
-                        href={course.content_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
-                      >
-                        <FileText className="w-5 h-5 text-indigo-600" />
-                        <div className="flex-1">
-                          <p className="font-medium">Material del curso</p>
-                          <p className="text-sm text-slate-500">Archivo disponible</p>
+            <TabsContent value="quizzes" className="space-y-4">
+              {quizzes.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center text-slate-500">
+                    <Brain className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+                    <p>No hay quizzes disponibles para este curso</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                quizzes.map((quiz, index) => (
+                  <Card key={quiz.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">Quiz {index + 1}: {quiz.title}</CardTitle>
+                        <Badge>
+                          {quiz.questions?.length || 0} preguntas
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {user ? (
+                        <QuizViewer quiz={quiz} user={user} onComplete={() => {}} />
+                      ) : (
+                        <div className="text-center py-8 text-slate-500">
+                          <p>Debes inscribirte para realizar el quiz</p>
                         </div>
-                        <Download className="w-5 h-5 text-slate-400" />
-                      </a>
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-slate-500">
-                      <Upload className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                      <p>No hay materiales disponibles</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="discussion" className="space-y-4">
+              {user ? (
+                <DiscussionForum courseId={courseId} user={user} />
+              ) : (
+                <Card>
+                  <CardContent className="py-12 text-center text-slate-500">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+                    <p>Debes inscribirte para participar en el foro</p>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="resources" className="space-y-4">
+              <ExternalResources resources={course.external_resources} />
             </TabsContent>
           </Tabs>
         </motion.div>
