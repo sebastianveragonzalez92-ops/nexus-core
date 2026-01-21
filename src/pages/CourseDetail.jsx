@@ -255,16 +255,28 @@ export default function CourseDetail() {
                 </CardHeader>
                 <CardContent>
                   {course.content_url ? (
-                    <div className="aspect-video bg-slate-100 rounded-xl flex items-center justify-center">
-                      <a 
-                        href={course.content_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-indigo-600 hover:underline flex items-center gap-2"
-                      >
-                        <Play className="w-5 h-5" />
-                        Abrir contenido del curso
-                      </a>
+                    <div className="w-full">
+                      {course.type === 'video' || course.content_url.match(/\.(mp4|webm|ogg)$/i) ? (
+                        <video 
+                          controls 
+                          className="w-full aspect-video rounded-xl bg-slate-900"
+                          src={course.content_url}
+                        >
+                          Tu navegador no soporta video.
+                        </video>
+                      ) : course.content_url.match(/\.(pdf)$/i) ? (
+                        <iframe
+                          src={course.content_url}
+                          className="w-full aspect-video rounded-xl border border-slate-200"
+                          title="Contenido del curso"
+                        />
+                      ) : (
+                        <iframe
+                          src={course.content_url}
+                          className="w-full aspect-video rounded-xl border border-slate-200"
+                          title="Contenido del curso"
+                        />
+                      )}
                     </div>
                   ) : (
                     <div className="text-center py-12 text-slate-500">
