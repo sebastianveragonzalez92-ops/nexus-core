@@ -266,20 +266,10 @@ export default function MyCourses() {
                         <Button 
                           variant="outline" 
                           className="w-full"
-                          onClick={() => handleDownloadCertificate(cert)}
-                          disabled={downloading === cert.id}
+                          onClick={() => navigate(createPageUrl('Certificates'))}
                         >
-                          {downloading === cert.id ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Generando...
-                            </>
-                          ) : (
-                            <>
-                              <Download className="w-4 h-4 mr-2" />
-                              Descargar Certificado
-                            </>
-                          )}
+                          <Download className="w-4 h-4 mr-2" />
+                          Ver Certificado
                         </Button>
                       </CardContent>
                     </Card>
