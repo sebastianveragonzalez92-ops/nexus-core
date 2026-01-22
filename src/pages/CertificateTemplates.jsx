@@ -1,37 +1,47 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Award, Layout, Eye, Check } from 'lucide-react';
+import { Award, Layout, Eye, Check, Plus, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import CertificateTemplate from '../components/certificates/CertificateGenerator';
+import TemplateEditor from '../components/certificates/TemplateEditor';
+import CustomCertificateRenderer from '../components/certificates/CustomCertificateRenderer';
 
-const templates = [
+const builtInTemplates = [
   {
     id: 'modern',
     name: 'Moderno',
     description: 'Diseño contemporáneo con gradientes y elementos minimalistas',
-    preview: '/images/template-modern.jpg',
+    isBuiltIn: true
   },
   {
     id: 'default',
     name: 'Clásico',
     description: 'Certificado tradicional con bordes dorados y estilo formal',
-    preview: '/images/template-classic.jpg',
+    isBuiltIn: true
   },
 ];
 
 export default function CertificateTemplates() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [previewTemplate, setPreviewTemplate] = useState(null);
+  const [editingTemplate, setEditingTemplate] = useState(null);
+  const [showEditor, setShowEditor] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: () => base44.auth.me(),
+  });
+
+  const { data: customTemplates = [] } = useQuery({
+    queryKey: ['certificateTemplates'],
+    queryFn: () => base44.entities.CertificateTemplate.list(),
   });
 
   const mockCertificate = {
@@ -44,25 +54,84 @@ export default function CertificateTemplates() {
     title: 'Operación Segura de Maquinaria Pesada',
   };
 
-  const handleSaveTemplate = async (templateId) => {
-    try {
-      await base44.auth.updateMe({ 
-        certificate_template: templateId 
-      });
-      setSelectedTemplate(templateId);
-      toast.success('Plantilla guardada como predeterminada');
-    } catch (error) {
+  const saveTemplateMutation = useMutation({
+    mutationFn: (data) => {
+      if (editingTemplate?.id) {
+        return base44.entities.CertificateTemplate.update(editingTemplate.id, data);
+      }
+      return base44.entities.CertificateTemplate.create(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['certificateTemplates']);
+      setShowEditor(false);
+      setEditingTemplate(null);
+      toast.success('Plantilla guardada correctamente');
+    },
+    onError: () => {
       toast.error('Error al guardar la plantilla');
+    }
+  });
+
+  const deleteTemplateMutation = useMutation({
+    mutationFn: (id) => base44.entities.CertificateTemplate.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['certificateTemplates']);
+      toast.success('Plantilla eliminada');
+    },
+    onError: () => {
+      toast.error('Error al eliminar la plantilla');
+    }
+  });
+
+  const setDefaultMutation = useMutation({
+    mutationFn: async (templateId) => {
+      // Unset all other defaults
+      const allTemplates = customTemplates;
+      for (const t of allTemplates) {
+        if (t.is_default && t.id !== templateId) {
+          await base44.entities.CertificateTemplate.update(t.id, { is_default: false });
+        }
+      }
+      
+      // Set new default
+      const template = customTemplates.find(t => t.id === templateId);
+      if (template) {
+        await base44.entities.CertificateTemplate.update(templateId, { is_default: true });
+      } else {
+        // It's a built-in template, save in user
+        await base44.auth.updateMe({ certificate_template: templateId });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['certificateTemplates']);
+      queryClient.invalidateQueries(['user']);
+      toast.success('Plantilla establecida como predeterminada');
+    }
+  });
+
+  const handleSaveEditor = (data) => {
+    saveTemplateMutation.mutate(data);
+  };
+
+  const handleDelete = (template) => {
+    if (confirm('¿Estás seguro de eliminar esta plantilla?')) {
+      deleteTemplateMutation.mutate(template.id);
     }
   };
 
   React.useEffect(() => {
-    if (user?.certificate_template) {
+    const defaultCustom = customTemplates.find(t => t.is_default);
+    if (defaultCustom) {
+      setSelectedTemplate(defaultCustom.id);
+    } else if (user?.certificate_template) {
       setSelectedTemplate(user.certificate_template);
     } else {
       setSelectedTemplate('modern');
     }
-  }, [user]);
+  }, [user, customTemplates]);
+
+  const allTemplates = [...builtInTemplates, ...customTemplates];
+  const getTemplate = (id) => allTemplates.find(t => t.id === id);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
@@ -78,9 +147,23 @@ export default function CertificateTemplates() {
           <p className="text-slate-600 mt-1">Personaliza el diseño de los certificados generados</p>
         </div>
 
+        {/* Add Template Button */}
+        {user?.role === 'admin' && (
+          <Button
+            onClick={() => {
+              setEditingTemplate(null);
+              setShowEditor(true);
+            }}
+            className="bg-gradient-to-r from-indigo-500 to-violet-500"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Crear Plantilla Personalizada
+          </Button>
+        )}
+
         {/* Templates Grid */}
         <div className="grid md:grid-cols-2 gap-6">
-          {templates.map((template, index) => (
+          {allTemplates.map((template, index) => (
             <motion.div
               key={template.id}
               initial={{ opacity: 0, y: 20 }}
@@ -111,37 +194,70 @@ export default function CertificateTemplates() {
                   <div className="relative aspect-[4/3] bg-slate-100 rounded-lg overflow-hidden border-2 border-slate-200">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="transform scale-[0.15] origin-center">
-                        <CertificateTemplate
-                          certificate={mockCertificate}
-                          user={user}
-                          course={mockCourse}
-                          template={template.id}
-                        />
+                        {template.isBuiltIn ? (
+                          <CertificateTemplate
+                            certificate={mockCertificate}
+                            user={user}
+                            course={mockCourse}
+                            template={template.id}
+                          />
+                        ) : (
+                          <CustomCertificateRenderer
+                            certificate={mockCertificate}
+                            user={user}
+                            course={mockCourse}
+                            template={template}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
 
                   <div className="flex gap-2">
                     <Button
-                      onClick={() => setPreviewTemplate(template.id)}
+                      onClick={() => setPreviewTemplate(template)}
                       variant="outline"
                       className="flex-1"
                     >
                       <Eye className="w-4 h-4 mr-2" />
                       Vista Previa
                     </Button>
+                    
+                    {!template.isBuiltIn && user?.role === 'admin' && (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setEditingTemplate(template);
+                            setShowEditor(true);
+                          }}
+                          variant="outline"
+                          size="icon"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          onClick={() => handleDelete(template)}
+                          variant="outline"
+                          size="icon"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
+
                     <Button
-                      onClick={() => handleSaveTemplate(template.id)}
+                      onClick={() => setDefaultMutation.mutate(template.id || template.id)}
                       disabled={selectedTemplate === template.id}
                       className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-500"
                     >
                       {selectedTemplate === template.id ? (
                         <>
                           <Check className="w-4 h-4 mr-2" />
-                          Seleccionada
+                          Activa
                         </>
                       ) : (
-                        'Seleccionar'
+                        'Activar'
                       )}
                     </Button>
                   </div>
@@ -172,20 +288,83 @@ export default function CertificateTemplates() {
       <Dialog open={!!previewTemplate} onOpenChange={() => setPreviewTemplate(null)}>
         <DialogContent className="max-w-6xl max-h-[90vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Vista Previa - Plantilla {templates.find(t => t.id === previewTemplate)?.name}</DialogTitle>
+            <DialogTitle>Vista Previa - {previewTemplate?.name}</DialogTitle>
           </DialogHeader>
           {previewTemplate && (
             <div className="flex justify-center p-4 bg-slate-50 rounded-lg overflow-auto">
               <div className="transform scale-75 origin-top">
-                <CertificateTemplate
-                  certificate={mockCertificate}
-                  user={user}
-                  course={mockCourse}
-                  template={previewTemplate}
-                />
+                {previewTemplate.isBuiltIn ? (
+                  <CertificateTemplate
+                    certificate={mockCertificate}
+                    user={user}
+                    course={mockCourse}
+                    template={previewTemplate.id}
+                  />
+                ) : (
+                  <CustomCertificateRenderer
+                    certificate={mockCertificate}
+                    user={user}
+                    course={mockCourse}
+                    template={previewTemplate}
+                  />
+                )}
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Editor Dialog */}
+      <Dialog open={showEditor} onOpenChange={(open) => {
+        if (!open) {
+          setShowEditor(false);
+          setEditingTemplate(null);
+        }
+      }}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingTemplate ? 'Editar Plantilla' : 'Nueva Plantilla Personalizada'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Editor */}
+            <div>
+              <TemplateEditor
+                template={editingTemplate}
+                onSave={handleSaveEditor}
+                onCancel={() => {
+                  setShowEditor(false);
+                  setEditingTemplate(null);
+                }}
+              />
+            </div>
+
+            {/* Live Preview */}
+            <div className="sticky top-0">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Vista Previa en Vivo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-100 rounded-lg p-4 overflow-auto">
+                    <div className="transform scale-[0.35] origin-top-left">
+                      <CustomCertificateRenderer
+                        certificate={mockCertificate}
+                        user={user}
+                        course={mockCourse}
+                        template={{
+                          ...editingTemplate,
+                          config: editingTemplate?.config
+                        }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
