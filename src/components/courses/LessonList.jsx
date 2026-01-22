@@ -9,6 +9,7 @@ import { CheckCircle, Circle, Video, FileText, File, Lock, ChevronDown, ChevronR
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
+import { awardPoints, incrementStat, checkAndAwardBadges, POINTS } from '../gamification/gamificationHelpers';
 
 export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
   const [expandedLesson, setExpandedLesson] = useState(null);

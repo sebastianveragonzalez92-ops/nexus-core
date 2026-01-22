@@ -1,4 +1,7 @@
+import AIQuizGenerator from './pages/AIQuizGenerator';
 import Activity from './pages/Activity';
+import CertificateTemplates from './pages/CertificateTemplates';
+import Certificates from './pages/Certificates';
 import CourseDetail from './pages/CourseDetail';
 import Courses from './pages/Courses';
 import Dashboard from './pages/Dashboard';
@@ -8,14 +11,15 @@ import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
-import AIQuizGenerator from './pages/AIQuizGenerator';
-import Certificates from './pages/Certificates';
-import CertificateTemplates from './pages/CertificateTemplates';
+import Gamification from './pages/Gamification';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIQuizGenerator": AIQuizGenerator,
     "Activity": Activity,
+    "CertificateTemplates": CertificateTemplates,
+    "Certificates": Certificates,
     "CourseDetail": CourseDetail,
     "Courses": Courses,
     "Dashboard": Dashboard,
@@ -25,9 +29,7 @@ export const PAGES = {
     "Notifications": Notifications,
     "Settings": Settings,
     "Tutor": Tutor,
-    "AIQuizGenerator": AIQuizGenerator,
-    "Certificates": Certificates,
-    "CertificateTemplates": CertificateTemplates,
+    "Gamification": Gamification,
 }
 
 export const pagesConfig = {

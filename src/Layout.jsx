@@ -15,6 +15,7 @@ const getNavItems = (userRole) => {
     { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
     { name: 'Capacitaciones', page: 'Courses', icon: Layers },
     { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+    { name: 'Gamificación', page: 'Gamification', icon: Award },
     { name: 'Certificados', page: 'Certificates', icon: Activity },
     { name: 'Notificaciones', page: 'Notifications', icon: Bell },
     { name: 'Tutor IA', page: 'Tutor', icon: Bot },
