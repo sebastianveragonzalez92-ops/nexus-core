@@ -2,11 +2,40 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, CheckCircle, Sparkles, Video, FileText, File } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BookOpen, Clock, CheckCircle, Sparkles, Video, FileText, File, Search, Filter } from 'lucide-react';
 import ModuleLessonManager from './ModuleLessonManager';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 export default function CourseContentManager({ courses }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
+  const { data: lessons = [] } = useQuery({
+    queryKey: ['all-lessons-overview'],
+    queryFn: () => base44.entities.Lesson.list(),
+  });
+
+  // Filter courses
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         course.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || course.status === statusFilter;
+    const matchesCategory = categoryFilter === 'all' || course.category === categoryFilter;
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+
+  // Get lesson count per course
+  const getLessonCount = (courseId) => {
+    return lessons.filter(l => l.course_id === courseId).length;
+  };
+
+  // Get unique categories
+  const categories = [...new Set(courses.map(c => c.category).filter(Boolean))];
 
 
 
@@ -46,23 +75,71 @@ export default function CourseContentManager({ courses }) {
         </CardContent>
       </Card>
 
+      {/* Search and Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="md:col-span-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  placeholder="Buscar cursos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+            <div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estados</SelectItem>
+                  <SelectItem value="published">Publicados</SelectItem>
+                  <SelectItem value="draft">Borradores</SelectItem>
+                  <SelectItem value="archived">Archivados</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas las categorías</SelectItem>
+                  {categories.map(cat => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Course Selection */}
       <Card>
         <CardHeader>
-          <CardTitle>Gestión de Contenido del Curso</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>Selecciona un Curso</span>
+            <Badge variant="outline">{filteredCourses.length} cursos</Badge>
+          </CardTitle>
           <CardDescription>
             Selecciona un curso para gestionar sus módulos, lecciones y contenido
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {courses.length === 0 ? (
+          {filteredCourses.length === 0 ? (
             <div className="text-center py-8">
               <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-600">No hay cursos disponibles</p>
+              <p className="text-slate-600">No hay cursos que coincidan con los filtros</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {courses.map((course) => (
+              {filteredCourses.map((course) => (
                 <div
                   key={course.id}
                   onClick={() => setSelectedCourse(course)}
@@ -82,6 +159,10 @@ export default function CourseContentManager({ courses }) {
                     {course.description}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="w-3 h-3" />
+                      {getLessonCount(course.id)} lecciones
+                    </span>
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {course.duration_minutes || 0} min

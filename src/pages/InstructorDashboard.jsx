@@ -15,6 +15,7 @@ import QuizAttemptsReview from '../components/instructor/QuizAttemptsReview';
 import ForumModeration from '../components/instructor/ForumModeration';
 import CourseAnalytics from '../components/instructor/CourseAnalytics';
 import CourseContentManager from '../components/instructor/CourseContentManager';
+import CourseProgressOverview from '../components/instructor/CourseProgressOverview';
 import QuizCreator from '../components/instructor/QuizCreator';
 
 export default function InstructorDashboard() {
@@ -162,8 +163,12 @@ export default function InstructorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Tabs defaultValue="analytics" className="space-y-6">
+          <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="bg-white border border-slate-200 p-1">
+              <TabsTrigger value="overview">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Vista General
+              </TabsTrigger>
               <TabsTrigger value="analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Analíticas
@@ -193,6 +198,10 @@ export default function InstructorDashboard() {
                 Certificados
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="overview">
+              <CourseProgressOverview courses={courses} />
+            </TabsContent>
 
             <TabsContent value="analytics">
               <CourseAnalytics courses={courses} enrollments={enrollments} quizAttempts={quizAttempts} />
