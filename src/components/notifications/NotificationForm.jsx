@@ -43,7 +43,7 @@ export default function NotificationForm() {
           type: data.type,
           title: data.title,
           message: data.message,
-          action_url: data.action_url || null,
+          action_url: data.action_url || '',
         }));
         return await base44.entities.Notification.bulkCreate(notifications);
       } else {
@@ -52,7 +52,7 @@ export default function NotificationForm() {
           type: data.type,
           title: data.title,
           message: data.message,
-          action_url: data.action_url || null,
+          action_url: data.action_url || '',
         });
       }
     },
@@ -68,8 +68,9 @@ export default function NotificationForm() {
         action_url: '',
       });
     },
-    onError: () => {
-      toast.error('Error al enviar notificación');
+    onError: (error) => {
+      console.error('Error sending notification:', error);
+      toast.error('Error al enviar notificación: ' + (error.message || 'Error desconocido'));
     },
   });
 
