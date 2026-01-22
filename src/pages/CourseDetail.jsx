@@ -401,11 +401,12 @@ export default function CourseDetail() {
                       <QuizViewer 
                         quiz={quiz} 
                         user={user} 
-                        onComplete={async () => {
+                        onComplete={() => {
                           // Check if this was the last quiz
-                          if (index === quizzes.length - 1) {
-                            toast.success('¡Todas las evaluaciones completadas!');
-                            await completeMutation.mutate();
+                          if (index === quizzes.length - 1 && enrollment.status !== 'completed') {
+                            setTimeout(() => {
+                              completeMutation.mutate();
+                            }, 1500);
                           }
                         }} 
                       />
