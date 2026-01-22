@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, CheckCircle } from 'lucide-react';
+import { BookOpen, Clock, CheckCircle, Sparkles, Video, FileText, File } from 'lucide-react';
 import ModuleLessonManager from './ModuleLessonManager';
 
 export default function CourseContentManager({ courses }) {
@@ -12,6 +12,40 @@ export default function CourseContentManager({ courses }) {
 
   return (
     <div className="space-y-6">
+      {/* Info Card */}
+      <Card className="bg-gradient-to-r from-indigo-50 to-violet-50 border-indigo-200">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-white shadow-sm">
+              <Sparkles className="w-6 h-6 text-indigo-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-slate-900 mb-2">
+                Tipos de Contenido Disponibles
+              </h3>
+              <div className="grid md:grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <FileText className="w-4 h-4 text-slate-500" />
+                  <span>Texto y artículos enriquecidos</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700">
+                  <Video className="w-4 h-4 text-slate-500" />
+                  <span>Videos (YouTube, Vimeo, etc.)</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700">
+                  <File className="w-4 h-4 text-slate-500" />
+                  <span>Documentos PDF</span>
+                </div>
+                <div className="flex items-center gap-2 text-indigo-700 font-medium">
+                  <Sparkles className="w-4 h-4 text-indigo-600" />
+                  <span>Escenarios Interactivos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Course Selection */}
       <Card>
         <CardHeader>
