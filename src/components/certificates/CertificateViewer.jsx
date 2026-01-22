@@ -46,48 +46,49 @@ export default function CertificateViewer() {
       return;
     }
 
-    try {
-      setDownloading(certificate.id);
-      setPreviewCert({ certificate, course });
+    setDownloading(certificate.id);
+    setPreviewCert({ certificate, course });
 
-      // Wait for the certificate to render in the DOM
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for render
+    setTimeout(async () => {
+      try {
+        const certificateElement = document.getElementById('certificate-preview');
+        if (!certificateElement) {
+          toast.error('No se pudo cargar el certificado');
+          setDownloading(null);
+          setPreviewCert(null);
+          return;
+        }
 
-      const certificateElement = document.getElementById('certificate-preview');
-      if (!certificateElement) {
-        throw new Error('No se pudo encontrar el elemento del certificado');
+        const canvas = await html2canvas(certificateElement, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`certificado-${certificate.certificate_number}.pdf`);
+        
+        toast.success('Certificado descargado');
+        setDownloading(null);
+        setPreviewCert(null);
+      } catch (error) {
+        console.error('Error:', error);
+        toast.error('Error al generar el PDF');
+        setDownloading(null);
+        setPreviewCert(null);
       }
-
-      // Generate canvas from the certificate
-      const canvas = await html2canvas(certificateElement, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        logging: true,
-        useCORS: true,
-        allowTaint: true,
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`certificado-${certificate.certificate_number}.pdf`);
-      
-      toast.success('Certificado descargado');
-    } catch (error) {
-      toast.error(`Error: ${error.message}`);
-      console.error('Error descargando certificado:', error);
-    } finally {
-      setDownloading(null);
-      setPreviewCert(null);
-    }
+    }, 800);
   };
 
   const handlePreview = (certificate) => {
