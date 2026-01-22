@@ -214,13 +214,13 @@ export default function Layout({ children, currentPageName }) {
               </div>
               <span className="font-bold text-slate-900">{brandName}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <NotificationCenter user={user} />
               <Link
                 to={createPageUrl('Settings')}
-                className="p-2 rounded-xl hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900"
+                className="p-2.5 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900"
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-6 h-6" />
               </Link>
             </div>
           </div>
