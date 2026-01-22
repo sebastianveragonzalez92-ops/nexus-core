@@ -246,7 +246,7 @@ export default function CertificateViewer() {
 
       {/* Hidden certificate for PDF generation */}
       {downloading && previewCert && (
-        <div style={{ position: 'fixed', left: '-10000px', top: '-10000px', width: '1123px', height: '794px' }}>
+        <div id="certificate-preview" style={{ position: 'fixed', left: '-10000px', top: '-10000px', width: '1123px', height: '794px' }}>
           <CertificateTemplate
             certificate={previewCert.certificate}
             user={user}
