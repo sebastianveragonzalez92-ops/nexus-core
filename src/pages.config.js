@@ -8,6 +8,7 @@ import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
+import AIQuizGenerator from './pages/AIQuizGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "Notifications": Notifications,
     "Settings": Settings,
     "Tutor": Tutor,
+    "AIQuizGenerator": AIQuizGenerator,
 }
 
 export const pagesConfig = {

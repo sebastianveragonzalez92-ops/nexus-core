@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Upload, FileCheck, Plus, Trash2, Link as LinkIcon } from 'lucide-react';
+import { X, Save, Upload, FileCheck, Plus, Trash2, Link as LinkIcon, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import AIContentGenerator from './AIContentGenerator';
 
 export default function CourseModal({ course, onClose }) {
   const queryClient = useQueryClient();
@@ -28,6 +29,19 @@ export default function CourseModal({ course, onClose }) {
     external_resources: course?.external_resources || [],
   });
   const [uploading, setUploading] = useState(false);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
+
+  const handleApplyAICourse = (aiCourseData) => {
+    setFormData({
+      ...formData,
+      title: aiCourseData.title,
+      description: aiCourseData.description,
+      category: aiCourseData.category,
+      duration_minutes: aiCourseData.duration_minutes,
+      external_resources: aiCourseData.external_resources
+    });
+    setShowAIGenerator(false);
+  };
 
   const addResource = () => {
     setFormData({
@@ -97,15 +111,35 @@ export default function CourseModal({ course, onClose }) {
             <h2 className="text-xl font-bold text-slate-900">
               {course ? 'Editar Capacitación' : 'Nueva Capacitación'}
             </h2>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              <X className="w-5 h-5 text-slate-500" />
-            </button>
+            <div className="flex items-center gap-2">
+              {!course && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAIGenerator(!showAIGenerator)}
+                  className="border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {showAIGenerator ? 'Ocultar IA' : 'Generar con IA'}
+                </Button>
+              )}
+              <button
+                onClick={onClose}
+                className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            {showAIGenerator && (
+              <div className="mb-6">
+                <AIContentGenerator onApplyCourse={handleApplyAICourse} />
+              </div>
+            )}
+
             <div className="space-y-4">
               <div>
                 <Label>Título *</Label>
