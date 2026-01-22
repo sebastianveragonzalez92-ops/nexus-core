@@ -40,7 +40,8 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
     resources: lesson?.resources || [],
     scenarios: lesson?.scenarios || [],
     micro_steps: lesson?.micro_steps || { steps: [] },
-    checklist: lesson?.checklist || { title: '', checks: [] }
+    checklist: lesson?.checklist || { title: '', checks: [] },
+    assessment_id: lesson?.assessment_id || ''
   });
   const [uploading, setUploading] = useState(false);
 
@@ -578,6 +579,41 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Assessment Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Evaluación Asociada</span>
+            <Button size="sm" variant="outline" className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 hover:from-emerald-600 hover:to-teal-600">
+              <Plus className="w-4 h-4 mr-2" />
+              Añadir Evaluación
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {formData.assessment_id ? (
+            <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div>
+                <p className="text-sm font-medium text-slate-900">Evaluación ID: {formData.assessment_id}</p>
+                <p className="text-xs text-slate-600 mt-1">Evaluación vinculada a esta lección</p>
+              </div>
+              <Button
+                onClick={() => setFormData(prev => ({ ...prev, assessment_id: '' }))}
+                variant="ghost"
+                size="sm"
+                className="text-red-600"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          ) : (
+            <p className="text-sm text-slate-500 text-center py-4">
+              No hay evaluación asociada. Haz clic en "Añadir Evaluación" para crear una.
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Interactive Checklist */}
       <Card>
