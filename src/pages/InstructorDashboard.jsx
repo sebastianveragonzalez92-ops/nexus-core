@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StudentProgressTable from '../components/instructor/StudentProgressTable';
 import QuizAttemptsReview from '../components/instructor/QuizAttemptsReview';
 import ForumModeration from '../components/instructor/ForumModeration';
-import CourseAnalytics from '../components/instructor/CourseAnalytics';
+import EnhancedAnalytics from '../components/instructor/EnhancedAnalytics';
 import CourseContentManager from '../components/instructor/CourseContentManager';
 import CourseProgressOverview from '../components/instructor/CourseProgressOverview';
 import QuizCreator from '../components/instructor/QuizCreator';
@@ -229,7 +229,7 @@ export default function InstructorDashboard() {
             </TabsContent>
 
             <TabsContent value="analytics">
-              <CourseAnalytics courses={courses} enrollments={enrollments} quizAttempts={quizAttempts} />
+              <EnhancedAnalytics courses={courses} enrollments={enrollments} quizAttempts={quizAttempts} />
             </TabsContent>
 
             <TabsContent value="progress">
