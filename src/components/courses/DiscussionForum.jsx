@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { notifyForumReply } from '@/utils/notifications';
+import { notifyForumReply } from '../notifications/notificationHelpers';
 
 export default function DiscussionForum({ courseId, user }) {
   const [newPostContent, setNewPostContent] = useState('');

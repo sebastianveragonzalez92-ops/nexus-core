@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
-import { notifyEnrollmentConfirmation, notifyCourseCompletion, notifyCertificateIssued } from '@/utils/notifications';
+import { notifyEnrollmentConfirmation, notifyCourseCompletion, notifyCertificateIssued } from '../components/notifications/notificationHelpers';
 
 export default function CourseDetail() {
   const navigate = useNavigate();
