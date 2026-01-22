@@ -194,8 +194,8 @@ export default function InstructorDashboard() {
                   value="quizzes"
                   className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
                 >
-                  <FileText className="w-5 h-5" />
-                  <span className="text-xs font-medium">Quizzes</span>
+                  <Award className="w-5 h-5" />
+                  <span className="text-xs font-medium">Evaluaciones</span>
                 </TabsTrigger>
                 
                 <TabsTrigger 
@@ -212,14 +212,6 @@ export default function InstructorDashboard() {
                 >
                   <BookOpen className="w-5 h-5" />
                   <span className="text-xs font-medium">Contenido</span>
-                </TabsTrigger>
-                
-                <TabsTrigger 
-                  value="evaluations"
-                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
-                >
-                  <Award className="w-5 h-5" />
-                  <span className="text-xs font-medium">Evaluaciones</span>
                 </TabsTrigger>
                 
                 <TabsTrigger 
@@ -257,10 +249,6 @@ export default function InstructorDashboard() {
 
             <TabsContent value="content">
               <CourseContentManager courses={courses} />
-            </TabsContent>
-
-            <TabsContent value="evaluations">
-              <QuizCreator courses={courses} />
             </TabsContent>
 
             <TabsContent value="certificates">
