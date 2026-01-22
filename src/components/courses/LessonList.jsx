@@ -152,7 +152,7 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
         {/* Text Content */}
         {lesson.content_text && !lesson.micro_steps?.steps?.length && (
           <div className="prose prose-sm max-w-none">
-            <ReactMarkdown>{lesson.content_text}</ReactMarkdown>
+            <div dangerouslySetInnerHTML={{ __html: lesson.content_text }} />
           </div>
         )}
 
