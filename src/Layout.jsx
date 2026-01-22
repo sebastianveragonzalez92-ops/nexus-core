@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Sparkles, Bot, BookOpen
+  Menu, X, ChevronRight, Sparkles, Bot, BookOpen, Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -15,6 +15,7 @@ const getNavItems = (userRole) => {
     { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
     { name: 'Capacitaciones', page: 'Courses', icon: Layers },
     { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+    { name: 'Notificaciones', page: 'Notifications', icon: Bell },
     { name: 'Tutor IA', page: 'Tutor', icon: Bot },
     { name: 'Actividad', page: 'Activity', icon: Activity },
   ];
