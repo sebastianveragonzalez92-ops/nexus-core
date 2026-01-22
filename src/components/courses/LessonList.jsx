@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Circle, Video, FileText, File, Lock, ChevronDown, ChevronRight, Sparkles, XCircle } from 'lucide-react';
+import { CheckCircle, Circle, Video, FileText, File, Lock, ChevronDown, ChevronRight, Sparkles, XCircle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
