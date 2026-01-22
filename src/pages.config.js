@@ -1,27 +1,27 @@
 import Activity from './pages/Activity';
+import CourseDetail from './pages/CourseDetail';
 import Courses from './pages/Courses';
 import Dashboard from './pages/Dashboard';
+import InstructorDashboard from './pages/InstructorDashboard';
 import Modules from './pages/Modules';
+import MyCourses from './pages/MyCourses';
+import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
-import CourseDetail from './pages/CourseDetail';
-import MyCourses from './pages/MyCourses';
-import InstructorDashboard from './pages/InstructorDashboard';
-import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Activity": Activity,
+    "CourseDetail": CourseDetail,
     "Courses": Courses,
     "Dashboard": Dashboard,
+    "InstructorDashboard": InstructorDashboard,
     "Modules": Modules,
+    "MyCourses": MyCourses,
+    "Notifications": Notifications,
     "Settings": Settings,
     "Tutor": Tutor,
-    "CourseDetail": CourseDetail,
-    "MyCourses": MyCourses,
-    "InstructorDashboard": InstructorDashboard,
-    "Notifications": Notifications,
 }
 
 export const pagesConfig = {
