@@ -84,7 +84,7 @@ export default function MicroStepReader({ content, user, onComplete }) {
 
           {/* Step content */}
           <div className="prose prose-sm max-w-none">
-            <ReactMarkdown>{step.content}</ReactMarkdown>
+            <div dangerouslySetInnerHTML={{ __html: step.content }} />
           </div>
 
           {/* Inline question */}
