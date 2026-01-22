@@ -15,6 +15,7 @@ import QuizAttemptsReview from '../components/instructor/QuizAttemptsReview';
 import ForumModeration from '../components/instructor/ForumModeration';
 import CourseAnalytics from '../components/instructor/CourseAnalytics';
 import CourseContentManager from '../components/instructor/CourseContentManager';
+import QuizCreator from '../components/instructor/QuizCreator';
 
 export default function InstructorDashboard() {
   const [user, setUser] = useState(null);
