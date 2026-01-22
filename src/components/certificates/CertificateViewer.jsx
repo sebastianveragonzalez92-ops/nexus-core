@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import CertificateTemplate from './CertificateGenerator';
 
 export default function CertificateViewer() {
@@ -57,16 +59,16 @@ export default function CertificateViewer() {
       }
 
       // Generate canvas from the certificate
-      const canvas = await window.html2canvas(certificateElement, {
+      const canvas = await html2canvas(certificateElement, {
         scale: 2,
         backgroundColor: '#ffffff',
-        logging: false,
+        logging: true,
         useCORS: true,
         allowTaint: true,
       });
 
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new window.jspdf.jsPDF({
+      const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
         format: 'a4',
@@ -80,7 +82,7 @@ export default function CertificateViewer() {
       
       toast.success('Certificado descargado');
     } catch (error) {
-      toast.error('Error al generar el PDF');
+      toast.error(`Error: ${error.message}`);
       console.error('Error descargando certificado:', error);
     } finally {
       setDownloading(null);
