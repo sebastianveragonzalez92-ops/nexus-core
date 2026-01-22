@@ -50,19 +50,21 @@ export default function CertificateViewer() {
     // Wait for the certificate to render
     setTimeout(async () => {
       try {
-        const pdf = await generateCertificatePDF(certificate, user, course);
+        const pdf = await generateCertificatePDF(certificate, user, course, 'modern');
         if (pdf) {
           pdf.save(`certificado-${certificate.certificate_number}.pdf`);
           toast.success('Certificado descargado');
+        } else {
+          toast.error('Error al generar el PDF');
         }
       } catch (error) {
         toast.error('Error al generar el PDF');
-        console.error(error);
+        console.error('Error descargando certificado:', error);
       } finally {
         setDownloading(null);
         setPreviewCert(null);
       }
-    }, 100);
+    }, 500);
   };
 
   const handlePreview = (certificate) => {

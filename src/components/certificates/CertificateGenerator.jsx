@@ -4,29 +4,39 @@ import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-export const generateCertificatePDF = async (certificate, user, course, template) => {
-  const certificateElement = document.getElementById('certificate-preview');
-  if (!certificateElement) return null;
+export const generateCertificatePDF = async (certificate, user, course, template = 'modern') => {
+  try {
+    const certificateElement = document.getElementById('certificate-preview');
+    if (!certificateElement) {
+      console.error('Certificate element not found');
+      return null;
+    }
 
-  const canvas = await html2canvas(certificateElement, {
-    scale: 2,
-    backgroundColor: '#ffffff',
-    logging: false,
-  });
+    const canvas = await html2canvas(certificateElement, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+    });
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF({
-    orientation: 'landscape',
-    unit: 'mm',
-    format: 'a4',
-  });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  
-  return pdf;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+    return pdf;
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    return null;
+  }
 };
 
 export default function CertificateTemplate({ certificate, user, course, template = 'default' }) {
