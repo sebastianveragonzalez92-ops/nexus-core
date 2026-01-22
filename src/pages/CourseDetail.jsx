@@ -45,11 +45,14 @@ export default function CourseDetail() {
   const course = courses.find(c => c.id === courseId);
 
   // Fetch quizzes
-  const { data: quizzes = [] } = useQuery({
+  const { data: allQuizzes = [] } = useQuery({
     queryKey: ['quizzes', courseId],
     queryFn: () => base44.entities.Quiz.filter({ course_id: courseId }, 'order'),
     enabled: !!courseId,
   });
+
+  const quizzes = allQuizzes.filter(q => q.type !== 'final_exam');
+  const finalExams = allQuizzes.filter(q => q.type === 'final_exam');
 
   // Fetch enrollment
   const { data: enrollments = [] } = useQuery({
@@ -284,6 +287,10 @@ export default function CourseDetail() {
                 <Brain className="w-4 h-4 mr-2" />
                 Quizzes ({quizzes.length})
               </TabsTrigger>
+              <TabsTrigger value="final_exam">
+                <Award className="w-4 h-4 mr-2" />
+                Evaluación Final
+              </TabsTrigger>
               <TabsTrigger value="discussion">
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Foro
@@ -362,21 +369,13 @@ export default function CourseDetail() {
                 <Card>
                   <CardContent className="py-12 text-center">
                     <Brain className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-4">Inscríbete para acceder a las evaluaciones</p>
+                    <p className="text-slate-600 mb-4">Inscríbete para acceder a los quizzes</p>
                     <Button 
                       className="bg-gradient-to-r from-indigo-500 to-violet-500"
                       onClick={() => enrollMutation.mutate()}
                     >
                       Inscribirse Ahora
                     </Button>
-                  </CardContent>
-                </Card>
-              ) : !allLessonsCompleted ? (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <Brain className="w-12 h-12 text-amber-300 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-2">Completa todas las lecciones primero</p>
-                    <p className="text-sm text-slate-500">Las evaluaciones estarán disponibles una vez completes todo el contenido</p>
                   </CardContent>
                 </Card>
               ) : quizzes.length === 0 ? (
@@ -391,7 +390,7 @@ export default function CourseDetail() {
                   <Card key={quiz.id}>
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">Evaluación {index + 1}: {quiz.title}</CardTitle>
+                        <CardTitle className="text-lg">Quiz {index + 1}: {quiz.title}</CardTitle>
                         <Badge>
                           {quiz.questions?.length || 0} preguntas
                         </Badge>
@@ -401,9 +400,68 @@ export default function CourseDetail() {
                       <QuizViewer 
                         quiz={quiz} 
                         user={user} 
+                        onComplete={() => {}} 
+                      />
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </TabsContent>
+
+            <TabsContent value="final_exam" className="space-y-4">
+              {!enrollment ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Award className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-600 mb-4">Inscríbete para acceder a la evaluación final</p>
+                    <Button 
+                      className="bg-gradient-to-r from-indigo-500 to-violet-500"
+                      onClick={() => enrollMutation.mutate()}
+                    >
+                      Inscribirse Ahora
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : !allLessonsCompleted ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Award className="w-12 h-12 text-amber-300 mx-auto mb-4" />
+                    <p className="text-slate-600 mb-2">Completa todas las lecciones y quizzes primero</p>
+                    <p className="text-sm text-slate-500">La evaluación final estará disponible una vez completes todo el contenido</p>
+                  </CardContent>
+                </Card>
+              ) : finalExams.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center text-slate-500">
+                    <Award className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+                    <p>No hay evaluación final configurada para este curso</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                finalExams.map((exam, index) => (
+                  <Card key={exam.id} className="border-2 border-indigo-200">
+                    <CardHeader className="bg-gradient-to-r from-indigo-50 to-violet-50">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-xl flex items-center gap-2">
+                            <Award className="w-6 h-6 text-indigo-600" />
+                            {exam.title}
+                          </CardTitle>
+                          {exam.description && (
+                            <p className="text-sm text-slate-600 mt-1">{exam.description}</p>
+                          )}
+                        </div>
+                        <Badge className="bg-indigo-600">
+                          {exam.questions?.length || 0} preguntas
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                      <QuizViewer 
+                        quiz={exam} 
+                        user={user} 
                         onComplete={() => {
-                          // Check if this was the last quiz
-                          if (index === quizzes.length - 1 && enrollment.status !== 'completed') {
+                          if (enrollment.status !== 'completed') {
                             setTimeout(() => {
                               completeMutation.mutate();
                             }, 1500);

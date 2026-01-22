@@ -20,6 +20,7 @@ export default function QuizCreator({ courses }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    type: 'quiz',
     passing_score: 70,
     time_limit_minutes: 0,
     questions: [
@@ -61,6 +62,7 @@ export default function QuizCreator({ courses }) {
     setFormData({
       title: '',
       description: '',
+      type: 'quiz',
       passing_score: 70,
       time_limit_minutes: 0,
       questions: [
@@ -77,6 +79,7 @@ export default function QuizCreator({ courses }) {
     setFormData({
       title: quiz.title,
       description: quiz.description,
+      type: quiz.type || 'quiz',
       passing_score: quiz.passing_score,
       time_limit_minutes: quiz.time_limit_minutes,
       questions: quiz.questions
@@ -173,7 +176,12 @@ export default function QuizCreator({ courses }) {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-lg mb-1">{quiz.title}</CardTitle>
+                    <div className="flex items-center gap-2 mb-1">
+                      <CardTitle className="text-lg">{quiz.title}</CardTitle>
+                      <Badge variant={quiz.type === 'final_exam' ? 'default' : 'outline'}>
+                        {quiz.type === 'final_exam' ? '🎓 Final' : '📝 Quiz'}
+                      </Badge>
+                    </div>
                     <p className="text-sm text-slate-500">{getCourseTitle(quiz.course_id)}</p>
                     {quiz.description && (
                       <p className="text-sm text-slate-600 mt-2">{quiz.description}</p>
@@ -262,6 +270,19 @@ export default function QuizCreator({ courses }) {
                   placeholder="Breve descripción de la evaluación"
                   rows={2}
                 />
+              </div>
+
+              <div>
+                <Label>Tipo de Evaluación *</Label>
+                <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="quiz">Quiz (Evaluación rápida)</SelectItem>
+                    <SelectItem value="final_exam">Evaluación Final</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
