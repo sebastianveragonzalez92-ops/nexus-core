@@ -7,10 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Plus, Upload, Loader2, Sparkles, CheckCircle, XCircle, Zap, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -42,16 +40,9 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
     resources: lesson?.resources || [],
     scenarios: lesson?.scenarios || [],
     micro_steps: lesson?.micro_steps || { steps: [] },
-    checklist: lesson?.checklist || { title: '', checks: [] },
-    assessment_id: lesson?.assessment_id || ''
+    checklist: lesson?.checklist || { title: '', checks: [] }
   });
   const [uploading, setUploading] = useState(false);
-  const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
-
-  const { data: assessments = [] } = useQuery({
-    queryKey: ['assessments', courseId],
-    queryFn: () => base44.entities.Assessment.filter({ course_id: courseId }),
-  });
 
   const handleFileUpload = async (file, field) => {
     try {
@@ -587,69 +578,6 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
           </CardContent>
         </Card>
       )}
-
-      {/* Assessment Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Evaluación Asociada</span>
-            <Button size="sm" variant="outline" className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 hover:from-emerald-600 hover:to-teal-600" onClick={() => setShowAssessmentDialog(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Añadir Evaluación
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formData.assessment_id ? (
-            <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-              <div>
-                <p className="text-sm font-medium text-slate-900">{assessments.find(a => a.id === formData.assessment_id)?.title || formData.assessment_id}</p>
-                <p className="text-xs text-slate-600 mt-1">Evaluación vinculada a esta lección</p>
-              </div>
-              <Button
-                onClick={() => setFormData(prev => ({ ...prev, assessment_id: '' }))}
-                variant="ghost"
-                size="sm"
-                className="text-red-600"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          ) : (
-            <p className="text-sm text-slate-500 text-center py-4">
-              No hay evaluación asociada. Haz clic en "Añadir Evaluación" para seleccionar una.
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Assessment Selection Dialog */}
-      <Dialog open={showAssessmentDialog} onOpenChange={setShowAssessmentDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Seleccionar Evaluación</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2 max-h-96 overflow-y-auto">
-            {assessments.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-4">No hay evaluaciones disponibles en este curso</p>
-            ) : (
-              assessments.map(assessment => (
-                <button
-                  key={assessment.id}
-                  onClick={() => {
-                    setFormData(prev => ({ ...prev, assessment_id: assessment.id }));
-                    setShowAssessmentDialog(false);
-                  }}
-                  className="w-full text-left p-3 border border-slate-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all"
-                >
-                  <p className="font-medium text-slate-900">{assessment.title}</p>
-                  <p className="text-xs text-slate-600 mt-1">{assessment.type} • {assessment.questions?.length || 0} preguntas</p>
-                </button>
-              ))
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Interactive Checklist */}
       <Card>
