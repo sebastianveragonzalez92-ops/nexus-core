@@ -245,19 +245,15 @@ export default function CourseDetail() {
                         )}
                       </div>
 
-                      {enrollment.status === 'completed' ? (
-                        <Button className="w-full bg-green-600 hover:bg-green-700">
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Completado
-                        </Button>
-                      ) : (
-                        <Button 
-                          className="w-full"
-                          onClick={() => completeMutation.mutate()}
-                        >
-                          <Play className="w-4 h-4 mr-2" />
-                          Marcar como Completado
-                        </Button>
+                      {enrollment.status === 'completed' && (
+                        <div className="p-3 bg-green-50 border-2 border-green-200 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <p className="text-sm font-medium text-green-900">
+                              ¡Curso completado!
+                            </p>
+                          </div>
+                        </div>
                       )}
                     </>
                   ) : (

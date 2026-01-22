@@ -5,13 +5,13 @@ import Certificates from './pages/Certificates';
 import CourseDetail from './pages/CourseDetail';
 import Courses from './pages/Courses';
 import Dashboard from './pages/Dashboard';
+import Gamification from './pages/Gamification';
 import InstructorDashboard from './pages/InstructorDashboard';
 import Modules from './pages/Modules';
 import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
-import Gamification from './pages/Gamification';
 import __Layout from './Layout.jsx';
 
 
@@ -23,13 +23,13 @@ export const PAGES = {
     "CourseDetail": CourseDetail,
     "Courses": Courses,
     "Dashboard": Dashboard,
+    "Gamification": Gamification,
     "InstructorDashboard": InstructorDashboard,
     "Modules": Modules,
     "MyCourses": MyCourses,
     "Notifications": Notifications,
     "Settings": Settings,
     "Tutor": Tutor,
-    "Gamification": Gamification,
 }
 
 export const pagesConfig = {
