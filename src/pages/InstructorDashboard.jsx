@@ -183,6 +183,10 @@ export default function InstructorDashboard() {
                 <BookOpen className="w-4 h-4 mr-2" />
                 Gestión de Contenido
               </TabsTrigger>
+              <TabsTrigger value="evaluations">
+                <Award className="w-4 h-4 mr-2" />
+                Evaluaciones
+              </TabsTrigger>
               <TabsTrigger value="certificates">
                 <Layout className="w-4 h-4 mr-2" />
                 Certificados
@@ -207,6 +211,10 @@ export default function InstructorDashboard() {
 
             <TabsContent value="content">
               <CourseContentManager courses={courses} />
+            </TabsContent>
+
+            <TabsContent value="evaluations">
+              <QuizCreator courses={courses} />
             </TabsContent>
 
             <TabsContent value="certificates">
