@@ -164,39 +164,47 @@ export default function Dashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <StatsCard
-            title="Cursos Completados"
-            value={completedCourses}
-            subtitle={`de ${myEnrollments.length} inscritos`}
-            icon={BookOpen}
-            color="indigo"
-            index={0}
-          />
-          <StatsCard
-            title="Progreso General"
-            value={`${avgProgress}%`}
-            subtitle="promedio"
-            icon={TrendingUp}
-            color="emerald"
-            trend={avgProgress > 50 ? 12 : -5}
-            index={1}
-          />
-          <StatsCard
-            title="En Progreso"
-            value={inProgressCourses}
-            subtitle="cursos activos"
-            icon={RefreshCw}
-            color="violet"
-            index={2}
-          />
-          <StatsCard
-            title="Usuarios Activos"
-            value={users.length}
-            subtitle="en plataforma"
-            icon={Users}
-            color="amber"
-            index={3}
-          />
+          <Link to={createPageUrl('MyCourses')}>
+            <StatsCard
+              title="Cursos Completados"
+              value={completedCourses}
+              subtitle={`de ${myEnrollments.length} inscritos`}
+              icon={BookOpen}
+              color="indigo"
+              index={0}
+            />
+          </Link>
+          <Link to={createPageUrl('MyCourses')}>
+            <StatsCard
+              title="Progreso General"
+              value={`${avgProgress}%`}
+              subtitle="promedio"
+              icon={TrendingUp}
+              color="emerald"
+              trend={avgProgress > 50 ? 12 : -5}
+              index={1}
+            />
+          </Link>
+          <Link to={createPageUrl('MyCourses')}>
+            <StatsCard
+              title="En Progreso"
+              value={inProgressCourses}
+              subtitle="cursos activos"
+              icon={RefreshCw}
+              color="violet"
+              index={2}
+            />
+          </Link>
+          <Link to={createPageUrl('Courses')}>
+            <StatsCard
+              title="Cursos Disponibles"
+              value={courses.length}
+              subtitle="en catálogo"
+              icon={Users}
+              color="amber"
+              index={3}
+            />
+          </Link>
         </div>
 
         {/* Main Content Grid */}
