@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
+import { notifyEnrollmentConfirmation, notifyCourseCompletion, notifyCertificateIssued } from '@/utils/notifications';
 
 export default function CourseDetail() {
   const navigate = useNavigate();
@@ -67,7 +68,12 @@ export default function CourseDetail() {
         status: 'in_progress',
         started_date: new Date().toISOString(),
       };
-      return base44.entities.Enrollment.create(enrollmentData);
+      const enrollment = await base44.entities.Enrollment.create(enrollmentData);
+      
+      // Send notification
+      await notifyEnrollmentConfirmation(user.email, course);
+      
+      return enrollment;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['enrollments'] });
@@ -85,14 +91,20 @@ export default function CourseDetail() {
         score: 100,
       });
 
+      // Send completion notification
+      await notifyCourseCompletion(user.email, course, 100);
+
       if (course.requires_certification) {
-        await base44.entities.Certificate.create({
+        const cert = await base44.entities.Certificate.create({
           course_id: courseId,
           user_email: user.email,
           certificate_number: `CERT-${Date.now()}`,
           issued_date: new Date().toISOString(),
           score: 100,
         });
+        
+        // Send certificate notification
+        await notifyCertificateIssued(user.email, course, cert.id);
       }
     },
     onSuccess: () => {

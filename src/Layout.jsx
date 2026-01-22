@@ -8,6 +8,7 @@ import {
   Menu, X, ChevronRight, Sparkles, Bot, BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import NotificationCenter from './components/notifications/NotificationCenter';
 
 const getNavItems = (userRole) => {
   const baseItems = [
@@ -91,12 +92,17 @@ export default function Layout({ children, currentPageName }) {
                 <span className="font-bold text-xl text-slate-900 tracking-tight">{brandName}</span>
               )}
             </Link>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-xl hover:bg-slate-100"
-            >
-              <X className="w-5 h-5 text-slate-500" />
-            </button>
+            <div className="flex items-center gap-2">
+              <div className="hidden lg:block">
+                <NotificationCenter user={user} />
+              </div>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="lg:hidden p-2 rounded-xl hover:bg-slate-100"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -192,7 +198,7 @@ export default function Layout({ children, currentPageName }) {
               </div>
               <span className="font-bold text-slate-900">{brandName}</span>
             </div>
-            <div className="w-9" />
+            <NotificationCenter user={user} />
           </div>
         </header>
 

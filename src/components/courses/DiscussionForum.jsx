@@ -10,6 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { notifyForumReply } from '@/utils/notifications';
 
 export default function DiscussionForum({ courseId, user }) {
   const [newPostContent, setNewPostContent] = useState('');
@@ -52,17 +53,26 @@ export default function DiscussionForum({ courseId, user }) {
     });
   };
 
-  const handleReply = (parentId) => {
+  const handleReply = async (parentId) => {
     if (!replyContent.trim()) return;
     
-    createPostMutation.mutate({
+    const parentPost = posts.find(p => p.id === parentId);
+    
+    const replyData = {
       course_id: courseId,
       user_email: user.email,
       user_name: user.full_name || user.email,
       content: replyContent,
       parent_id: parentId,
       is_instructor: user.role === 'admin',
-    });
+    };
+    
+    createPostMutation.mutate(replyData);
+    
+    // Send notification to parent post author
+    if (parentPost && parentPost.user_email !== user.email) {
+      await notifyForumReply(parentPost, replyData, parentPost.user_email);
+    }
   };
 
   const handleLike = (post) => {
