@@ -130,6 +130,13 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
   const renderLessonContent = (lesson) => {
     return (
       <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
+        {/* Text Content */}
+        {lesson.content_text && (
+          <div className="prose prose-sm max-w-none">
+            <div dangerouslySetInnerHTML={{ __html: lesson.content_text }} />
+          </div>
+        )}
+
         {/* Micro-steps Reader */}
         {lesson.micro_steps && lesson.micro_steps.steps && lesson.micro_steps.steps.length > 0 && (
           <MicroStepReader 
@@ -147,13 +154,6 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
             user={user}
             onAllComplete={() => {}}
           />
-        )}
-
-        {/* Text Content */}
-        {lesson.content_text && !lesson.micro_steps?.steps?.length && (
-          <div className="prose prose-sm max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: lesson.content_text }} />
-          </div>
         )}
 
         {/* Video */}
