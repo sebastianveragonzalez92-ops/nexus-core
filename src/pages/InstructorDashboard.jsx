@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   GraduationCap, Users, MessageSquare, TrendingUp, 
-  BarChart3, BookOpen, Award
+  BarChart3, BookOpen, Award, Layout
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StudentProgressTable from '../components/instructor/StudentProgressTable';
@@ -181,6 +183,10 @@ export default function InstructorDashboard() {
                 <BookOpen className="w-4 h-4 mr-2" />
                 Gestión de Contenido
               </TabsTrigger>
+              <TabsTrigger value="certificates">
+                <Layout className="w-4 h-4 mr-2" />
+                Certificados
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="analytics">
@@ -201,6 +207,28 @@ export default function InstructorDashboard() {
 
             <TabsContent value="content">
               <CourseContentManager courses={courses} />
+            </TabsContent>
+
+            <TabsContent value="certificates">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Layout className="w-5 h-5 text-amber-500" />
+                    Gestión de Certificados
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-slate-600">
+                    Personaliza las plantillas de certificados que se generan automáticamente cuando los estudiantes completan un curso.
+                  </p>
+                  <Link to={createPageUrl('CertificateTemplates')}>
+                    <button className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-xl hover:shadow-lg transition-all flex items-center gap-2">
+                      <Layout className="w-5 h-5" />
+                      Editar Plantillas de Certificados
+                    </button>
+                  </Link>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </motion.div>
