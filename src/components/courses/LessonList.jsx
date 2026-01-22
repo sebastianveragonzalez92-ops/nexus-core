@@ -39,15 +39,20 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
     enabled: !!courseId && !!user
   });
 
-  // Complete lesson mutation
-  const completeLessonMutation = useMutation({
+  // Auto-complete lesson mutation (triggered by expanding and viewing content)
+  const markLessonViewedMutation = useMutation({
     mutationFn: async (lessonId) => {
       const existing = progressRecords.find(p => p.lesson_id === lessonId);
+      
+      if (existing && existing.completed) {
+        return existing; // Already completed
+      }
       
       if (existing) {
         return base44.entities.LessonProgress.update(existing.id, {
           completed: true,
-          completed_date: new Date().toISOString()
+          completed_date: new Date().toISOString(),
+          time_spent_minutes: (existing.time_spent_minutes || 0) + 1
         });
       }
       
@@ -56,19 +61,36 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
         course_id: courseId,
         user_email: user.email,
         completed: true,
-        completed_date: new Date().toISOString()
+        completed_date: new Date().toISOString(),
+        time_spent_minutes: 1
       });
     },
-    onSuccess: async () => {
-      queryClient.invalidateQueries(['lesson-progress']);
-      toast.success('Lección completada');
-      
-      // Award points and update stats
-      await awardPoints(user.email, POINTS.LESSON_COMPLETE, 'Lección completada');
-      await incrementStat(user.email, 'lessons_completed');
-      await checkAndAwardBadges(user.email);
+    onSuccess: async (data, lessonId) => {
+      // Only award points if it's newly completed
+      const wasCompleted = progressRecords.find(p => p.lesson_id === lessonId && p.completed);
+      if (!wasCompleted) {
+        queryClient.invalidateQueries(['lesson-progress']);
+        toast.success('Lección completada automáticamente');
+        
+        // Award points and update stats
+        await awardPoints(user.email, POINTS.LESSON_COMPLETE, 'Lección completada');
+        await incrementStat(user.email, 'lessons_completed');
+        await checkAndAwardBadges(user.email);
+      }
     }
   });
+
+  // Track when user expands and views lesson content
+  React.useEffect(() => {
+    if (expandedLesson && !isLessonCompleted(expandedLesson)) {
+      // Auto-complete after viewing for a few seconds
+      const timer = setTimeout(() => {
+        markLessonViewedMutation.mutate(expandedLesson);
+      }, 5000); // 5 seconds of viewing
+      
+      return () => clearTimeout(timer);
+    }
+  }, [expandedLesson]);
 
   // Group lessons by module
   const moduleGroups = lessons.reduce((acc, lesson) => {
@@ -314,15 +336,40 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
           </div>
         )}
 
-        {/* Complete Button */}
+        {/* Auto-completion indicator */}
         {!isLessonCompleted(lesson.id) && (
-          <Button
-            onClick={() => completeLessonMutation.mutate(lesson.id)}
-            className="w-full bg-gradient-to-r from-indigo-500 to-violet-500"
-          >
-            <CheckCircle className="w-4 h-4 mr-2" />
-            Marcar como Completada
-          </Button>
+          <div className="p-4 bg-indigo-50 border-2 border-indigo-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="shrink-0">
+                <Clock className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-indigo-900">
+                  Progreso automático
+                </p>
+                <p className="text-xs text-indigo-700">
+                  Esta lección se marcará como completada automáticamente al revisar todo el contenido
+                </p>
+              </div>
+            </div>
+            <Progress value={50} className="h-1 mt-3" />
+          </div>
+        )}
+
+        {isLessonCompleted(lesson.id) && (
+          <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <div>
+                <p className="text-sm font-medium text-green-900">
+                  Lección completada
+                </p>
+                <p className="text-xs text-green-700">
+                  ¡Excelente trabajo! Continúa con la siguiente lección
+                </p>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     );
