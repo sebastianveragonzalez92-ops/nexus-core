@@ -33,6 +33,7 @@ export default function ExamManagement({ user, exams }) {
     status: 'vigente',
     document_url: '',
     notes: '',
+    notification_email: '',
   });
 
   const queryClient = useQueryClient();
@@ -102,6 +103,7 @@ export default function ExamManagement({ user, exams }) {
       status: exam.status,
       document_url: exam.document_url || '',
       notes: exam.notes || '',
+      notification_email: exam.notification_email || '',
     });
     setShowForm(true);
   };
@@ -117,6 +119,7 @@ export default function ExamManagement({ user, exams }) {
       status: 'vigente',
       document_url: '',
       notes: '',
+      notification_email: '',
     });
   };
 
@@ -225,6 +228,17 @@ export default function ExamManagement({ user, exams }) {
                       onChange={(e) => setFormData({ ...formData, expiry_date: e.target.value })}
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Label>Email de Notificación</Label>
+                  <Input
+                    type="email"
+                    value={formData.notification_email}
+                    onChange={(e) => setFormData({ ...formData, notification_email: e.target.value })}
+                    placeholder="email@ejemplo.com"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Email para enviar recordatorios de vencimiento</p>
                 </div>
 
                 <div>
