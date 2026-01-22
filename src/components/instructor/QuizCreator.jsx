@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Plus, Trash2, Save, Brain, Edit } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export default function QuizCreator({ courses }) {
@@ -323,21 +325,28 @@ export default function QuizCreator({ courses }) {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-xs">Opciones (selecciona la correcta)</Label>
+                        <Label className="text-xs">Opciones (haz clic en el círculo para marcar la correcta)</Label>
                         {q.options.map((opt, oIndex) => (
                           <div key={oIndex} className="flex items-center gap-2">
                             <input
                               type="radio"
+                              name={`quiz-q-${qIndex}`}
                               checked={q.correct_answer === oIndex}
                               onChange={() => updateQuestion(qIndex, 'correct_answer', oIndex)}
-                              className="shrink-0"
+                              className="w-4 h-4 text-green-600 shrink-0"
                             />
                             <Input
                               placeholder={`Opción ${oIndex + 1} *`}
                               value={opt}
                               onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                              className="bg-white"
+                              className={cn(
+                                "bg-white",
+                                q.correct_answer === oIndex && "border-green-500 bg-green-50"
+                              )}
                             />
+                            {q.correct_answer === oIndex && (
+                              <Badge className="bg-green-600 text-white text-xs shrink-0">✓ Correcta</Badge>
+                            )}
                           </div>
                         ))}
                       </div>
