@@ -10,6 +10,7 @@ import {
 import QuizViewer from '../components/courses/QuizViewer';
 import DiscussionForum from '../components/courses/DiscussionForum';
 import ExternalResources from '../components/courses/ExternalResources';
+import LessonList from '../components/courses/LessonList';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +24,7 @@ export default function CourseDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [allLessonsCompleted, setAllLessonsCompleted] = useState(false);
   
   // Get course ID from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -287,58 +289,26 @@ export default function CourseDetail() {
             </TabsList>
 
             <TabsContent value="content" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contenido del Curso</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {course.content_url ? (
-                    <div className="w-full">
-                      {course.type === 'video' || course.content_url.match(/\.(mp4|webm|ogg)$/i) ? (
-                        <video 
-                          controls 
-                          controlsList="nodownload"
-                          className="w-full aspect-video rounded-xl bg-slate-900"
-                          src={course.content_url}
-                        >
-                          Tu navegador no soporta video.
-                        </video>
-                      ) : course.content_url.match(/\.(pdf)$/i) ? (
-                        <iframe
-                          src={`https://docs.google.com/viewer?url=${encodeURIComponent(course.content_url)}&embedded=true`}
-                          className="w-full h-[700px] rounded-xl border border-slate-200"
-                          title="Contenido del curso"
-                        />
-                      ) : course.content_url.includes('youtube.com') || course.content_url.includes('youtu.be') ? (
-                        <iframe
-                          src={course.content_url.replace('watch?v=', 'embed/')}
-                          className="w-full aspect-video rounded-xl border-0"
-                          title="Contenido del curso"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : course.content_url.match(/\.(doc|docx|xls|xlsx|ppt|pptx)$/i) ? (
-                        <iframe
-                          src={`https://docs.google.com/viewer?url=${encodeURIComponent(course.content_url)}&embedded=true`}
-                          className="w-full h-[700px] rounded-xl border border-slate-200"
-                          title="Contenido del curso"
-                        />
-                      ) : (
-                        <iframe
-                          src={course.content_url}
-                          className="w-full h-[700px] rounded-xl border border-slate-200"
-                          title="Contenido del curso"
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-slate-500">
-                      <FileText className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                      <p>Contenido no disponible aún</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              {enrollment ? (
+                <LessonList 
+                  courseId={courseId} 
+                  user={user}
+                  onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
+                />
+              ) : (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-600 mb-4">Inscríbete para acceder al contenido del curso</p>
+                    <Button 
+                      className="bg-gradient-to-r from-indigo-500 to-violet-500"
+                      onClick={() => enrollMutation.mutate()}
+                    >
+                      Inscribirse Ahora
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="details" className="space-y-4">
@@ -384,7 +354,28 @@ export default function CourseDetail() {
             </TabsContent>
 
             <TabsContent value="quizzes" className="space-y-4">
-              {quizzes.length === 0 ? (
+              {!enrollment ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Brain className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-600 mb-4">Inscríbete para acceder a las evaluaciones</p>
+                    <Button 
+                      className="bg-gradient-to-r from-indigo-500 to-violet-500"
+                      onClick={() => enrollMutation.mutate()}
+                    >
+                      Inscribirse Ahora
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : !allLessonsCompleted ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Brain className="w-12 h-12 text-amber-300 mx-auto mb-4" />
+                    <p className="text-slate-600 mb-2">Completa todas las lecciones primero</p>
+                    <p className="text-sm text-slate-500">Las evaluaciones estarán disponibles una vez completes todo el contenido</p>
+                  </CardContent>
+                </Card>
+              ) : quizzes.length === 0 ? (
                 <Card>
                   <CardContent className="py-12 text-center text-slate-500">
                     <Brain className="w-12 h-12 mx-auto mb-4 text-slate-300" />
@@ -396,20 +387,14 @@ export default function CourseDetail() {
                   <Card key={quiz.id}>
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">Quiz {index + 1}: {quiz.title}</CardTitle>
+                        <CardTitle className="text-lg">Evaluación {index + 1}: {quiz.title}</CardTitle>
                         <Badge>
                           {quiz.questions?.length || 0} preguntas
                         </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      {user ? (
-                        <QuizViewer quiz={quiz} user={user} onComplete={() => {}} />
-                      ) : (
-                        <div className="text-center py-8 text-slate-500">
-                          <p>Debes inscribirte para realizar el quiz</p>
-                        </div>
-                      )}
+                      <QuizViewer quiz={quiz} user={user} onComplete={() => {}} />
                     </CardContent>
                   </Card>
                 ))
