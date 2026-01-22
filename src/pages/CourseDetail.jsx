@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
 import { notifyEnrollmentConfirmation, notifyCourseCompletion, notifyCertificateIssued } from '../components/notifications/notificationHelpers';
+import { awardPoints, incrementStat, checkAndAwardBadges, POINTS } from '../components/gamification/gamificationHelpers';
 
 export default function CourseDetail() {
   const navigate = useNavigate();
@@ -116,9 +117,15 @@ export default function CourseDetail() {
         await notifyCertificateIssued(user.email, course, cert.id);
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['enrollments'] });
       queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      
+      // Award points and update stats
+      await awardPoints(user.email, POINTS.COURSE_COMPLETE, '¡Curso completado!');
+      await incrementStat(user.email, 'courses_completed');
+      await checkAndAwardBadges(user.email);
+      
       toast.success(course.requires_certification ? '¡Curso completado! Certificado generado.' : '¡Curso completado!');
     },
   });

@@ -57,9 +57,14 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
         completed_date: new Date().toISOString()
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(['lesson-progress']);
       toast.success('Lección completada');
+      
+      // Award points and update stats
+      await awardPoints(user.email, POINTS.LESSON_COMPLETE, 'Lección completada');
+      await incrementStat(user.email, 'lessons_completed');
+      await checkAndAwardBadges(user.email);
     }
   });
 

@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, XCircle, Clock, Trophy, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+import confetti from 'canvas-confetti';
+import { awardPoints, incrementStat, checkAndAwardBadges, POINTS } from '../gamification/gamificationHelpers';
 
 export default function QuizViewer({ quiz, user, onComplete }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -65,6 +67,23 @@ export default function QuizViewer({ quiz, user, onComplete }) {
       });
 
       if (passed) {
+        // Award points and update stats
+        const points = finalScore === 100 ? POINTS.QUIZ_PERFECT : POINTS.QUIZ_PASS;
+        await awardPoints(user.email, points, `Quiz ${finalScore === 100 ? 'perfecto' : 'aprobado'}: ${finalScore}%`);
+        await incrementStat(user.email, 'quizzes_passed');
+        
+        if (finalScore === 100) {
+          await incrementStat(user.email, 'perfect_scores');
+        }
+        
+        await checkAndAwardBadges(user.email);
+        
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+        
         toast.success('¡Felicitaciones! Has aprobado el quiz');
         onComplete?.(finalScore);
       } else {
