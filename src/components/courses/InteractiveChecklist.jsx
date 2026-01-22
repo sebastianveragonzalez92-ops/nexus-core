@@ -9,19 +9,27 @@ import { awardPoints, POINTS } from '../gamification/gamificationHelpers';
 export default function InteractiveChecklist({ title, checks, user, onAllComplete }) {
   const [selectedItems, setSelectedItems] = useState({});
 
-  const handleSelect = async (index, value) => {
-    const updated = {
-      ...selectedItems,
-      [index]: value
-    };
-    setSelectedItems(updated);
+  const handleCheck = async (index) => {
+    const isCurrentlyChecked = selectedItems[index];
     
-    await awardPoints(user.email, POINTS.CHECK_COMPLETE, 'Check completado');
+    if (isCurrentlyChecked) {
+      setSelectedItems(prev => {
+        const newState = { ...prev };
+        delete newState[index];
+        return newState;
+      });
+    } else {
+      setSelectedItems(prev => ({
+        ...prev,
+        [index]: true
+      }));
+      
+      await awardPoints(user.email, POINTS.CHECK_COMPLETE, 'Check completado');
 
-    // Check if all completed
-    const allCompleted = checks.every((_, i) => updated[i] !== undefined);
-    if (allCompleted) {
-      onAllComplete?.();
+      // Check if all completed after setting this one
+      if (Object.keys(selectedItems).length + 1 === checks.length) {
+        onAllComplete?.();
+      }
     }
   };
 
@@ -46,63 +54,41 @@ export default function InteractiveChecklist({ title, checks, user, onAllComplet
         </div>
         <Progress value={progress} className="h-2 mt-3" />
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {checks.map((check, index) => {
-          const isCompleted = selectedItems[index] !== undefined;
-          const selectedValue = selectedItems[index];
-          const hasOptions = check.options && check.options.length > 0;
+          const isChecked = selectedItems[index];
+          const checkText = typeof check === 'string' ? check : (check.text || check.question || check);
 
           return (
-            <div
+            <button
               key={index}
+              onClick={() => handleCheck(index)}
               className={cn(
-                "p-3 rounded-lg border-2 transition-all",
-                isCompleted 
+                "w-full flex items-start gap-3 p-3 rounded-lg border-2 transition-all text-left",
+                isChecked 
                   ? "border-green-500 bg-green-50" 
-                  : "border-slate-200"
+                  : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50"
               )}
             >
-              <div className="flex items-start gap-3 mb-2">
-                <div className="shrink-0 mt-0.5">
-                  {isCompleted ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <Circle className="w-5 h-5 text-slate-400" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className={cn(
-                    "font-medium",
-                    isCompleted ? "text-green-900" : "text-slate-900"
-                  )}>
-                    {check.text}
-                  </p>
-                  {check.description && (
-                    <p className="text-sm text-slate-600 mt-1">{check.description}</p>
-                  )}
-                </div>
+              <div className="shrink-0 mt-0.5">
+                {isChecked ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                ) : (
+                  <Circle className="w-5 h-5 text-slate-400" />
+                )}
               </div>
-
-              {/* Single choice buttons */}
-              {hasOptions && (
-                <div className="flex flex-wrap gap-2 ml-8">
-                  {check.options.map((option, optIdx) => (
-                    <button
-                      key={optIdx}
-                      onClick={() => handleSelect(index, option)}
-                      className={cn(
-                        "px-3 py-1.5 rounded-lg text-sm font-medium transition-all border-2",
-                        selectedValue === option
-                          ? "border-green-500 bg-green-100 text-green-700"
-                          : "border-slate-300 bg-white text-slate-700 hover:border-indigo-400 hover:bg-indigo-50"
-                      )}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+              <div className="flex-1">
+                <p className={cn(
+                  "font-medium",
+                  isChecked ? "text-green-900 line-through" : "text-slate-900"
+                )}>
+                  {checkText}
+                </p>
+                {check.description && (
+                  <p className="text-sm text-slate-600 mt-1">{check.description}</p>
+                )}
+              </div>
+            </button>
           );
         })}
 
