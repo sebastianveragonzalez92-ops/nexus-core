@@ -52,6 +52,67 @@ export default function MyCourses() {
     ? Math.round(enrolledCourses.reduce((sum, e) => sum + (e.progress_percent || 0), 0) / enrolledCourses.length)
     : 0;
 
+  // Eliminar certificados duplicados
+  const uniqueCertificates = certificates.reduce((acc, cert) => {
+    const exists = acc.find(c => c.course_id === cert.course_id && c.user_email === cert.user_email);
+    if (!exists) acc.push(cert);
+    return acc;
+  }, []);
+
+  const handleDownloadCertificate = async (certificate) => {
+    const course = courses.find(c => c.id === certificate.course_id);
+    if (!course) {
+      toast.error('Curso no encontrado');
+      return;
+    }
+
+    setDownloading(certificate.id);
+
+    // Crear elemento temporal para descargar
+    const tempDiv = document.createElement('div');
+    tempDiv.style.position = 'fixed';
+    tempDiv.style.left = '-10000px';
+    tempDiv.style.top = '-10000px';
+    tempDiv.style.width = '1123px';
+    tempDiv.style.height = '794px';
+    tempDiv.innerHTML = '<div id="cert-temp"></div>';
+    document.body.appendChild(tempDiv);
+
+    setTimeout(async () => {
+      try {
+        const certificateElement = tempDiv.querySelector('#cert-temp');
+        
+        const canvas = await html2canvas(certificateElement, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`certificado-${certificate.certificate_number}.pdf`);
+        
+        toast.success('Certificado descargado');
+        document.body.removeChild(tempDiv);
+        setDownloading(null);
+      } catch (error) {
+        console.error('Error:', error);
+        toast.error('Error al generar el PDF');
+        document.body.removeChild(tempDiv);
+        setDownloading(null);
+      }
+    }, 500);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
       <div className="max-w-7xl mx-auto p-6">
