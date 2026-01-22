@@ -5,13 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Circle, Video, FileText, File, Lock, ChevronDown, ChevronRight } from 'lucide-react';
+import { CheckCircle, Circle, Video, FileText, File, Lock, ChevronDown, ChevronRight, Sparkles, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
 export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
   const [expandedLesson, setExpandedLesson] = useState(null);
+  const [selectedScenarioOptions, setSelectedScenarioOptions] = useState({});
+  const [showScenarioFeedback, setShowScenarioFeedback] = useState({});
   const queryClient = useQueryClient();
 
   // Fetch lessons
@@ -95,8 +97,15 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
     switch(type) {
       case 'video': return <Video className="w-4 h-4" />;
       case 'pdf': return <File className="w-4 h-4" />;
+      case 'scenario': return <Sparkles className="w-4 h-4" />;
       default: return <FileText className="w-4 h-4" />;
     }
+  };
+
+  const handleScenarioOptionSelect = (lessonId, scenarioIndex, optionIndex) => {
+    const key = `${lessonId}-${scenarioIndex}`;
+    setSelectedScenarioOptions(prev => ({ ...prev, [key]: optionIndex }));
+    setShowScenarioFeedback(prev => ({ ...prev, [key]: true }));
   };
 
   const renderLessonContent = (lesson) => {
@@ -139,6 +148,111 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
               <File className="w-4 h-4" />
               Ver documento
             </a>
+          </div>
+        )}
+
+        {/* Scenarios */}
+        {lesson.scenarios && lesson.scenarios.length > 0 && (
+          <div className="space-y-4">
+            {lesson.scenarios.map((scenario, sIndex) => {
+              const key = `${lesson.id}-${sIndex}`;
+              const selectedOption = selectedScenarioOptions[key];
+              const showFeedback = showScenarioFeedback[key];
+
+              return (
+                <Card key={sIndex} className="bg-white border-2 border-indigo-200">
+                  <CardHeader className="bg-gradient-to-r from-indigo-50 to-violet-50">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-indigo-600" />
+                      {scenario.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 space-y-4">
+                    {scenario.image_url && (
+                      <img 
+                        src={scenario.image_url} 
+                        alt={scenario.title}
+                        className="w-full rounded-lg"
+                      />
+                    )}
+                    
+                    <div className="p-4 bg-slate-50 rounded-lg">
+                      <p className="text-slate-700 whitespace-pre-wrap">{scenario.situation}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="font-semibold text-sm text-slate-700">
+                        ¿Qué harías en esta situación?
+                      </p>
+                      {scenario.options.map((option, oIndex) => {
+                        const isSelected = selectedOption === oIndex;
+                        const isCorrect = option.is_correct;
+                        
+                        return (
+                          <div key={oIndex}>
+                            <button
+                              onClick={() => handleScenarioOptionSelect(lesson.id, sIndex, oIndex)}
+                              disabled={showFeedback}
+                              className={cn(
+                                "w-full text-left p-3 rounded-lg border-2 transition-all",
+                                showFeedback && isSelected && isCorrect && "border-green-500 bg-green-50",
+                                showFeedback && isSelected && !isCorrect && "border-red-500 bg-red-50",
+                                !showFeedback && "border-slate-200 hover:border-indigo-300 hover:bg-indigo-50",
+                                showFeedback && !isSelected && "opacity-50"
+                              )}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className={cn(
+                                  "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5",
+                                  isSelected && showFeedback && isCorrect && "border-green-500 bg-green-500",
+                                  isSelected && showFeedback && !isCorrect && "border-red-500 bg-red-500",
+                                  !isSelected && "border-slate-300"
+                                )}>
+                                  {isSelected && showFeedback && (
+                                    isCorrect ? 
+                                      <CheckCircle className="w-4 h-4 text-white" /> : 
+                                      <XCircle className="w-4 h-4 text-white" />
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-medium text-slate-900">{option.text}</p>
+                                  {isSelected && showFeedback && option.feedback && (
+                                    <p className={cn(
+                                      "text-sm mt-2 p-2 rounded",
+                                      isCorrect ? "text-green-700 bg-green-50" : "text-red-700 bg-red-50"
+                                    )}>
+                                      {option.feedback}
+                                    </p>
+                                  )}
+                                  {option.points > 0 && (
+                                    <Badge variant="outline" className="mt-2">
+                                      {option.points} puntos
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {showFeedback && (
+                      <Button
+                        onClick={() => {
+                          setSelectedScenarioOptions(prev => ({ ...prev, [key]: undefined }));
+                          setShowScenarioFeedback(prev => ({ ...prev, [key]: false }));
+                        }}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        Intentar Nuevamente
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
 

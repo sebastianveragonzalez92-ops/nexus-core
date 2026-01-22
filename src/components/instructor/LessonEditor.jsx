@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, Plus, Upload, Loader2 } from 'lucide-react';
+import { X, Plus, Upload, Loader2, Sparkles, CheckCircle, XCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
@@ -35,7 +35,8 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
     video_duration_minutes: lesson?.video_duration_minutes || 0,
     document_url: lesson?.document_url || '',
     is_published: lesson?.is_published !== false,
-    resources: lesson?.resources || []
+    resources: lesson?.resources || [],
+    scenarios: lesson?.scenarios || []
   });
   const [uploading, setUploading] = useState(false);
 
@@ -140,6 +141,7 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
                 <SelectItem value="text">Texto / Artículo</SelectItem>
                 <SelectItem value="video">Video</SelectItem>
                 <SelectItem value="pdf">Documento PDF</SelectItem>
+                <SelectItem value="scenario">Escenario Interactivo</SelectItem>
                 <SelectItem value="mixed">Mixto</SelectItem>
               </SelectContent>
             </Select>
@@ -214,6 +216,208 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
                 </a>
               )}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Scenarios Section */}
+      {(formData.content_type === 'scenario' || formData.content_type === 'mixed') && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-600" />
+                <span>Escenarios Interactivos</span>
+              </div>
+              <Button onClick={() => {
+                setFormData(prev => ({
+                  ...prev,
+                  scenarios: [...prev.scenarios, {
+                    title: '',
+                    situation: '',
+                    image_url: '',
+                    options: [
+                      { text: '', feedback: '', is_correct: false, points: 0 },
+                      { text: '', feedback: '', is_correct: false, points: 0 }
+                    ]
+                  }]
+                }));
+              }} size="sm" variant="outline">
+                <Plus className="w-4 h-4 mr-2" />
+                Añadir Escenario
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {formData.scenarios.map((scenario, sIndex) => (
+              <Card key={sIndex} className="bg-slate-50">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <h4 className="font-semibold text-sm">Escenario {sIndex + 1}</h4>
+                    <Button
+                      onClick={() => setFormData(prev => ({
+                        ...prev,
+                        scenarios: prev.scenarios.filter((_, i) => i !== sIndex)
+                      }))}
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <div>
+                    <Label className="text-xs">Título del Escenario</Label>
+                    <Input
+                      value={scenario.title}
+                      onChange={(e) => {
+                        const updated = [...formData.scenarios];
+                        updated[sIndex].title = e.target.value;
+                        setFormData(prev => ({ ...prev, scenarios: updated }));
+                      }}
+                      placeholder="Ej: Situación de emergencia"
+                      className="bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-xs">Descripción de la Situación</Label>
+                    <Textarea
+                      value={scenario.situation}
+                      onChange={(e) => {
+                        const updated = [...formData.scenarios];
+                        updated[sIndex].situation = e.target.value;
+                        setFormData(prev => ({ ...prev, scenarios: updated }));
+                      }}
+                      placeholder="Describe la situación o problema que el estudiante debe resolver..."
+                      rows={3}
+                      className="bg-white"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-xs">Imagen (opcional)</Label>
+                    <Input
+                      value={scenario.image_url}
+                      onChange={(e) => {
+                        const updated = [...formData.scenarios];
+                        updated[sIndex].image_url = e.target.value;
+                        setFormData(prev => ({ ...prev, scenarios: updated }));
+                      }}
+                      placeholder="URL de la imagen"
+                      className="bg-white"
+                    />
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="text-xs font-semibold">Opciones de Respuesta</Label>
+                      <Button
+                        onClick={() => {
+                          const updated = [...formData.scenarios];
+                          updated[sIndex].options.push({
+                            text: '',
+                            feedback: '',
+                            is_correct: false,
+                            points: 0
+                          });
+                          setFormData(prev => ({ ...prev, scenarios: updated }));
+                        }}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        <Plus className="w-3 h-3 mr-1" />
+                        Opción
+                      </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {scenario.options.map((option, oIndex) => (
+                        <Card key={oIndex} className="bg-white">
+                          <CardContent className="p-3 space-y-2">
+                            <div className="flex items-start gap-2">
+                              <div className="flex-1 space-y-2">
+                                <Input
+                                  placeholder="Texto de la opción"
+                                  value={option.text}
+                                  onChange={(e) => {
+                                    const updated = [...formData.scenarios];
+                                    updated[sIndex].options[oIndex].text = e.target.value;
+                                    setFormData(prev => ({ ...prev, scenarios: updated }));
+                                  }}
+                                  className="text-sm"
+                                />
+                                <Textarea
+                                  placeholder="Feedback al seleccionar esta opción"
+                                  value={option.feedback}
+                                  onChange={(e) => {
+                                    const updated = [...formData.scenarios];
+                                    updated[sIndex].options[oIndex].feedback = e.target.value;
+                                    setFormData(prev => ({ ...prev, scenarios: updated }));
+                                  }}
+                                  rows={2}
+                                  className="text-sm"
+                                />
+                                <div className="flex gap-2">
+                                  <label className="flex items-center gap-2 text-sm">
+                                    <input
+                                      type="checkbox"
+                                      checked={option.is_correct}
+                                      onChange={(e) => {
+                                        const updated = [...formData.scenarios];
+                                        updated[sIndex].options[oIndex].is_correct = e.target.checked;
+                                        setFormData(prev => ({ ...prev, scenarios: updated }));
+                                      }}
+                                    />
+                                    {option.is_correct ? (
+                                      <span className="flex items-center gap-1 text-green-600">
+                                        <CheckCircle className="w-3 h-3" />
+                                        Correcta
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-600">Marcar como correcta</span>
+                                    )}
+                                  </label>
+                                  <Input
+                                    type="number"
+                                    placeholder="Puntos"
+                                    value={option.points}
+                                    onChange={(e) => {
+                                      const updated = [...formData.scenarios];
+                                      updated[sIndex].options[oIndex].points = parseInt(e.target.value) || 0;
+                                      setFormData(prev => ({ ...prev, scenarios: updated }));
+                                    }}
+                                    className="w-20 text-sm"
+                                  />
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => {
+                                  const updated = [...formData.scenarios];
+                                  updated[sIndex].options = updated[sIndex].options.filter((_, i) => i !== oIndex);
+                                  setFormData(prev => ({ ...prev, scenarios: updated }));
+                                }}
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-600"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {formData.scenarios.length === 0 && (
+              <p className="text-sm text-slate-500 text-center py-4">
+                No hay escenarios. Haz clic en "Añadir Escenario" para crear uno.
+              </p>
+            )}
           </CardContent>
         </Card>
       )}
