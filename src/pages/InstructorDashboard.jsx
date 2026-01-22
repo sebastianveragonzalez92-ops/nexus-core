@@ -245,7 +245,10 @@ export default function InstructorDashboard() {
             </TabsContent>
 
             <TabsContent value="quizzes">
-              <QuizAttemptsReview />
+              <div className="space-y-6">
+                <QuizCreator courses={courses} />
+                <QuizAttemptsReview />
+              </div>
             </TabsContent>
 
             <TabsContent value="forum">
