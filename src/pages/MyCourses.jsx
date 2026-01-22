@@ -68,49 +68,92 @@ export default function MyCourses() {
 
     setDownloading(certificate.id);
 
-    // Crear elemento temporal para descargar
+    // Crear elemento temporal para renderizar el certificado
     const tempDiv = document.createElement('div');
     tempDiv.style.position = 'fixed';
     tempDiv.style.left = '-10000px';
     tempDiv.style.top = '-10000px';
-    tempDiv.style.width = '1123px';
-    tempDiv.style.height = '794px';
-    tempDiv.innerHTML = '<div id="cert-temp"></div>';
+    tempDiv.style.width = '100%';
+    tempDiv.style.height = '100%';
     document.body.appendChild(tempDiv);
 
-    setTimeout(async () => {
-      try {
-        const certificateElement = tempDiv.querySelector('#cert-temp');
-        
-        const canvas = await html2canvas(certificateElement, {
-          scale: 2,
-          backgroundColor: '#ffffff',
-          useCORS: true,
-        });
+    // Renderizar el componente del certificado
+    const root = document.createElement('div');
+    tempDiv.appendChild(root);
 
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-          orientation: 'landscape',
-          unit: 'mm',
-          format: 'a4',
-        });
+    try {
+      // Simular renderizado del certificado HTML
+      const certificateHTML = `
+        <div id="certificate-preview" style="width: 1123px; height: 794px; background: white; padding: 64px; position: absolute; left: -10000px; top: -10000px;">
+          <div style="border: 8px double #b45309; height: 100%; padding: 48px; position: relative; background: white;">
+            <div style="text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-top: 32px;">
+              <div>
+                <h1 style="font-size: 48px; font-weight: bold; color: #92400e; margin-bottom: 8px; font-family: serif;">Certificado</h1>
+                <p style="font-size: 18px; color: #475569; text-transform: uppercase; letter-spacing: 3px;">de finalización</p>
+                <div style="width: 192px; height: 4px; background: #92400e; margin: 16px auto;"></div>
+              </div>
+              <div style="space-y: 24px;">
+                <p style="font-size: 22px; color: #1e293b; font-weight: 300;">Se certifica que</p>
+                <h2 style="font-size: 40px; font-weight: bold; color: #1e293b; border-bottom: 2px solid #cbd5e1; padding-bottom: 8px; padding-left: 48px; padding-right: 48px; font-family: serif;">${user?.full_name || user?.email}</h2>
+                <p style="font-size: 22px; color: #1e293b; font-weight: 300; margin-top: 24px;">ha completado satisfactoriamente</p>
+                <h3 style="font-size: 28px; font-weight: 600; color: #92400e; padding-left: 64px; padding-right: 64px; margin-top: 24px;">${course.title}</h3>
+                ${certificate.score ? `<p style="font-size: 18px; color: #475569; margin-top: 24px;">con una calificación de <span style="font-weight: bold; font-size: 20px; color: #92400e;">${certificate.score}%</span></p>` : ''}
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding-left: 64px; padding-right: 64px;">
+                <div style="text-align: center; border-top: 2px solid #94a3b8; padding-top: 16px;">
+                  <p style="color: #64748b; font-size: 12px; margin-bottom: 4px;">Fecha</p>
+                  <p style="font-weight: 600; color: #1e293b;">${new Date(certificate.issued_date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+                <div style="text-align: center; border-top: 2px solid #94a3b8; padding-top: 16px;">
+                  <p style="color: #64748b; font-size: 12px; margin-bottom: 4px;">Certificado N°</p>
+                  <p style="font-weight: 600; color: #1e293b; font-family: monospace;">${certificate.certificate_number}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+      root.innerHTML = certificateHTML;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`certificado-${certificate.certificate_number}.pdf`);
-        
-        toast.success('Certificado descargado');
-        document.body.removeChild(tempDiv);
-        setDownloading(null);
-      } catch (error) {
-        console.error('Error:', error);
-        toast.error('Error al generar el PDF');
-        document.body.removeChild(tempDiv);
-        setDownloading(null);
+      // Esperar a que se renderice
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const certificateElement = document.getElementById('certificate-preview');
+      if (!certificateElement) {
+        throw new Error('Certificado no renderizado');
       }
-    }, 500);
+
+      // Generar canvas
+      const canvas = await html2canvas(certificateElement, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`certificado-${certificate.certificate_number}.pdf`);
+
+      toast.success('Certificado descargado');
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error al generar el PDF');
+    } finally {
+      document.body.removeChild(tempDiv);
+      setDownloading(null);
+    }
   };
 
   return (
