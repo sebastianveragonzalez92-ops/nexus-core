@@ -121,7 +121,7 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
     if (allLessonsComplete && onAllLessonsCompleted) {
       onAllLessonsCompleted();
     }
-  }, [allLessonsComplete]);
+  }, [allLessonsComplete, onAllLessonsCompleted]);
 
   const getContentIcon = (type) => {
     switch(type) {
