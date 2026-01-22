@@ -52,7 +52,7 @@ export default function MyCourses() {
     const exists = acc.find(c => c.course_id === cert.course_id && c.user_email === cert.user_email);
     if (!exists) acc.push(cert);
     return acc;
-  }, []);
+  }, []).sort((a, b) => new Date(b.issued_date) - new Date(a.issued_date));
 
 
 
