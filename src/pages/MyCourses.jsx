@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, Clock, CheckCircle, TrendingUp } from 'lucide-react';
+import { BookOpen, Award, Clock, CheckCircle, TrendingUp, Download, Loader2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import CertificateTemplate from '@/components/certificates/CertificateGenerator';
 
 export default function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [downloading, setDownloading] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
