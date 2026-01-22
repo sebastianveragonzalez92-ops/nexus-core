@@ -12,7 +12,7 @@ import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import CertificateTemplate from '@/components/certificates/CertificateGenerator';
+import CertificateTemplate, { generateCertificatePDF } from '@/components/certificates/CertificateGenerator';
 
 export default function MyCourses() {
   const navigate = useNavigate();
