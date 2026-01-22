@@ -26,6 +26,7 @@ export default function CourseDetail() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [allLessonsCompleted, setAllLessonsCompleted] = useState(false);
+  const [currentTab, setCurrentTab] = useState('content');
   
   // Get course ID from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -276,7 +277,7 @@ export default function CourseDetail() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Tabs defaultValue="content" className="space-y-4">
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
             <TabsList className="bg-white border border-slate-200 p-1">
               <TabsTrigger value="content">Contenido</TabsTrigger>
               <TabsTrigger value="quizzes">
@@ -397,7 +398,17 @@ export default function CourseDetail() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <QuizViewer quiz={quiz} user={user} onComplete={() => {}} />
+                      <QuizViewer 
+                        quiz={quiz} 
+                        user={user} 
+                        onComplete={async () => {
+                          // Check if this was the last quiz
+                          if (index === quizzes.length - 1) {
+                            toast.success('¡Todas las evaluaciones completadas!');
+                            await completeMutation.mutate();
+                          }
+                        }} 
+                      />
                     </CardContent>
                   </Card>
                 ))
