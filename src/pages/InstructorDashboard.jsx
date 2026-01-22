@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   GraduationCap, Users, MessageSquare, TrendingUp, 
-  BarChart3, BookOpen, Award, Layout
+  BarChart3, BookOpen, Award, Layout, FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -164,40 +164,73 @@ export default function InstructorDashboard() {
           transition={{ delay: 0.5 }}
         >
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="bg-white border border-slate-200 p-1">
-              <TabsTrigger value="overview">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Vista General
-              </TabsTrigger>
-              <TabsTrigger value="analytics">
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Analíticas
-              </TabsTrigger>
-              <TabsTrigger value="progress">
-                <Users className="w-4 h-4 mr-2" />
-                Progreso Estudiantes
-              </TabsTrigger>
-              <TabsTrigger value="quizzes">
-                <Award className="w-4 h-4 mr-2" />
-                Quizzes
-              </TabsTrigger>
-              <TabsTrigger value="forum">
-                <MessageSquare className="w-4 h-4 mr-2" />
-                Moderación Foro
-              </TabsTrigger>
-              <TabsTrigger value="content">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Gestión de Contenido
-              </TabsTrigger>
-              <TabsTrigger value="evaluations">
-                <Award className="w-4 h-4 mr-2" />
-                Evaluaciones
-              </TabsTrigger>
-              <TabsTrigger value="certificates">
-                <Layout className="w-4 h-4 mr-2" />
-                Certificados
-              </TabsTrigger>
-            </TabsList>
+            <div className="bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+              <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 bg-transparent h-auto p-0">
+                <TabsTrigger 
+                  value="overview"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <TrendingUp className="w-5 h-5" />
+                  <span className="text-xs font-medium">Vista General</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="analytics"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  <span className="text-xs font-medium">Analíticas</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="progress"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <Users className="w-5 h-5" />
+                  <span className="text-xs font-medium">Estudiantes</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="quizzes"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <FileText className="w-5 h-5" />
+                  <span className="text-xs font-medium">Quizzes</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="forum"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                  <span className="text-xs font-medium">Foro</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="content"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <BookOpen className="w-5 h-5" />
+                  <span className="text-xs font-medium">Contenido</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="evaluations"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <Award className="w-5 h-5" />
+                  <span className="text-xs font-medium">Evaluaciones</span>
+                </TabsTrigger>
+                
+                <TabsTrigger 
+                  value="certificates"
+                  className="flex flex-col items-center gap-1 py-3 px-2 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-50 data-[state=active]:to-violet-50 data-[state=active]:text-indigo-700 data-[state=active]:border-indigo-200"
+                >
+                  <Layout className="w-5 h-5" />
+                  <span className="text-xs font-medium">Certificados</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="overview">
               <CourseProgressOverview courses={courses} />
