@@ -10,16 +10,17 @@ export default function InteractiveChecklist({ title, checks, user, onAllComplet
   const [selectedItems, setSelectedItems] = useState({});
 
   const handleSelect = async (index, value) => {
-    setSelectedItems(prev => ({
-      ...prev,
+    const updated = {
+      ...selectedItems,
       [index]: value
-    }));
+    };
+    setSelectedItems(updated);
     
     await awardPoints(user.email, POINTS.CHECK_COMPLETE, 'Check completado');
 
     // Check if all completed
-    const allCompleted = checks.every((_, i) => selectedItems[i] !== undefined || (i === index && value !== undefined));
-    if (allCompleted && Object.keys(selectedItems).length + 1 === checks.length) {
+    const allCompleted = checks.every((_, i) => updated[i] !== undefined);
+    if (allCompleted) {
       onAllComplete?.();
     }
   };
