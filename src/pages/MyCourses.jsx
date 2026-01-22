@@ -13,7 +13,6 @@ import { createPageUrl } from '@/utils';
 export default function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [downloading, setDownloading] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
