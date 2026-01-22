@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { X, Plus, Upload, Loader2, Sparkles, CheckCircle, XCircle } from 'lucide-react';
+import { X, Plus, Upload, Loader2, Sparkles, CheckCircle, XCircle, Zap, MapPin } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
@@ -36,7 +36,9 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
     document_url: lesson?.document_url || '',
     is_published: lesson?.is_published !== false,
     resources: lesson?.resources || [],
-    scenarios: lesson?.scenarios || []
+    scenarios: lesson?.scenarios || [],
+    micro_steps: lesson?.micro_steps || { steps: [] },
+    checklist: lesson?.checklist || { title: '', checks: [] }
   });
   const [uploading, setUploading] = useState(false);
 
@@ -421,6 +423,223 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
           </CardContent>
         </Card>
       )}
+
+      {/* Micro-steps Section */}
+      {(formData.content_type === 'text' || formData.content_type === 'mixed') && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-amber-500" />
+                <span>Micro-pasos con Preguntas</span>
+              </div>
+              <Button onClick={() => {
+                setFormData(prev => ({
+                  ...prev,
+                  micro_steps: {
+                    steps: [...(prev.micro_steps?.steps || []), {
+                      title: '',
+                      content: '',
+                      question: null
+                    }]
+                  }
+                }));
+              }} size="sm" variant="outline">
+                <Plus className="w-4 h-4 mr-2" />
+                Añadir Micro-paso
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {formData.micro_steps?.steps?.map((step, index) => (
+              <Card key={index} className="bg-slate-50">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <h4 className="font-semibold text-sm">Paso {index + 1}</h4>
+                    <Button
+                      onClick={() => {
+                        const updated = { ...formData.micro_steps };
+                        updated.steps = updated.steps.filter((_, i) => i !== index);
+                        setFormData(prev => ({ ...prev, micro_steps: updated }));
+                      }}
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <Input
+                    placeholder="Título del paso"
+                    value={step.title}
+                    onChange={(e) => {
+                      const updated = { ...formData.micro_steps };
+                      updated.steps[index].title = e.target.value;
+                      setFormData(prev => ({ ...prev, micro_steps: updated }));
+                    }}
+                    className="bg-white"
+                  />
+                  <Textarea
+                    placeholder="Contenido del paso"
+                    value={step.content}
+                    onChange={(e) => {
+                      const updated = { ...formData.micro_steps };
+                      updated.steps[index].content = e.target.value;
+                      setFormData(prev => ({ ...prev, micro_steps: updated }));
+                    }}
+                    rows={3}
+                    className="bg-white"
+                  />
+                  
+                  {/* Mini Question */}
+                  <div className="pt-3 border-t">
+                    <Label className="text-xs">Mini-pregunta (opcional)</Label>
+                    {step.question ? (
+                      <div className="space-y-2 mt-2">
+                        <Input
+                          placeholder="Pregunta"
+                          value={step.question.text}
+                          onChange={(e) => {
+                            const updated = { ...formData.micro_steps };
+                            updated.steps[index].question.text = e.target.value;
+                            setFormData(prev => ({ ...prev, micro_steps: updated }));
+                          }}
+                          className="bg-white text-sm"
+                        />
+                        {step.question.options?.map((opt, oIdx) => (
+                          <div key={oIdx} className="flex gap-2">
+                            <input
+                              type="radio"
+                              checked={step.question.correct === oIdx}
+                              onChange={() => {
+                                const updated = { ...formData.micro_steps };
+                                updated.steps[index].question.correct = oIdx;
+                                setFormData(prev => ({ ...prev, micro_steps: updated }));
+                              }}
+                            />
+                            <Input
+                              placeholder={`Opción ${oIdx + 1}`}
+                              value={opt}
+                              onChange={(e) => {
+                                const updated = { ...formData.micro_steps };
+                                updated.steps[index].question.options[oIdx] = e.target.value;
+                                setFormData(prev => ({ ...prev, micro_steps: updated }));
+                              }}
+                              className="bg-white text-sm"
+                            />
+                          </div>
+                        ))}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const updated = { ...formData.micro_steps };
+                            updated.steps[index].question = null;
+                            setFormData(prev => ({ ...prev, micro_steps: updated }));
+                          }}
+                        >
+                          Quitar pregunta
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          const updated = { ...formData.micro_steps };
+                          updated.steps[index].question = {
+                            text: '',
+                            options: ['', ''],
+                            correct: 0,
+                            explanation: ''
+                          };
+                          setFormData(prev => ({ ...prev, micro_steps: updated }));
+                        }}
+                        className="mt-2"
+                      >
+                        <Plus className="w-3 h-3 mr-1" />
+                        Añadir pregunta
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Interactive Checklist */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-indigo-600" />
+              <span>Lista de Verificación Interactiva</span>
+            </div>
+            <Button onClick={() => {
+              setFormData(prev => ({
+                ...prev,
+                checklist: {
+                  ...prev.checklist,
+                  checks: [...(prev.checklist?.checks || []), { text: '', description: '' }]
+                }
+              }));
+            }} size="sm" variant="outline">
+              <Plus className="w-4 h-4 mr-2" />
+              Añadir Check
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Input
+            placeholder="Título de la checklist"
+            value={formData.checklist?.title || ''}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              checklist: { ...prev.checklist, title: e.target.value }
+            }))}
+          />
+          {formData.checklist?.checks?.map((check, index) => (
+            <div key={index} className="flex gap-2 p-3 bg-slate-50 rounded-lg">
+              <div className="flex-1 space-y-2">
+                <Input
+                  placeholder="Texto del check"
+                  value={check.text}
+                  onChange={(e) => {
+                    const updated = { ...formData.checklist };
+                    updated.checks[index].text = e.target.value;
+                    setFormData(prev => ({ ...prev, checklist: updated }));
+                  }}
+                  className="bg-white"
+                />
+                <Input
+                  placeholder="Descripción (opcional)"
+                  value={check.description}
+                  onChange={(e) => {
+                    const updated = { ...formData.checklist };
+                    updated.checks[index].description = e.target.value;
+                    setFormData(prev => ({ ...prev, checklist: updated }));
+                  }}
+                  className="bg-white text-sm"
+                />
+              </div>
+              <Button
+                onClick={() => {
+                  const updated = { ...formData.checklist };
+                  updated.checks = updated.checks.filter((_, i) => i !== index);
+                  setFormData(prev => ({ ...prev, checklist: updated }));
+                }}
+                variant="ghost"
+                size="icon"
+                className="text-red-600"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
 
       {/* Resources */}
       <Card>

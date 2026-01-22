@@ -6,7 +6,11 @@ const POINTS = {
   QUIZ_PASS: 100,
   QUIZ_PERFECT: 200,
   COURSE_COMPLETE: 500,
-  SCENARIO_COMPLETE: 75
+  SCENARIO_COMPLETE: 75,
+  SCENARIO_PERFECT: 150,
+  MICRO_STEP: 10,
+  MINI_QUESTION: 20,
+  CHECK_COMPLETE: 5
 };
 
 export async function awardPoints(userEmail, points, reason) {

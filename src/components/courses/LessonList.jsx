@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import { awardPoints, incrementStat, checkAndAwardBadges, POINTS } from '../gamification/gamificationHelpers';
+import MicroStepReader from './MicroStepReader';
+import InteractiveChecklist from './InteractiveChecklist';
 
 export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
   const [expandedLesson, setExpandedLesson] = useState(null);
@@ -108,17 +110,47 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
     }
   };
 
-  const handleScenarioOptionSelect = (lessonId, scenarioIndex, optionIndex) => {
+  const handleScenarioOptionSelect = async (lessonId, scenarioIndex, optionIndex) => {
     const key = `${lessonId}-${scenarioIndex}`;
     setSelectedScenarioOptions(prev => ({ ...prev, [key]: optionIndex }));
     setShowScenarioFeedback(prev => ({ ...prev, [key]: true }));
+    
+    // Award points if correct
+    const lesson = lessons.find(l => l.id === lessonId);
+    const scenario = lesson?.scenarios?.[scenarioIndex];
+    const option = scenario?.options?.[optionIndex];
+    
+    if (option?.is_correct) {
+      const allCorrect = scenario.options.filter(o => o.is_correct).length === 1;
+      const points = allCorrect ? POINTS.SCENARIO_PERFECT : POINTS.SCENARIO_COMPLETE;
+      await awardPoints(user.email, points, `Escenario completado correctamente`);
+    }
   };
 
   const renderLessonContent = (lesson) => {
     return (
       <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
+        {/* Micro-steps Reader */}
+        {lesson.micro_steps && lesson.micro_steps.steps && lesson.micro_steps.steps.length > 0 && (
+          <MicroStepReader 
+            content={lesson.micro_steps} 
+            user={user}
+            onComplete={() => {}}
+          />
+        )}
+
+        {/* Interactive Checklist */}
+        {lesson.checklist && lesson.checklist.checks && lesson.checklist.checks.length > 0 && (
+          <InteractiveChecklist 
+            title={lesson.checklist.title}
+            checks={lesson.checklist.checks}
+            user={user}
+            onAllComplete={() => {}}
+          />
+        )}
+
         {/* Text Content */}
-        {lesson.content_text && (
+        {lesson.content_text && !lesson.micro_steps?.steps?.length && (
           <div className="prose prose-sm max-w-none">
             <ReactMarkdown>{lesson.content_text}</ReactMarkdown>
           </div>
