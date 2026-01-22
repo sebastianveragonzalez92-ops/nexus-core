@@ -108,3 +108,67 @@ export const notifyCertificateIssued = async (userEmail, course, certificateId) 
     },
   });
 };
+
+// Notificaciones para módulos específicos
+export const notifySpecializedCourseAvailable = async (userEmail, courseName, courseType) => {
+  const messages = {
+    conduccion: `Curso de Conducción Segura disponible. Inscríbete ahora.`,
+    extintores: `Curso de Manejo de Extintores disponible. Capacitación obligatoria.`,
+    altura: `Curso de Trabajo en Altura disponible. Certificación requerida.`,
+    default: `Nuevo curso especializado "${courseName}" disponible.`
+  };
+
+  await base44.entities.Notification.create({
+    user_email: userEmail,
+    type: 'new_course',
+    title: 'Curso Especializado Disponible',
+    message: messages[courseType] || messages.default,
+    action_url: createPageUrl('Courses'),
+    metadata: { course_type: courseType, course_name: courseName },
+  });
+};
+
+export const notifyMandatoryCourseReminder = async (userEmail, courseName, daysRemaining) => {
+  await base44.entities.Notification.create({
+    user_email: userEmail,
+    type: 'quiz_deadline',
+    title: 'Curso Obligatorio Pendiente',
+    message: `Tienes ${daysRemaining} días para completar "${courseName}"`,
+    action_url: createPageUrl('MyCourses'),
+    metadata: { course_name: courseName, days_remaining: daysRemaining },
+  });
+};
+
+// Notificaciones para exámenes ocupacionales
+export const notifyExamExpiring = async (userEmail, examName, daysUntilExpiry) => {
+  await base44.entities.Notification.create({
+    user_email: userEmail,
+    type: 'quiz_deadline',
+    title: 'Examen Ocupacional Próximo a Vencer',
+    message: `Tu ${examName} vence en ${daysUntilExpiry} días. Programa tu renovación.`,
+    action_url: createPageUrl('Dashboard'),
+    metadata: { exam_name: examName, days_until_expiry: daysUntilExpiry },
+  });
+};
+
+export const notifyExamExpired = async (userEmail, examName) => {
+  await base44.entities.Notification.create({
+    user_email: userEmail,
+    type: 'quiz_deadline',
+    title: 'Examen Ocupacional Vencido',
+    message: `Tu ${examName} ha vencido. Debes renovarlo inmediatamente.`,
+    action_url: createPageUrl('Dashboard'),
+    metadata: { exam_name: examName, status: 'expired' },
+  });
+};
+
+export const notifyExamScheduled = async (userEmail, examName, examDate) => {
+  await base44.entities.Notification.create({
+    user_email: userEmail,
+    type: 'general',
+    title: 'Examen Ocupacional Programado',
+    message: `Tu ${examName} está programado para el ${new Date(examDate).toLocaleDateString('es-ES')}`,
+    action_url: createPageUrl('Dashboard'),
+    metadata: { exam_name: examName, exam_date: examDate },
+  });
+};
