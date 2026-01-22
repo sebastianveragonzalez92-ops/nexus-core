@@ -275,7 +275,7 @@ export default function MyCourses() {
         )}
 
         {/* Certificates */}
-        {certificates.length > 0 && (
+        {uniqueCertificates.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -283,7 +283,7 @@ export default function MyCourses() {
           >
             <h2 className="text-xl font-semibold text-slate-900 mb-4">Certificados</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {certificates.map((cert, index) => {
+              {uniqueCertificates.map((cert, index) => {
                 const course = courses.find(c => c.id === cert.course_id);
                 return (
                   <motion.div
@@ -315,8 +315,23 @@ export default function MyCourses() {
                             </div>
                           )}
                         </div>
-                        <Button variant="outline" className="w-full">
-                          Descargar Certificado
+                        <Button 
+                          variant="outline" 
+                          className="w-full"
+                          onClick={() => handleDownloadCertificate(cert)}
+                          disabled={downloading === cert.id}
+                        >
+                          {downloading === cert.id ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Generando...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="w-4 h-4 mr-2" />
+                              Descargar Certificado
+                            </>
+                          )}
                         </Button>
                       </CardContent>
                     </Card>
