@@ -30,6 +30,7 @@ const pageMap = {
   'Capacitaciones': 'Courses',
   'Training': 'Courses',
   'LMS': 'Courses',
+  'LMS - Capacitación': 'Courses',
   'Tutor': 'Tutor',
   'Tutor IA': 'Tutor',
   'Actividad': 'Activity',
@@ -37,10 +38,14 @@ const pageMap = {
   'Configuración': 'Settings',
   'Settings': 'Settings',
   'KPIs': 'Dashboard',
+  'KPIs y Reportes': 'Dashboard',
   'Analytics': 'Dashboard',
+  'Dashboard analytics': 'Dashboard',
   'Reportes': 'Dashboard',
   'Notificaciones': 'Notifications',
   'Notifications': 'Notifications',
+  'Gestión de usuarios': 'Settings',
+  'Gestión de Activos': 'Dashboard',
 };
 
 export default function ModuleCard({ module, onToggle, index = 0 }) {
