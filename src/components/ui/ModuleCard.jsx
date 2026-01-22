@@ -36,6 +36,11 @@ const pageMap = {
   'Activity': 'Activity',
   'Configuración': 'Settings',
   'Settings': 'Settings',
+  'KPIs': 'Dashboard',
+  'Analytics': 'Dashboard',
+  'Reportes': 'Dashboard',
+  'Notificaciones': 'Notifications',
+  'Notifications': 'Notifications',
 };
 
 export default function ModuleCard({ module, onToggle, index = 0 }) {
