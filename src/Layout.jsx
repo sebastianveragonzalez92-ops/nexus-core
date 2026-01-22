@@ -177,19 +177,6 @@ export default function Layout({ children, currentPageName }) {
         "min-h-screen transition-all duration-300",
         isCollapsed ? "lg:pl-20" : "lg:pl-64"
       )}>
-        {/* Desktop header */}
-        <header className="hidden lg:block sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-6 py-4">
-          <div className="flex items-center justify-end gap-4">
-            <NotificationCenter user={user} />
-            <Link
-              to={createPageUrl('Settings')}
-              className="p-2 rounded-xl hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900"
-            >
-              <Settings className="w-5 h-5" />
-            </Link>
-          </div>
-        </header>
-
         {/* Mobile header */}
         <header className="lg:hidden sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-4 py-4">
           <div className="flex items-center justify-between">
@@ -213,15 +200,6 @@ export default function Layout({ children, currentPageName }) {
                 )}
               </div>
               <span className="font-bold text-slate-900">{brandName}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <NotificationCenter user={user} />
-              <Link
-                to={createPageUrl('Settings')}
-                className="p-2 rounded-xl hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900"
-              >
-                <Settings className="w-5 h-5" />
-              </Link>
             </div>
           </div>
         </header>
