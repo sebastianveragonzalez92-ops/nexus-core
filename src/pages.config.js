@@ -10,6 +10,7 @@ import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
 import AIQuizGenerator from './pages/AIQuizGenerator';
 import Certificates from './pages/Certificates';
+import CertificateTemplates from './pages/CertificateTemplates';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "Tutor": Tutor,
     "AIQuizGenerator": AIQuizGenerator,
     "Certificates": Certificates,
+    "CertificateTemplates": CertificateTemplates,
 }
 
 export const pagesConfig = {
