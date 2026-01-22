@@ -507,15 +507,17 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
                           className="bg-white text-sm"
                         />
                         {step.question.options?.map((opt, oIdx) => (
-                          <div key={oIdx} className="flex gap-2">
+                          <div key={oIdx} className="flex items-center gap-2">
                             <input
                               type="radio"
+                              name={`question-${index}`}
                               checked={step.question.correct === oIdx}
                               onChange={() => {
                                 const updated = { ...formData.micro_steps };
                                 updated.steps[index].question.correct = oIdx;
                                 setFormData(prev => ({ ...prev, micro_steps: updated }));
                               }}
+                              className="w-4 h-4 text-green-600"
                             />
                             <Input
                               placeholder={`Opción ${oIdx + 1}`}
@@ -525,8 +527,14 @@ export default function LessonEditor({ lesson, courseId, onSave, onCancel }) {
                                 updated.steps[index].question.options[oIdx] = e.target.value;
                                 setFormData(prev => ({ ...prev, micro_steps: updated }));
                               }}
-                              className="bg-white text-sm"
+                              className={cn(
+                                "bg-white text-sm",
+                                step.question.correct === oIdx && "border-green-500 bg-green-50"
+                              )}
                             />
+                            {step.question.correct === oIdx && (
+                              <Badge className="bg-green-600 text-white text-xs">Correcta</Badge>
+                            )}
                           </div>
                         ))}
                         <Button
