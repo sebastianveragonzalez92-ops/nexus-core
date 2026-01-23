@@ -71,7 +71,7 @@ export default function MyCourses() {
     }
   });
 
-  const inProgress = sortedCourses.filter(e => e.status === 'in_progress');
+  const inProgress = sortedCourses.filter(e => e.status === 'in_progress' || e.status === 'enrolled');
   const completed = sortedCourses.filter(e => e.status === 'completed');
 
   const avgProgress = enrolledCourses.length > 0
