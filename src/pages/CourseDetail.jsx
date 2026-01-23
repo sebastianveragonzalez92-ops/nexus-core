@@ -602,8 +602,10 @@ export default function CourseDetail() {
                       <QuizViewer 
                         quiz={exam} 
                         user={user} 
-                        onComplete={() => {
-                          if (enrollment.status !== 'completed') {
+                        onComplete={(score) => {
+                          queryClient.invalidateQueries({ queryKey: ['quizAttempts'] });
+                          // Si aprueba el examen final, completar el curso y generar certificado
+                          if (score >= exam.passing_score && enrollment.status !== 'completed') {
                             setTimeout(() => {
                               completeMutation.mutate();
                             }, 1500);
