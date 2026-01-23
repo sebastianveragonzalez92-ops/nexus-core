@@ -57,7 +57,7 @@ export default function CourseDetail() {
 
   // Fetch enrollment
   const { data: enrollments = [] } = useQuery({
-    queryKey: ['enrollments', user?.email],
+    queryKey: ['enrollments', user?.email, courseId],
     queryFn: () => base44.entities.Enrollment.filter({ 
       course_id: courseId,
       user_email: user?.email 
@@ -123,8 +123,8 @@ export default function CourseDetail() {
       }
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      await queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+      await queryClient.invalidateQueries({ queryKey: ['certificates'] });
       
       // Award points and update stats
       await awardPoints(user.email, POINTS.COURSE_COMPLETE, '¡Curso completado!');
