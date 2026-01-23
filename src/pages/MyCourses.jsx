@@ -182,6 +182,7 @@ export default function MyCourses() {
 
         {/* In Progress Courses */}
         {viewMode === 'grid' && (
+          <>
         {inProgress.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -327,6 +328,7 @@ export default function MyCourses() {
             </div>
           </motion.div>
         )}
+          </>
         )}
 
         {/* Empty State */}
