@@ -11,6 +11,7 @@ import QuizViewer from '../components/courses/QuizViewer';
 import DiscussionForum from '../components/courses/DiscussionForum';
 import ExternalResources from '../components/courses/ExternalResources';
 import LessonList from '../components/courses/LessonList';
+import XAPIViewer from '../components/courses/XAPIViewer';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -148,6 +149,7 @@ export default function CourseDetail() {
   const typeColors = {
     video: 'bg-red-50 text-red-700 border-red-200',
     scorm: 'bg-blue-50 text-blue-700 border-blue-200',
+    xapi: 'bg-purple-50 text-purple-700 border-purple-200',
     microlearning: 'bg-green-50 text-green-700 border-green-200',
     evaluation: 'bg-amber-50 text-amber-700 border-amber-200',
   };
@@ -301,11 +303,30 @@ export default function CourseDetail() {
 
             <TabsContent value="content" className="space-y-4">
               {enrollment ? (
-                <LessonList 
-                  courseId={courseId} 
-                  user={user}
-                  onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
-                />
+                course.type === 'xapi' ? (
+                  <XAPIViewer
+                    contentUrl={course.content_url}
+                    courseId={courseId}
+                    enrollment={enrollment}
+                    onProgressUpdate={(progress) => {
+                      base44.entities.Enrollment.update(enrollment.id, {
+                        progress_percent: progress,
+                        status: progress === 100 ? 'completed' : 'in_progress'
+                      }).then(() => {
+                        queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+                        if (progress === 100) {
+                          setAllLessonsCompleted(true);
+                        }
+                      });
+                    }}
+                  />
+                ) : (
+                  <LessonList 
+                    courseId={courseId} 
+                    user={user}
+                    onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
+                  />
+                )
               ) : (
                 <Card>
                   <CardContent className="py-12 text-center">
