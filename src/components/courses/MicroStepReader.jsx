@@ -25,19 +25,18 @@ export default function MicroStepReader({ content, user, onComplete }) {
       setCompletedSteps(prev => new Set([...prev, currentStep]));
       await awardPoints(user.email, POINTS.MICRO_STEP, 'Micro-paso completado');
     }
-
-    if (currentStep < steps.length - 1) {
-      setShowCompletionScreen(true);
-    } else {
-      onComplete?.();
-    }
+    setShowCompletionScreen(true);
   };
 
   const handleContinueToNext = () => {
-    setCurrentStep(currentStep + 1);
-    setSelectedAnswer(null);
-    setShowFeedback(false);
-    setShowCompletionScreen(false);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+      setSelectedAnswer(null);
+      setShowFeedback(false);
+      setShowCompletionScreen(false);
+    } else {
+      onComplete?.();
+    }
   };
 
   const handleAnswerQuestion = async (answerIndex) => {
@@ -71,7 +70,7 @@ export default function MicroStepReader({ content, user, onComplete }) {
             size="lg"
             className="bg-gradient-to-r from-green-500 to-emerald-500"
           >
-            Continuar al siguiente paso
+            {currentStep < steps.length - 1 ? 'Continuar al siguiente paso' : 'Finalizar lección'}
             <ChevronRight className="w-5 h-5 ml-2" />
           </Button>
         </CardContent>
