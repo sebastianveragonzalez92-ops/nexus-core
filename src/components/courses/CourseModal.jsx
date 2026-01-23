@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Upload, FileCheck, Plus, Trash2, Link as LinkIcon, Sparkles } from 'lucide-react';
+import { X, Save, Upload, FileCheck, Plus, Trash2, Link as LinkIcon, Sparkles, Code, Download, FileJson } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import AIContentGenerator from './AIContentGenerator';
 
@@ -30,6 +31,8 @@ export default function CourseModal({ course, onClose }) {
   });
   const [uploading, setUploading] = useState(false);
   const [showAIGenerator, setShowAIGenerator] = useState(false);
+  const [jsonMode, setJsonMode] = useState(false);
+  const [jsonText, setJsonText] = useState('');
 
   const handleApplyAICourse = (aiCourseData) => {
     setFormData({
@@ -98,6 +101,58 @@ export default function CourseModal({ course, onClose }) {
     }
   };
 
+  const handleExportJSON = () => {
+    const dataToExport = { ...formData };
+    delete dataToExport.id;
+    delete dataToExport.created_date;
+    delete dataToExport.updated_date;
+    
+    const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `curso-${formData.title?.toLowerCase().replace(/\s+/g, '-') || 'nuevo'}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('JSON exportado exitosamente');
+  };
+
+  const handleImportJSON = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        setFormData({ ...formData, ...imported });
+        toast.success('JSON importado exitosamente');
+      } catch (error) {
+        toast.error('Error al leer el archivo JSON');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleApplyJSON = () => {
+    try {
+      const parsed = JSON.parse(jsonText);
+      setFormData({ ...formData, ...parsed });
+      setJsonMode(false);
+      toast.success('JSON aplicado exitosamente');
+    } catch (error) {
+      toast.error('JSON inválido: ' + error.message);
+    }
+  };
+
+  const syncJSONFromForm = () => {
+    const dataToExport = { ...formData };
+    delete dataToExport.id;
+    delete dataToExport.created_date;
+    delete dataToExport.updated_date;
+    setJsonText(JSON.stringify(dataToExport, null, 2));
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -124,6 +179,31 @@ export default function CourseModal({ course, onClose }) {
                   {showAIGenerator ? 'Ocultar IA' : 'Generar con IA'}
                 </Button>
               )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleExportJSON}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar JSON
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => document.getElementById('json-import').click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Importar JSON
+              </Button>
+              <input
+                id="json-import"
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={handleImportJSON}
+              />
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
@@ -140,6 +220,16 @@ export default function CourseModal({ course, onClose }) {
               </div>
             )}
 
+            <Tabs defaultValue="form" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="form">Formulario</TabsTrigger>
+                <TabsTrigger value="json" onClick={syncJSONFromForm}>
+                  <Code className="w-4 h-4 mr-2" />
+                  Editor JSON
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="form">
             <div className="space-y-4">
               <div>
                 <Label>Título *</Label>
@@ -390,6 +480,42 @@ export default function CourseModal({ course, onClose }) {
                 </div>
               </div>
             </div>
+              </TabsContent>
+
+              <TabsContent value="json">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 text-sm text-blue-700">
+                      <FileJson className="w-4 h-4" />
+                      <span>Edita el JSON directamente y aplica los cambios</span>
+                    </div>
+                  </div>
+                  <Textarea
+                    value={jsonText}
+                    onChange={(e) => setJsonText(e.target.value)}
+                    className="font-mono text-xs min-h-[400px] bg-slate-50"
+                    placeholder="Pegue su JSON aquí..."
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      onClick={handleApplyJSON}
+                      className="flex-1"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Aplicar JSON
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={syncJSONFromForm}
+                    >
+                      Actualizar desde Formulario
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
 
             <div className="flex gap-3 mt-6 pt-6 border-t border-slate-200">
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">
