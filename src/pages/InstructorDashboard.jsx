@@ -93,7 +93,7 @@ export default function InstructorDashboard() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Card className="border-l-4 border-l-blue-500">
+            <Card className="border-l-4 border-l-blue-500 cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -109,7 +109,7 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="border-l-4 border-l-green-500">
+            <Card className="border-l-4 border-l-green-500 cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -125,7 +125,7 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <Card className="border-l-4 border-l-amber-500">
+            <Card className="border-l-4 border-l-amber-500 cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -141,7 +141,7 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <Card className="border-l-4 border-l-purple-500">
+            <Card className="border-l-4 border-l-purple-500 cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
