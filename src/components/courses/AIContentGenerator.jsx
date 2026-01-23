@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Sparkles, Loader2, BookOpen, FileText, HelpCircle, Lightbulb } from 'lucide-react';
+import { Sparkles, Loader2, BookOpen, FileText, HelpCircle, Lightbulb, Upload, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,6 +19,8 @@ export default function AIContentGenerator({ onApplyCourse, onApplyQuiz }) {
   const [category, setCategory] = useState('operacion');
   const [difficulty, setDifficulty] = useState('intermediate');
   const [generatedContent, setGeneratedContent] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const generateCourse = async () => {
     if (!prompt.trim()) {
@@ -181,6 +183,22 @@ Haz que sea práctico, interactivo y orientado a adultos en contexto industrial.
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setImageUrl(file_url);
+      toast.success('Imagen subida exitosamente');
+    } catch (error) {
+      toast.error('Error al subir imagen');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const generateQuiz = async () => {
     if (!prompt.trim()) {
       toast.error('Por favor ingresa un tema para el quiz');
@@ -197,6 +215,8 @@ Haz que sea práctico, interactivo y orientado a adultos en contexto industrial.
 Categoría: ${category}
 Nivel: ${difficulty}
 
+${imageUrl ? 'Se ha proporcionado una imagen de contexto. Úsala para crear preguntas más específicas y visuales.' : ''}
+
 Genera 10 preguntas de opción múltiple con las siguientes características:
 - 4 opciones por pregunta
 - Solo una respuesta correcta
@@ -206,6 +226,7 @@ Genera 10 preguntas de opción múltiple con las siguientes características:
 - Progresión de dificultad (fácil → difícil)
 
 Las preguntas deben evaluar comprensión profunda, no solo memorización.`,
+        file_urls: imageUrl ? [imageUrl] : undefined,
         response_json_schema: {
           type: "object",
           properties: {
@@ -335,6 +356,54 @@ Las preguntas deben evaluar comprensión profunda, no solo memorización.`,
                 rows={3}
                 className="mt-2"
               />
+            </div>
+            
+            <div>
+              <Label>Imagen (opcional)</Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="URL de la imagen"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('image-upload-quiz').click()}
+                  disabled={uploading}
+                  className="shrink-0"
+                >
+                  {uploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Subir
+                    </>
+                  )}
+                </Button>
+                <input
+                  id="image-upload-quiz"
+                  type="file"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                />
+              </div>
+              {imageUrl && (
+                <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ImageIcon className="w-4 h-4 text-slate-500" />
+                    <span className="text-xs text-slate-600">Vista previa:</span>
+                  </div>
+                  <img 
+                    src={imageUrl} 
+                    alt="Preview" 
+                    className="w-full h-32 object-cover rounded-lg"
+                  />
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
