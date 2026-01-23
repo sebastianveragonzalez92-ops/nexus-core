@@ -20,6 +20,7 @@ import QuizCreator from '../components/instructor/QuizCreator';
 
 export default function InstructorDashboard() {
   const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -93,7 +94,10 @@ export default function InstructorDashboard() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Card className="border-l-4 border-l-blue-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <Card 
+              className="border-l-4 border-l-blue-500 cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setActiveTab('progress')}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -109,7 +113,10 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="border-l-4 border-l-green-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <Card 
+              className="border-l-4 border-l-green-500 cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setActiveTab('overview')}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -125,7 +132,10 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <Card className="border-l-4 border-l-amber-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <Card 
+              className="border-l-4 border-l-amber-500 cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setActiveTab('quizzes')}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -141,7 +151,10 @@ export default function InstructorDashboard() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <Card className="border-l-4 border-l-purple-500 cursor-pointer hover:shadow-lg transition-shadow">
+            <Card 
+              className="border-l-4 border-l-purple-500 cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => setActiveTab('forum')}
+            >
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -163,7 +176,7 @@ export default function InstructorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Tabs defaultValue="overview" className="space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
               <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 bg-transparent h-auto p-0">
                 <TabsTrigger 
