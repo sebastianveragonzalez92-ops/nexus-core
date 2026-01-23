@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Plus, BookOpen, Video, FileText, Award, Search, Filter } from 'lucide-react';
+import { Plus, BookOpen, Video, FileText, Award, Search, Filter, Calendar, Grid, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import CourseCard from '@/components/courses/CourseCard';
 import CourseModal from '@/components/courses/CourseModal';
+import CourseCalendar from '@/components/courses/CourseCalendar';
 
 export default function Courses() {
+  const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('recent');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('grid');
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
 
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: () => base44.entities.Course.list('-created_date', 100),
+  });
+
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['myEnrollments', user?.email],
+    queryFn: () => base44.entities.Enrollment.filter({ user_email: user?.email }),
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
@@ -28,10 +43,40 @@ export default function Courses() {
     },
   });
 
-  const filteredCourses = courses.filter(course => {
+  // Combinar cursos con enrollments para la vista de calendario
+  const enrolledCourses = enrollments.map(enrollment => {
+    const course = courses.find(c => c.id === enrollment.course_id);
+    return { ...enrollment, course };
+  }).filter(e => e.course);
+
+  // Filtrar cursos
+  let filteredCourses = courses.filter(course => {
     const matchesSearch = course.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || course.category === categoryFilter;
+    
+    // Filtrar por estado de inscripción si aplica
+    if (statusFilter !== 'all') {
+      const enrollment = enrollments.find(e => e.course_id === course.id);
+      if (!enrollment || enrollment.status !== statusFilter) {
+        return false;
+      }
+    }
+    
     return matchesSearch && matchesCategory;
+  });
+
+  // Ordenar cursos
+  filteredCourses = [...filteredCourses].sort((a, b) => {
+    switch (sortBy) {
+      case 'recent':
+        return new Date(b.created_date) - new Date(a.created_date);
+      case 'oldest':
+        return new Date(a.created_date) - new Date(b.created_date);
+      case 'title':
+        return (a.title || '').localeCompare(b.title || '');
+      default:
+        return 0;
+    }
   });
 
   const handleEdit = (course) => {
@@ -129,34 +174,98 @@ export default function Courses() {
           transition={{ delay: 0.1 }}
           className="bg-white rounded-2xl p-4 border border-slate-200 mb-6"
         >
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar capacitaciones..."
-                className="pl-10"
-              />
+          <div className="flex flex-col gap-4">
+            {/* Search and Category */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar capacitaciones..."
+                  className="pl-10"
+                />
+              </div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-full sm:w-48">
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas las categorías</SelectItem>
+                  <SelectItem value="operacion">Operación</SelectItem>
+                  <SelectItem value="mantenimiento">Mantenimiento</SelectItem>
+                  <SelectItem value="seguridad">Seguridad</SelectItem>
+                  <SelectItem value="calidad">Calidad</SelectItem>
+                  <SelectItem value="tecnico">Técnico</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue placeholder="Categoría" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas las categorías</SelectItem>
-                <SelectItem value="operacion">Operación</SelectItem>
-                <SelectItem value="mantenimiento">Mantenimiento</SelectItem>
-                <SelectItem value="seguridad">Seguridad</SelectItem>
-                <SelectItem value="calidad">Calidad</SelectItem>
-                <SelectItem value="tecnico">Técnico</SelectItem>
-              </SelectContent>
-            </Select>
+
+            {/* Sort and View Mode */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <SlidersHorizontal className="w-4 h-4" />
+                <span className="font-medium">Ordenar y visualizar</span>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="Estado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los estados</SelectItem>
+                    <SelectItem value="enrolled">Pendiente</SelectItem>
+                    <SelectItem value="in_progress">En progreso</SelectItem>
+                    <SelectItem value="completed">Completado</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-56">
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recent">Más recientes</SelectItem>
+                    <SelectItem value="oldest">Más antiguos</SelectItem>
+                    <SelectItem value="title">Título (A-Z)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="icon"
+                  onClick={() => setViewMode('grid')}
+                >
+                  <Grid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'calendar' ? 'default' : 'outline'}
+                  size="icon"
+                  onClick={() => setViewMode('calendar')}
+                >
+                  <Calendar className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </motion.div>
 
+        {/* Calendar View */}
+        {viewMode === 'calendar' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <CourseCalendar enrolledCourses={enrolledCourses} />
+          </motion.div>
+        )}
+
         {/* Courses Grid */}
+        {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
@@ -179,6 +288,7 @@ export default function Courses() {
             </div>
           )}
         </div>
+        )}
       </div>
 
       {showModal && (

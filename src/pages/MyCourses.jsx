@@ -9,10 +9,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import CourseFilters from '@/components/courses/CourseFilters';
+import CourseCalendar from '@/components/courses/CourseCalendar';
 
 export default function MyCourses() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [sortBy, setSortBy] = useState('recent');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -40,8 +45,34 @@ export default function MyCourses() {
     return { ...enrollment, course };
   }).filter(e => e.course);
 
-  const inProgress = enrolledCourses.filter(e => e.status === 'in_progress');
-  const completed = enrolledCourses.filter(e => e.status === 'completed');
+  // Filtrar por estado
+  const filteredByStatus = statusFilter === 'all' 
+    ? enrolledCourses 
+    : enrolledCourses.filter(e => e.status === statusFilter);
+
+  // Ordenar
+  const sortedCourses = [...filteredByStatus].sort((a, b) => {
+    switch (sortBy) {
+      case 'recent':
+        return new Date(b.created_date) - new Date(a.created_date);
+      case 'oldest':
+        return new Date(a.created_date) - new Date(b.created_date);
+      case 'progress':
+        return (b.progress_percent || 0) - (a.progress_percent || 0);
+      case 'title':
+        return (a.course?.title || '').localeCompare(b.course?.title || '');
+      case 'completion':
+        if (!a.completed_date && !b.completed_date) return 0;
+        if (!a.completed_date) return 1;
+        if (!b.completed_date) return -1;
+        return new Date(b.completed_date) - new Date(a.completed_date);
+      default:
+        return 0;
+    }
+  });
+
+  const inProgress = sortedCourses.filter(e => e.status === 'in_progress');
+  const completed = sortedCourses.filter(e => e.status === 'completed');
 
   const avgProgress = enrolledCourses.length > 0
     ? Math.round(enrolledCourses.reduce((sum, e) => sum + (e.progress_percent || 0), 0) / enrolledCourses.length)
@@ -128,7 +159,29 @@ export default function MyCourses() {
           </Card>
         </div>
 
+        {/* Filters */}
+        <CourseFilters
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        {/* Calendar View */}
+        {viewMode === 'calendar' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <CourseCalendar enrolledCourses={enrolledCourses} />
+          </motion.div>
+        )}
+
         {/* In Progress Courses */}
+        {viewMode === 'grid' && (
         {inProgress.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -273,6 +326,7 @@ export default function MyCourses() {
               })}
             </div>
           </motion.div>
+        )}
         )}
 
         {/* Empty State */}
