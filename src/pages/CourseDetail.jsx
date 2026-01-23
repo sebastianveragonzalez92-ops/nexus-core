@@ -420,7 +420,13 @@ export default function CourseDetail() {
                         <LessonList 
                           courseId={courseId} 
                           user={user}
-                          onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
+                          onAllLessonsCompleted={() => {
+                            setAllLessonsCompleted(true);
+                            // Si no hay examen final, completar el curso automáticamente
+                            if (finalExams.length === 0 && enrollment.status !== 'completed') {
+                              completeMutation.mutate();
+                            }
+                          }}
                         />
                       </div>
                     )}
