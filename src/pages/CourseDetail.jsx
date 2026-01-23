@@ -424,9 +424,11 @@ export default function CourseDetail() {
                             setAllLessonsCompleted(true);
                           }}
                         onProgressUpdate={(progress) => {
-                            // Si progreso alcanza 100% y no hay examen final, completar el curso
+                            // Si progreso alcanza 100% y no hay examen final, completar el curso y generar certificado
                             if (progress === 100 && finalExams.length === 0 && enrollment.status !== 'completed') {
-                              completeMutation.mutate();
+                              setTimeout(() => {
+                                completeMutation.mutate();
+                              }, 1000);
                             }
                           }}
                         />

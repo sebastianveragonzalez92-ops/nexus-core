@@ -136,7 +136,7 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted, onPr
         if (enrollment.progress_percent !== newProgress) {
           await base44.entities.Enrollment.update(enrollment.id, {
             progress_percent: newProgress,
-            status: newProgress === 100 ? 'completed' : 'in_progress'
+            status: newProgress === 100 ? 'in_progress' : 'in_progress'
           });
           queryClient.invalidateQueries({ queryKey: ['enrollments'] });
           
