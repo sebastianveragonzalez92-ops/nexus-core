@@ -67,6 +67,31 @@ export default function CourseDetail() {
 
   const enrollment = enrollments[0];
 
+  // Check if final exam is passed but course not completed
+  useEffect(() => {
+    if (!user || !enrollment || enrollment.status === 'completed' || finalExams.length === 0) return;
+    
+    const checkFinalExamCompletion = async () => {
+      for (const exam of finalExams) {
+        const attempts = await base44.entities.QuizAttempt.filter({
+          quiz_id: exam.id,
+          user_email: user.email,
+          passed: true
+        });
+        
+        if (attempts.length > 0 && enrollment.status !== 'completed') {
+          // Usuario aprobó el examen final pero el curso no está completado
+          setTimeout(() => {
+            completeMutation.mutate();
+          }, 500);
+          break;
+        }
+      }
+    };
+    
+    checkFinalExamCompletion();
+  }, [user, enrollment, finalExams]);
+
   // Enroll mutation
   const enrollMutation = useMutation({
     mutationFn: async () => {
