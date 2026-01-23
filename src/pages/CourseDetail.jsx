@@ -340,44 +340,113 @@ export default function CourseDetail() {
               <TabsTrigger value="details">Detalles</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="content" className="space-y-4">
+            <TabsContent value="content" className="space-y-6">
               {enrollment ? (
-                course.type === 'xapi' ? (
-                  <XAPIViewer
-                    contentUrl={course.content_url}
-                    courseId={courseId}
-                    enrollment={enrollment}
-                    onProgressUpdate={(progress) => {
-                      base44.entities.Enrollment.update(enrollment.id, {
-                        progress_percent: progress,
-                        status: progress === 100 ? 'completed' : 'in_progress'
-                      }).then(() => {
-                        queryClient.invalidateQueries({ queryKey: ['enrollments'] });
-                        if (progress === 100) {
-                          setAllLessonsCompleted(true);
-                          if (enrollment.status !== 'completed') {
-                            completeMutation.mutate();
-                          }
-                        }
-                      });
-                    }}
-                  />
-                ) : (
-                  <LessonList 
-                    courseId={courseId} 
-                    user={user}
-                    onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
-                  />
-                )
+                <>
+                  {/* Content Header */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-500 rounded-2xl p-8 text-white"
+                  >
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                            <Play className="w-6 h-6 text-white" />
+                          </div>
+                          <div>
+                            <h2 className="text-2xl font-bold">Contenido del Curso</h2>
+                            <p className="text-indigo-100 text-sm">
+                              {course.type === 'xapi' ? 'Contenido interactivo xAPI/cmi5' : 'Lecciones y módulos'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-6 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-indigo-200" />
+                            <span className="text-indigo-100">{course.duration_minutes} minutos</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Award className="w-4 h-4 text-indigo-200" />
+                            <span className="text-indigo-100">{enrollment.progress_percent}% completado</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/20">
+                        <div className="text-center">
+                          <div className="text-3xl font-bold mb-1">{enrollment.progress_percent}%</div>
+                          <div className="text-xs text-indigo-100 uppercase tracking-wider">Progreso Total</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-6">
+                      <Progress value={enrollment.progress_percent} className="h-2 bg-white/20" />
+                    </div>
+                  </motion.div>
+
+                  {/* Content Body */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    {course.type === 'xapi' ? (
+                      <Card className="border-2 border-slate-200 shadow-lg">
+                        <CardContent className="p-6">
+                          <XAPIViewer
+                            contentUrl={course.content_url}
+                            courseId={courseId}
+                            enrollment={enrollment}
+                            onProgressUpdate={(progress) => {
+                              base44.entities.Enrollment.update(enrollment.id, {
+                                progress_percent: progress,
+                                status: progress === 100 ? 'completed' : 'in_progress'
+                              }).then(() => {
+                                queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+                                if (progress === 100) {
+                                  setAllLessonsCompleted(true);
+                                  if (enrollment.status !== 'completed') {
+                                    completeMutation.mutate();
+                                  }
+                                }
+                              });
+                            }}
+                          />
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-lg p-6">
+                        <LessonList 
+                          courseId={courseId} 
+                          user={user}
+                          onAllLessonsCompleted={() => setAllLessonsCompleted(true)}
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                </>
               ) : (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-4">Inscríbete para acceder al contenido del curso</p>
+                <Card className="border-2 border-indigo-100">
+                  <CardContent className="py-16 text-center">
+                    <div className="mb-6">
+                      <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-violet-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <FileText className="w-10 h-10 text-indigo-600" />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                      Comienza tu Aprendizaje
+                    </h3>
+                    <p className="text-slate-600 mb-6 max-w-md mx-auto">
+                      Inscríbete en este curso para acceder a todo el contenido educativo, 
+                      lecciones interactivas y materiales de aprendizaje.
+                    </p>
                     <Button 
-                      className="bg-gradient-to-r from-indigo-500 to-violet-500"
+                      size="lg"
+                      className="bg-gradient-to-r from-indigo-500 to-violet-500 shadow-lg hover:shadow-xl transition-all"
                       onClick={() => enrollMutation.mutate()}
                     >
+                      <Play className="w-5 h-5 mr-2" />
                       Inscribirse Ahora
                     </Button>
                   </CardContent>
