@@ -17,12 +17,36 @@ export default function QuizViewer({ quiz, user, onComplete }) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime] = useState(Date.now());
+  const [previousAttempt, setPreviousAttempt] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (quiz.time_limit_minutes) {
       setTimeLeft(quiz.time_limit_minutes * 60);
     }
   }, [quiz]);
+
+  // Check for previous attempts if it's a final exam
+  useEffect(() => {
+    if (quiz.type === 'final_exam' && user) {
+      base44.entities.QuizAttempt.filter({
+        quiz_id: quiz.id,
+        user_email: user.email,
+        passed: true
+      }).then(attempts => {
+        if (attempts.length > 0) {
+          setPreviousAttempt(attempts[0]);
+          setScore(attempts[0].score);
+          setShowResults(true);
+        }
+        setLoading(false);
+      }).catch(() => {
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [quiz, user]);
 
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0) return;
@@ -100,8 +124,23 @@ export default function QuizViewer({ quiz, user, onComplete }) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="py-12 text-center">
+          <div className="animate-pulse">
+            <div className="w-12 h-12 bg-slate-200 rounded-full mx-auto mb-4"></div>
+            <div className="h-4 bg-slate-200 rounded w-32 mx-auto"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (showResults) {
     const passed = score >= quiz.passing_score;
+    const isBlocked = previousAttempt && quiz.type === 'final_exam' && passed;
+    
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -118,37 +157,41 @@ export default function QuizViewer({ quiz, user, onComplete }) {
               )}
             </div>
             <h3 className="text-2xl font-bold mb-2">
-              {passed ? '¡Quiz Completado!' : 'Sigue Intentando'}
+              {isBlocked ? '¡Evaluación Completada!' : passed ? '¡Quiz Completado!' : 'Sigue Intentando'}
             </h3>
             <p className="text-3xl font-bold text-slate-900 mb-4">{score}%</p>
             <p className="text-slate-600 mb-6">
-              {passed 
-                ? `Has superado el puntaje mínimo de ${quiz.passing_score}%`
-                : `Necesitas ${quiz.passing_score}% para aprobar`
+              {isBlocked 
+                ? 'Ya has aprobado esta evaluación final'
+                : passed 
+                  ? `Has superado el puntaje mínimo de ${quiz.passing_score}%`
+                  : `Necesitas ${quiz.passing_score}% para aprobar`
               }
             </p>
-            <div className="space-y-3">
-              {quiz.questions.map((q, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-white rounded-lg border">
-                  {answers[i] === q.correct_answer ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                  ) : (
-                    <XCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                  )}
-                  <div className="flex-1 text-left">
-                    <p className="font-medium text-sm mb-1">{q.question}</p>
-                    {answers[i] !== q.correct_answer && (
-                      <p className="text-xs text-slate-600">
-                        Respuesta correcta: {q.options[q.correct_answer]}
-                      </p>
+            {!isBlocked && answers.length > 0 && (
+              <div className="space-y-3">
+                {quiz.questions.map((q, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 bg-white rounded-lg border">
+                    {answers[i] === q.correct_answer ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                     )}
-                    {q.explanation && (
-                      <p className="text-xs text-slate-500 mt-1 italic">{q.explanation}</p>
-                    )}
+                    <div className="flex-1 text-left">
+                      <p className="font-medium text-sm mb-1">{q.question}</p>
+                      {answers[i] !== q.correct_answer && (
+                        <p className="text-xs text-slate-600">
+                          Respuesta correcta: {q.options[q.correct_answer]}
+                        </p>
+                      )}
+                      {q.explanation && (
+                        <p className="text-xs text-slate-500 mt-1 italic">{q.explanation}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>
