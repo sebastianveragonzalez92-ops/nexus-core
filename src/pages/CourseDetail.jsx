@@ -316,6 +316,9 @@ export default function CourseDetail() {
                         queryClient.invalidateQueries({ queryKey: ['enrollments'] });
                         if (progress === 100) {
                           setAllLessonsCompleted(true);
+                          if (enrollment.status !== 'completed') {
+                            completeMutation.mutate();
+                          }
                         }
                       });
                     }}
