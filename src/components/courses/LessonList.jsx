@@ -117,6 +117,35 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
 
   const allLessonsComplete = lessons.length > 0 && progressRecords.filter(p => p.completed).length === lessons.length;
 
+  // Update enrollment progress whenever lesson progress changes
+  React.useEffect(() => {
+    const updateEnrollmentProgress = async () => {
+      if (!user || !courseId || lessons.length === 0) return;
+      
+      const completedCount = progressRecords.filter(p => p.completed).length;
+      const newProgress = Math.round((completedCount / lessons.length) * 100);
+      
+      // Fetch and update enrollment
+      const enrollments = await base44.entities.Enrollment.filter({
+        course_id: courseId,
+        user_email: user.email
+      });
+      
+      if (enrollments.length > 0) {
+        const enrollment = enrollments[0];
+        if (enrollment.progress_percent !== newProgress) {
+          await base44.entities.Enrollment.update(enrollment.id, {
+            progress_percent: newProgress,
+            status: newProgress === 100 ? 'completed' : 'in_progress'
+          });
+          queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+        }
+      }
+    };
+    
+    updateEnrollmentProgress();
+  }, [progressRecords.length, lessons.length, user, courseId]);
+
   React.useEffect(() => {
     if (allLessonsComplete && onAllLessonsCompleted) {
       onAllLessonsCompleted();
