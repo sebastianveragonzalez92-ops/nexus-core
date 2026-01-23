@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Play, CheckCircle, Clock, Award, 
-  FileText, Users, BookOpen, Download, Upload, MessageSquare, Brain
+  FileText, Users, BookOpen, Download, Upload, MessageSquare, Brain, Eye, EyeOff
 } from 'lucide-react';
 import QuizViewer from '../components/courses/QuizViewer';
 import DiscussionForum from '../components/courses/DiscussionForum';
@@ -86,6 +86,19 @@ export default function CourseDetail() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['enrollments'] });
       toast.success('¡Inscripción exitosa!');
+    },
+  });
+
+  // Update course status mutation
+  const updateStatusMutation = useMutation({
+    mutationFn: async (newStatus) => {
+      return await base44.entities.Course.update(courseId, {
+        status: newStatus
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+      toast.success('Estado del curso actualizado');
     },
   });
 
@@ -182,7 +195,7 @@ export default function CourseDetail() {
         >
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1">
-              <div className="flex gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4">
                 <Badge className={typeColors[course.type]}>
                   {course.type}
                 </Badge>
@@ -195,11 +208,38 @@ export default function CourseDetail() {
                     Certificación
                   </Badge>
                 )}
+                <Badge className={course.status === 'published' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-slate-100 text-slate-600 border-slate-200'}>
+                  {course.status === 'published' ? 'Publicado' : 'En Desarrollo'}
+                </Badge>
               </div>
 
-              <h1 className="text-3xl font-bold text-slate-900 mb-3">
-                {course.title}
-              </h1>
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <h1 className="text-3xl font-bold text-slate-900 flex-1">
+                  {course.title}
+                </h1>
+                {user?.role === 'admin' && (
+                  <Button
+                    variant={course.status === 'published' ? 'outline' : 'default'}
+                    size="sm"
+                    onClick={() => updateStatusMutation.mutate(
+                      course.status === 'published' ? 'draft' : 'published'
+                    )}
+                    disabled={updateStatusMutation.isPending}
+                  >
+                    {course.status === 'published' ? (
+                      <>
+                        <EyeOff className="w-4 h-4 mr-2" />
+                        Despublicar
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Publicar
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
               <p className="text-slate-600 mb-6">
                 {course.description}
               </p>
