@@ -13,7 +13,7 @@ import { awardPoints, incrementStat, checkAndAwardBadges, POINTS } from '../gami
 import MicroStepReader from './MicroStepReader';
 import InteractiveChecklist from './InteractiveChecklist';
 
-export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
+export default function LessonList({ courseId, user, onAllLessonsCompleted, onProgressUpdate }) {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [selectedScenarioOptions, setSelectedScenarioOptions] = useState({});
   const [showScenarioFeedback, setShowScenarioFeedback] = useState({});
@@ -139,6 +139,11 @@ export default function LessonList({ courseId, user, onAllLessonsCompleted }) {
             status: newProgress === 100 ? 'completed' : 'in_progress'
           });
           queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+          
+          // Notificar al componente padre sobre el cambio de progreso
+          if (onProgressUpdate) {
+            onProgressUpdate(newProgress);
+          }
         }
       }
     };

@@ -422,8 +422,10 @@ export default function CourseDetail() {
                           user={user}
                           onAllLessonsCompleted={() => {
                             setAllLessonsCompleted(true);
-                            // Si no hay examen final, completar el curso automáticamente
-                            if (finalExams.length === 0 && enrollment.status !== 'completed') {
+                          }}
+                        onProgressUpdate={(progress) => {
+                            // Si progreso alcanza 100% y no hay examen final, completar el curso
+                            if (progress === 100 && finalExams.length === 0 && enrollment.status !== 'completed') {
                               completeMutation.mutate();
                             }
                           }}
@@ -560,14 +562,14 @@ export default function CourseDetail() {
                     </Button>
                   </CardContent>
                 </Card>
-              ) : !allLessonsCompleted ? (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <Award className="w-12 h-12 text-amber-300 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-2">Completa todas las lecciones y quizzes primero</p>
-                    <p className="text-sm text-slate-500">La evaluación final estará disponible una vez completes todo el contenido</p>
-                  </CardContent>
-                </Card>
+              ) : !allLessonsCompleted && enrollment.progress_percent < 100 ? (
+              <Card>
+              <CardContent className="py-12 text-center">
+              <Award className="w-12 h-12 text-amber-300 mx-auto mb-4" />
+              <p className="text-slate-600 mb-2">Completa todas las lecciones y quizzes primero</p>
+              <p className="text-sm text-slate-500">La evaluación final estará disponible una vez completes todo el contenido</p>
+              </CardContent>
+              </Card>
               ) : finalExams.length === 0 ? (
                 <Card>
                   <CardContent className="py-12 text-center text-slate-500">
