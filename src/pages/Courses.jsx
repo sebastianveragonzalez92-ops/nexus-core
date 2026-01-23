@@ -103,13 +103,15 @@ export default function Courses() {
               <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Capacitaciones</h1>
               <p className="text-slate-500 mt-1">Gestiona cursos, evaluaciones y certificaciones</p>
             </div>
-            <Button
-              onClick={handleAdd}
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Nueva Capacitación
-            </Button>
+            {user?.role === 'admin' && (
+              <Button
+                onClick={handleAdd}
+                className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Nueva Capacitación
+              </Button>
+            )}
           </div>
 
           {/* Stats */}
