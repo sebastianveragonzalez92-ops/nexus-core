@@ -13,6 +13,7 @@ export default function MicroStepReader({ content, user, onComplete }) {
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showCompletionScreen, setShowCompletionScreen] = useState(false);
 
   // Parse content into micro-steps
   const steps = content.steps || [];
@@ -26,12 +27,17 @@ export default function MicroStepReader({ content, user, onComplete }) {
     }
 
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setSelectedAnswer(null);
-      setShowFeedback(false);
+      setShowCompletionScreen(true);
     } else {
       onComplete?.();
     }
+  };
+
+  const handleContinueToNext = () => {
+    setCurrentStep(currentStep + 1);
+    setSelectedAnswer(null);
+    setShowFeedback(false);
+    setShowCompletionScreen(false);
   };
 
   const handleAnswerQuestion = async (answerIndex) => {
@@ -45,6 +51,32 @@ export default function MicroStepReader({ content, user, onComplete }) {
 
   if (!steps || steps.length === 0) {
     return null;
+  }
+
+  // Completion screen between steps
+  if (showCompletionScreen) {
+    return (
+      <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+        <CardContent className="p-12 text-center space-y-6">
+          <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+            <CheckCircle className="w-8 h-8 text-green-600" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">¡Micro-paso completado!</h3>
+            <p className="text-slate-600">Has completado el paso {currentStep + 1} de {steps.length}</p>
+          </div>
+          <Progress value={progress} className="h-3" />
+          <Button 
+            onClick={handleContinueToNext}
+            size="lg"
+            className="bg-gradient-to-r from-green-500 to-emerald-500"
+          >
+            Continuar al siguiente paso
+            <ChevronRight className="w-5 h-5 ml-2" />
+          </Button>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
