@@ -102,25 +102,24 @@ export default function CourseDetail() {
       // Send completion notification
       await notifyCourseCompletion(user.email, course, 100);
 
-      if (course.requires_certification) {
-        const certNumber = `CERT-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-        const expiryDate = course.certification_validity_days 
-          ? new Date(Date.now() + course.certification_validity_days * 24 * 60 * 60 * 1000).toISOString()
-          : null;
-        
-        const cert = await base44.entities.Certificate.create({
-          course_id: courseId,
-          user_email: user.email,
-          certificate_number: certNumber,
-          issued_date: new Date().toISOString(),
-          expiry_date: expiryDate,
-          status: 'active',
-          score: 100,
-        });
-        
-        // Send certificate notification
-        await notifyCertificateIssued(user.email, course, cert.id);
-      }
+      // Generate certificate for all completed courses
+      const certNumber = `CERT-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      const expiryDate = course.certification_validity_days 
+        ? new Date(Date.now() + course.certification_validity_days * 24 * 60 * 60 * 1000).toISOString()
+        : null;
+      
+      const cert = await base44.entities.Certificate.create({
+        course_id: courseId,
+        user_email: user.email,
+        certificate_number: certNumber,
+        issued_date: new Date().toISOString(),
+        expiry_date: expiryDate,
+        status: 'active',
+        score: 100,
+      });
+      
+      // Send certificate notification
+      await notifyCertificateIssued(user.email, course, cert.id);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['enrollments'] });
