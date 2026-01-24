@@ -273,11 +273,11 @@ export default function ExamManagement({ user, exams }) {
                     Cancelar
                   </Button>
                 </div>
-                </form>
-                </CardContent>
-                </Card>
-                </motion.div>
-                )}
+              </form>
+              </CardContent>
+              </Card>
+              </motion.div>
+              )}
 
 
       {/* Exams List */}
