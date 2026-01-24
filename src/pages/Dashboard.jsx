@@ -164,7 +164,7 @@ export default function Dashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <Link to={createPageUrl('MyCourses')}>
+          <Link to={createPageUrl('MyCourses')} className="block">
             <StatsCard
               title="Cursos Completados"
               value={completedCourses}
@@ -174,7 +174,7 @@ export default function Dashboard() {
               index={0}
             />
           </Link>
-          <Link to={createPageUrl('MyCourses')}>
+          <Link to={createPageUrl('MyCourses')} className="block">
             <StatsCard
               title="Progreso General"
               value={`${avgProgress}%`}
@@ -185,7 +185,7 @@ export default function Dashboard() {
               index={1}
             />
           </Link>
-          <Link to={createPageUrl('MyCourses')}>
+          <Link to={createPageUrl('MyCourses')} className="block">
             <StatsCard
               title="En Progreso"
               value={inProgressCourses}
@@ -195,7 +195,7 @@ export default function Dashboard() {
               index={2}
             />
           </Link>
-          <Link to={createPageUrl('Courses')}>
+          <Link to={createPageUrl('Courses')} className="block">
             <StatsCard
               title="Cursos Disponibles"
               value={courses.length}
@@ -235,7 +235,7 @@ export default function Dashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
-                      <Link to={createPageUrl('CourseDetail') + '?id=' + enrollment.course_id}>
+                      <Link to={createPageUrl('CourseDetail') + '?id=' + enrollment.course_id} className="block">
                         <div className="p-4 bg-slate-50 rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer border border-transparent hover:border-indigo-200">
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-semibold text-slate-900">{course?.title || 'Curso'}</h4>
@@ -303,7 +303,7 @@ export default function Dashboard() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: idx * 0.1 }}
                   >
-                    <Link to={createPageUrl('CourseDetail') + '?id=' + course.id}>
+                    <Link to={createPageUrl('CourseDetail') + '?id=' + course.id} className="block">
                       <div className="p-4 bg-gradient-to-br from-indigo-50 to-white rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer border border-indigo-100">
                         <div className="flex items-start justify-between mb-3">
                           <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
