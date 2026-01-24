@@ -12,16 +12,17 @@ import NotificationCenter from './components/notifications/NotificationCenter';
 import ExtensionBlockerGuard from './components/ExtensionBlockerGuard';
 
 const getNavItems = (userRole) => {
-  const items = [
-    { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
-    { name: 'Capacitaciones', page: 'Courses', icon: Layers },
-    { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
-    { name: 'Gamificación', page: 'Gamification', icon: Award },
-    { name: 'Certificados', page: 'Certificates', icon: Award },
-    { name: 'Notificaciones', page: 'Notifications', icon: Bell },
-    { name: 'Tutor IA', page: 'Tutor', icon: Bot },
-    { name: 'Actividad', page: 'Activity', icon: Activity },
-  ];
+        const items = [
+          { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
+          { name: 'Capacitaciones', page: 'Courses', icon: Layers },
+          { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+          { name: 'Gamificación', page: 'Gamification', icon: Award },
+          { name: 'Certificados', page: 'Certificates', icon: Award },
+          { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
+          { name: 'Notificaciones', page: 'Notifications', icon: Bell },
+          { name: 'Tutor IA', page: 'Tutor', icon: Bot },
+          { name: 'Actividad', page: 'Activity', icon: Activity },
+        ];
 
   if (userRole === 'admin') {
     items.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
