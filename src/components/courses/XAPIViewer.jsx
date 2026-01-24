@@ -114,8 +114,9 @@ export default function XAPIViewer({ contentUrl, courseId, enrollment, onProgres
               src={contentUrl}
               className="absolute top-0 left-0 w-full h-full border-0"
               title="Contenido xAPI/cmi5"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
               allowFullScreen
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-presentation"
             />
           </div>
         </CardContent>
