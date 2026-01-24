@@ -8,6 +8,7 @@ import MaintenanceDashboard from '@/components/maintenance/MaintenanceDashboard'
 import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
 import ImportFromSheets from '@/components/maintenance/ImportFromSheets';
+import ExportButton from '@/components/maintenance/ExportButton';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
@@ -40,9 +41,12 @@ export default function Maintenance() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <Wrench className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-3xl font-bold text-slate-900">Mantenimiento</h1>
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <div className="flex items-center gap-3">
+              <Wrench className="w-8 h-8 text-indigo-600" />
+              <h1 className="text-3xl font-bold text-slate-900">Mantenimiento</h1>
+            </div>
+            <ExportButton />
           </div>
           <p className="text-slate-600">Gestiona órdenes de trabajo, historial y métricas de mantenimiento</p>
         </div>
