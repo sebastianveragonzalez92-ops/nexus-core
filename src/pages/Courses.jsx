@@ -25,10 +25,13 @@ export default function Courses() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
-  const { data: courses = [], isLoading } = useQuery({
+  const { data: allCourses = [], isLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: () => base44.entities.Course.list('-created_date', 100),
   });
+
+  // Usuarios normales solo ven cursos publicados, admins ven todos
+  const courses = user?.role === 'admin' ? allCourses : allCourses.filter(c => c.status === 'published');
 
   const { data: enrollments = [] } = useQuery({
     queryKey: ['myEnrollments', user?.email],
