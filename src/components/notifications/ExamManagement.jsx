@@ -69,7 +69,18 @@ export default function ExamManagement({ user, exams }) {
     if (daysUntilExpiry < 0) status = 'vencido';
     else if (daysUntilExpiry <= 30) status = 'proximo_vencer';
 
-    saveMutation.mutate({ ...formData, status, user_email: user.email });
+    const data = {
+      exam_type: formData.exam_type,
+      exam_name: formData.exam_name,
+      exam_date: formData.exam_date || null,
+      expiry_date: formData.expiry_date,
+      status,
+      user_email: user?.email,
+      document_url: formData.document_url || '',
+      notes: formData.notes || '',
+    };
+
+    saveMutation.mutate(data);
   };
 
   const handleEdit = (exam) => {
