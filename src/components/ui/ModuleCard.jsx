@@ -128,11 +128,13 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
           {isActive && targetPage && (
             <ArrowRight className="w-4 h-4 text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
           )}
-          <Switch
-            checked={isActive}
-            onCheckedChange={handleSwitchChange}
-            className="data-[state=checked]:bg-indigo-500"
-          />
+          {isAdmin && (
+            <Switch
+              checked={isActive}
+              onCheckedChange={handleSwitchChange}
+              className="data-[state=checked]:bg-indigo-500"
+            />
+          )}
         </div>
       </div>
     </motion.div>
