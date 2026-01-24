@@ -4,7 +4,9 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ModuleCard from '@/components/ui/ModuleCard';
 
-export default function ModulesGrid({ modules, onToggleModule, onAddModule }) {
+export default function ModulesGrid({ modules, onToggleModule, onAddModule, isAdmin = false }) {
+  const displayModules = isAdmin ? modules : modules.filter(m => m.status === 'active');
+  
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -14,15 +16,19 @@ export default function ModulesGrid({ modules, onToggleModule, onAddModule }) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Módulos</h2>
-          <p className="text-sm text-slate-500">Activa o desactiva funcionalidades</p>
+          <p className="text-sm text-slate-500">
+            {isAdmin ? 'Activa o desactiva funcionalidades' : 'Accede a las funcionalidades del sistema'}
+          </p>
         </div>
-        <Button
-          onClick={onAddModule}
-          className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl transition-all"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Nuevo módulo
-        </Button>
+        {isAdmin && (
+          <Button
+            onClick={onAddModule}
+            className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl transition-all"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo módulo
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
