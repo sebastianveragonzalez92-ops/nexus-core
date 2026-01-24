@@ -15,6 +15,7 @@ import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 export default function ExamManagement({ user, exams }) {
+  console.log('🔍 ExamManagement: user.role =', user?.role, '| isAdmin =', user?.role === 'admin');
   const isAdmin = user?.role === 'admin';
   
   const [showForm, setShowForm] = useState(false);
