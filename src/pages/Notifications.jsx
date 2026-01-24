@@ -27,13 +27,20 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     console.log('📋 Notificaciones: useEffect iniciado');
+    console.log('📋 Notificaciones: Llamando base44.auth.me()...');
+    
     base44.auth.me()
       .then((userData) => {
-        console.log('✅ Notificaciones: Usuario cargado -', userData?.email, 'Rol:', userData?.role);
+        console.log('✅ Notificaciones: ÉXITO - Usuario cargado');
+        console.log('✅ Email:', userData?.email);
+        console.log('✅ Rol:', userData?.role);
+        console.log('✅ Objeto completo:', userData);
         setUser(userData);
       })
       .catch((error) => {
-        console.error('❌ Notificaciones: Error cargando usuario:', error);
+        console.error('❌ Notificaciones: ERROR al cargar usuario:', error);
+        console.error('❌ Error message:', error?.message);
+        console.error('❌ Error stack:', error?.stack);
       });
   }, []);
 
