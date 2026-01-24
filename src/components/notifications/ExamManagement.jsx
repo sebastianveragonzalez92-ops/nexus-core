@@ -366,12 +366,12 @@ export default function ExamManagement({ user, exams }) {
                       </>
                     )}
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      )}
+                  </CardContent>
+                  </Card>
+                  </motion.div>
+                  ))}
+                  </div>
+                  )}
     </div>
   );
 }
