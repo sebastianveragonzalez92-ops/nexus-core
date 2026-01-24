@@ -29,6 +29,8 @@ export default function ExamManagement({ user, exams }) {
 
   const queryClient = useQueryClient();
   const isAdmin = user?.role === 'admin';
+  
+  console.log('🔍 ExamManagement render:', { userRole: user?.role, isAdmin, userId: user?.id });
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
