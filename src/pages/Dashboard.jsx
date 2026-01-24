@@ -49,10 +49,13 @@ export default function Dashboard() {
   });
 
   // Courses query
-  const { data: courses = [] } = useQuery({
+  const { data: allCourses = [] } = useQuery({
     queryKey: ['courses'],
-    queryFn: () => base44.entities.Course.list('-created_date', 5),
+    queryFn: () => base44.entities.Course.list('-created_date', 50),
   });
+
+  // Filter courses based on role
+  const courses = user?.role === 'admin' ? allCourses : allCourses.filter(c => c.status === 'published');
 
   // Enrollments query
   const { data: enrollments = [] } = useQuery({
