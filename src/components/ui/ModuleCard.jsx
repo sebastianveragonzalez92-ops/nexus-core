@@ -65,7 +65,10 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
     }
     
     if (isActive && targetPage) {
+      console.log('Módulo:', module.name, '→ Página:', targetPage);
       window.location.href = createPageUrl(targetPage);
+    } else if (isActive && !targetPage) {
+      console.warn('Módulo sin mapeo de página:', module.name);
     }
   };
 
