@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
-import SafeModeWrapper from './components/security/SafeModeWrapper';
 
 const getNavItems = (userRole) => {
   const items = [
@@ -63,7 +62,6 @@ export default function Layout({ children, currentPageName }) {
   }, [currentPageName]);
 
   return (
-    <SafeModeWrapper>
     <div className="min-h-screen bg-slate-50">
       {/* Mobile sidebar backdrop */}
       <AnimatePresence>
@@ -246,6 +244,5 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </main>
     </div>
-    </SafeModeWrapper>
   );
 }
