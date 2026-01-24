@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,7 +34,15 @@ const getNavItems = (userRole) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  console.log('🎨 Layout: Componente iniciando, página:', currentPageName);
+  const location = useLocation();
+  
+  // Determinar la página actual desde la URL
+  const getPageNameFromPath = (pathname) => {
+    const path = pathname.replace(/^\//, '').split('/')[0];
+    return path || 'Dashboard';
+  };
+  
+  const actualPageName = getPageNameFromPath(location.pathname);
   
   const [user, setUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -52,18 +60,16 @@ export default function Layout({ children, currentPageName }) {
       });
   }, []);
 
-  console.log('🟢 Layout: Renderizando con usuario:', user?.email || 'sin usuario');
+
 
   const brandColor = user?.company_primary_color || '#6366f1';
   const brandName = user?.company_name || 'ModulaX';
   const brandLogo = user?.company_logo;
   const navItems = getNavItems(user?.role);
 
-  console.log('🔍 Layout: currentPageName prop recibida:', currentPageName);
-
   useEffect(() => {
     setIsSidebarOpen(false);
-  }, [currentPageName]);
+  }, [actualPageName]);
 
   return (
     <ExtensionBlockerGuard>
@@ -126,9 +132,9 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
-            {navItems.map(({ name, page, icon: Icon }) => {
-              const isActive = currentPageName === page;
+           <nav className="flex-1 p-4 space-y-1">
+             {navItems.map(({ name, page, icon: Icon }) => {
+               const isActive = actualPageName === page;
               return (
                 <Link
                   key={page}
