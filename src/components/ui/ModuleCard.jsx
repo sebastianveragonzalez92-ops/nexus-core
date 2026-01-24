@@ -54,8 +54,11 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
   const targetPage = pageMap[module.name];
 
   const handleCardClick = (e) => {
-    // No redirigir si se hace clic en el switch
-    if (e.target.closest('button')) return;
+    // Prevenir propagación de clicks en el área del switch
+    const target = e.target;
+    if (target.closest('[role="switch"]') || target.closest('button[role="switch"]')) {
+      return;
+    }
     
     if (isActive && targetPage) {
       window.location.href = createPageUrl(targetPage);
