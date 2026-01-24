@@ -26,9 +26,15 @@ export default function NotificationsPage() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch((error) => {
-      console.error('Error cargando usuario:', error);
-    });
+    console.log('📋 Notificaciones: useEffect iniciado');
+    base44.auth.me()
+      .then((userData) => {
+        console.log('✅ Notificaciones: Usuario cargado -', userData?.email, 'Rol:', userData?.role);
+        setUser(userData);
+      })
+      .catch((error) => {
+        console.error('❌ Notificaciones: Error cargando usuario:', error);
+      });
   }, []);
 
   // Fetch notifications
