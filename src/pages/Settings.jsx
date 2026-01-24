@@ -63,8 +63,10 @@ export default function Settings() {
       }));
     }).catch((error) => {
       console.error('Error al cargar usuario:', error);
-      // Redirigir al login si no está autenticado
-      base44.auth.redirectToLogin();
+      // Redirigir al login en Settings ya que requiere autenticación
+      setTimeout(() => {
+        base44.auth.redirectToLogin();
+      }, 100);
     });
   }, []);
 

@@ -25,8 +25,8 @@ export default function Dashboard() {
   useEffect(() => {
     base44.auth.me().then(setUser).catch((error) => {
       console.error('Error al cargar usuario:', error);
-      // Redirigir al login si no está autenticado
-      base44.auth.redirectToLogin();
+      // Usuario no autenticado en app pública, continuar sin usuario
+      setUser(null);
     });
   }, []);
 
