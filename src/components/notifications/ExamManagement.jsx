@@ -161,16 +161,18 @@ export default function ExamManagement({ user, exams }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">Mis Exámenes Ocupacionales</h2>
-          <p className="text-sm text-slate-500">Gestiona y monitorea tus exámenes médicos</p>
-        </div>
-        <Button onClick={() => setShowForm(!showForm)}>
-          <Plus className="w-4 h-4 mr-2" />
-          {showForm ? 'Cancelar' : 'Agregar Examen'}
-        </Button>
-      </div>
+       <div className="flex justify-between items-center">
+         <div>
+           <h2 className="text-xl font-bold text-slate-900">Mis Exámenes Ocupacionales</h2>
+           <p className="text-sm text-slate-500">Gestiona y monitorea tus exámenes médicos</p>
+         </div>
+         {user?.role === 'admin' && (
+           <Button onClick={() => setShowForm(!showForm)}>
+             <Plus className="w-4 h-4 mr-2" />
+             {showForm ? 'Cancelar' : 'Agregar Examen'}
+           </Button>
+         )}
+       </div>
 
       {/* Form */}
       {showForm && (
@@ -337,22 +339,26 @@ export default function ExamManagement({ user, exams }) {
                         Ver Documento
                       </Button>
                     )}
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit(exam)}
-                    >
-                      <Edit className="w-3 h-3 mr-1" />
-                      Editar
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => deleteMutation.mutate(exam.id)}
-                    >
-                      <Trash2 className="w-3 h-3 mr-1" />
-                      Eliminar
-                    </Button>
+                    {user?.role === 'admin' && (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEdit(exam)}
+                        >
+                          <Edit className="w-3 h-3 mr-1" />
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => deleteMutation.mutate(exam.id)}
+                        >
+                          <Trash2 className="w-3 h-3 mr-1" />
+                          Eliminar
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
