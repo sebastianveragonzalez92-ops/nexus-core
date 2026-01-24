@@ -314,17 +314,21 @@ export default function NotificationsPage() {
 
 
           {/* Exams Tab */}
-          <TabsContent value="exams">
-            {!user ? (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <Clock className="w-12 h-12 mx-auto mb-4 text-slate-300 animate-spin" />
-                  <p className="text-slate-500">Cargando...</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <ExamManagement user={user} exams={exams} />
-            )}
+           <TabsContent value="exams">
+             {console.log('📌 Tab EXAMS: user =', user?.email, 'exams.length =', exams.length)}
+             {!user ? (
+               <Card>
+                 <CardContent className="py-12 text-center">
+                   <Clock className="w-12 h-12 mx-auto mb-4 text-slate-300 animate-spin" />
+                   <p className="text-slate-500">Cargando...</p>
+                 </CardContent>
+               </Card>
+             ) : (
+               <>
+                 {console.log('📌 Renderizando ExamManagement con:', { user: user?.email, exams: exams.length })}
+                 <ExamManagement user={user} exams={exams} />
+               </>
+             )}
           </TabsContent>
 
           {/* Send Notification Tab (Admin only) */}
