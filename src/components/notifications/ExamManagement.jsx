@@ -24,7 +24,7 @@ import {
 
 export default function ExamManagement({ user, exams }) {
    // Only admins can manage exams
-   const isAdmin = user && user.role === 'admin';
+   const isAdmin = user?.role === 'admin' || false;
    const [showForm, setShowForm] = useState(false);
    const [editingExam, setEditingExam] = useState(null);
   const [formData, setFormData] = useState({
