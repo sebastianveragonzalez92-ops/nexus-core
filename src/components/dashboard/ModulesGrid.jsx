@@ -32,25 +32,41 @@ export default function ModulesGrid({ modules, onToggleModule, onAddModule, isAd
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {modules.filter(m => m.status === 'active').map((module, index) => (
-          <ModuleCard
-            key={module.id}
-            module={module}
-            onToggle={onToggleModule}
-            index={index}
-          />
-        ))}
-        {modules.filter(m => m.status !== 'active').map((module, index) => (
-          <ModuleCard
-            key={module.id}
-            module={module}
-            onToggle={onToggleModule}
-            index={modules.filter(m => m.status === 'active').length + index}
-          />
-        ))}
+        {isAdmin ? (
+          <>
+            {modules.filter(m => m.status === 'active').map((module, index) => (
+              <ModuleCard
+                key={module.id}
+                module={module}
+                onToggle={onToggleModule}
+                index={index}
+                isAdmin={isAdmin}
+              />
+            ))}
+            {modules.filter(m => m.status !== 'active').map((module, index) => (
+              <ModuleCard
+                key={module.id}
+                module={module}
+                onToggle={onToggleModule}
+                index={modules.filter(m => m.status === 'active').length + index}
+                isAdmin={isAdmin}
+              />
+            ))}
+          </>
+        ) : (
+          displayModules.map((module, index) => (
+            <ModuleCard
+              key={module.id}
+              module={module}
+              onToggle={null}
+              index={index}
+              isAdmin={isAdmin}
+            />
+          ))
+        )}
       </div>
 
-      {modules.length === 0 && (
+      {displayModules.length === 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
