@@ -282,9 +282,11 @@ export default function ExamManagement({ user, exams }) {
           <CardContent className="py-12 text-center">
             <Calendar className="w-12 h-12 mx-auto mb-4 text-slate-300" />
             <p className="text-slate-500">No tienes exámenes registrados</p>
-            <Button variant="link" onClick={() => setShowForm(true)} className="mt-2">
-              Agregar tu primer examen
-            </Button>
+            {user?.role === 'admin' && (
+              <Button variant="link" onClick={() => setShowForm(true)} className="mt-2">
+                Agregar tu primer examen
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
