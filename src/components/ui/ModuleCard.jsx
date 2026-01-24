@@ -48,7 +48,7 @@ const pageMap = {
   'Gestión de Activos': 'Dashboard',
 };
 
-export default function ModuleCard({ module, onToggle, index = 0 }) {
+export default function ModuleCard({ module, onToggle, index = 0, isAdmin = false }) {
   const IconComponent = iconMap[module.icon] || Box;
   const isActive = module.status === 'active';
   const targetPage = pageMap[module.name];
@@ -66,7 +66,9 @@ export default function ModuleCard({ module, onToggle, index = 0 }) {
   };
 
   const handleSwitchChange = () => {
-    onToggle(module);
+    if (onToggle) {
+      onToggle(module);
+    }
   };
 
   const cardClasses = cn(
