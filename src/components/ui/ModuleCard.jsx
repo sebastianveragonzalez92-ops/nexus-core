@@ -53,31 +53,43 @@ const pageMap = {
 };
 
 export default function ModuleCard({ module, onToggle, index = 0, isAdmin = false }) {
+  console.log('Renderizando ModuleCard:', module?.name, 'isAdmin:', isAdmin);
+  
+  if (!module) {
+    console.error('ModuleCard: módulo es null o undefined');
+    return null;
+  }
+
   const IconComponent = iconMap[module.icon] || Box;
   const isActive = module.status === 'active';
   const targetPage = pageMap[module.name];
 
   const handleCardClick = (e) => {
-    console.log('Click en módulo:', module.name, 'isActive:', isActive, 'targetPage:', targetPage);
+    console.log('🔴 CLICK DETECTADO - Módulo:', module.name, 'isActive:', isActive, 'targetPage:', targetPage, 'isAdmin:', isAdmin);
     
-    // Prevenir propagación de clicks en el área del switch
-    if (isAdmin && (e.target.closest('[role="switch"]') || e.target.closest('button[role="switch"]'))) {
-      console.log('Click en switch - no redirigir');
-      return;
+    try {
+      // Prevenir propagación de clicks en el área del switch
+      if (isAdmin && (e.target.closest('[role="switch"]') || e.target.closest('button[role="switch"]'))) {
+        console.log('❌ Click en switch - no redirigir');
+        return;
+      }
+      
+      if (!isActive) {
+        console.log('❌ Módulo inactivo - no redirigir');
+        return;
+      }
+      
+      if (!targetPage) {
+        console.warn('⚠️ Sin mapeo de página para:', module.name);
+        return;
+      }
+      
+      const url = createPageUrl(targetPage);
+      console.log('✅ Redirigiendo a:', url);
+      window.location.href = url;
+    } catch (error) {
+      console.error('💥 Error en handleCardClick:', error);
     }
-    
-    if (!isActive) {
-      console.log('Módulo inactivo - no redirigir');
-      return;
-    }
-    
-    if (!targetPage) {
-      console.warn('Sin mapeo de página para:', module.name);
-      return;
-    }
-    
-    console.log('Redirigiendo a:', createPageUrl(targetPage));
-    window.location.href = createPageUrl(targetPage);
   };
 
   const handleSwitchChange = () => {
