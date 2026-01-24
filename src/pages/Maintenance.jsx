@@ -4,9 +4,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
 import { Wrench, BarChart3, ListTodo } from 'lucide-react';
-import MaintenanceDashboard from '../components/maintenance/MaintenanceDashboard';
-import WorkOrderManagement from '../components/maintenance/WorkOrderManagement';
-import MaintenanceHistory from '../components/maintenance/MaintenanceHistory';
+import MaintenanceDashboard from '@/components/maintenance/MaintenanceDashboard';
+import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
+import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
