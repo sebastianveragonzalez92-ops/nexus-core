@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
+import ExtensionBlockerGuard from './components/ExtensionBlockerGuard';
 
 const getNavItems = (userRole) => {
   const items = [
@@ -62,7 +63,8 @@ export default function Layout({ children, currentPageName }) {
   }, [currentPageName]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <ExtensionBlockerGuard>
+      <div className="min-h-screen bg-slate-50">
       {/* Mobile sidebar backdrop */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -243,6 +245,7 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </div>
       </main>
-    </div>
-  );
-}
+      </div>
+      </ExtensionBlockerGuard>
+      );
+      }
