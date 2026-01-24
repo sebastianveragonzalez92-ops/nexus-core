@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
 import { Wrench, BarChart3, ListTodo } from 'lucide-react';
 import MaintenanceDashboard from '@/components/maintenance/MaintenanceDashboard';
 import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
+import ImportFromSheets from '@/components/maintenance/ImportFromSheets';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(console.error);
@@ -54,7 +56,7 @@ export default function Maintenance() {
           transition={{ duration: 0.3 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
               <TabsTrigger value="dashboard" className="gap-2">
                 <BarChart3 className="w-4 h-4" />
                 Dashboard
@@ -70,6 +72,10 @@ export default function Maintenance() {
               <TabsTrigger value="history" className="gap-2">
                 <Wrench className="w-4 h-4" />
                 Historial
+              </TabsTrigger>
+              <TabsTrigger value="import" className="gap-2">
+                <ListTodo className="w-4 h-4" />
+                Importar
               </TabsTrigger>
             </TabsList>
 
@@ -107,6 +113,14 @@ export default function Maintenance() {
                 workOrders={workOrders}
                 assets={assets}
                 user={user}
+              />
+            </TabsContent>
+
+            <TabsContent value="import">
+              <ImportFromSheets
+                onImportComplete={() => {
+                  queryClient.invalidateQueries({ queryKey: ['workOrders'] });
+                }}
               />
             </TabsContent>
           </Tabs>
