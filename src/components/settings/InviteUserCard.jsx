@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UserPlus, Mail, Shield, User as UserIcon, Send, Check } from 'lucide-react';
+import { UserPlus, Mail, Shield, User as UserIcon, Send, Check, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +17,12 @@ export default function InviteUserCard({ currentUser }) {
   const [role, setRole] = useState('user');
   const [isInviting, setIsInviting] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Fetch all users
+  const { data: allUsers = [], isLoading } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+  });
 
   const handleInvite = async () => {
     if (!email || !email.includes('@')) {
@@ -29,6 +37,10 @@ export default function InviteUserCard({ currentUser }) {
       setSuccess(true);
       setEmail('');
       setTimeout(() => setSuccess(false), 3000);
+      // Refetch users list
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       toast.error('Error al enviar invitación');
     } finally {
@@ -39,7 +51,79 @@ export default function InviteUserCard({ currentUser }) {
   const canInviteAdmin = currentUser?.role === 'admin';
 
   return (
-    <Card className="rounded-2xl border-slate-200">
+    <div className="space-y-6">
+      {/* Users List Card */}
+      <Card className="rounded-2xl border-slate-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-violet-50">
+              <Users className="w-5 h-5 text-violet-600" />
+            </div>
+            Usuarios registrados
+          </CardTitle>
+          <CardDescription>
+            {allUsers.length} {allUsers.length === 1 ? 'usuario' : 'usuarios'} en la plataforma
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="text-center py-8 text-slate-500">
+              Cargando usuarios...
+            </div>
+          ) : allUsers.length === 0 ? (
+            <div className="text-center py-8 text-slate-500">
+              No hay usuarios registrados
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {allUsers.map((user) => (
+                <motion.div
+                  key={user.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-indigo-600">
+                        {user.full_name?.charAt(0) || user.email?.charAt(0) || '?'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-900">
+                        {user.full_name || 'Sin nombre'}
+                      </p>
+                      <p className="text-sm text-slate-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <Badge
+                    className={cn(
+                      user.role === 'admin'
+                        ? 'bg-indigo-100 text-indigo-700 border-indigo-200'
+                        : 'bg-slate-100 text-slate-700 border-slate-200'
+                    )}
+                  >
+                    {user.role === 'admin' ? (
+                      <>
+                        <Shield className="w-3 h-3 mr-1" />
+                        Admin
+                      </>
+                    ) : (
+                      <>
+                        <UserIcon className="w-3 h-3 mr-1" />
+                        Usuario
+                      </>
+                    )}
+                  </Badge>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Invite Card */}
+      <Card className="rounded-2xl border-slate-200">
       <CardHeader>
         <CardTitle className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-indigo-50">
@@ -195,5 +279,6 @@ export default function InviteUserCard({ currentUser }) {
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 }
