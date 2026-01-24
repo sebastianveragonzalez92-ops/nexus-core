@@ -54,14 +54,18 @@ export default function Maintenance() {
           transition={{ duration: 0.3 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="dashboard" className="gap-2">
                 <BarChart3 className="w-4 h-4" />
                 Dashboard
               </TabsTrigger>
-              <TabsTrigger value="workorders" className="gap-2">
+              <TabsTrigger value="preventivo" className="gap-2">
                 <ListTodo className="w-4 h-4" />
-                Órdenes de Trabajo
+                Preventivos
+              </TabsTrigger>
+              <TabsTrigger value="correctivo" className="gap-2">
+                <Wrench className="w-4 h-4" />
+                Correctivos
               </TabsTrigger>
               <TabsTrigger value="history" className="gap-2">
                 <Wrench className="w-4 h-4" />
@@ -78,12 +82,23 @@ export default function Maintenance() {
               />
             </TabsContent>
 
-            <TabsContent value="workorders">
+            <TabsContent value="preventivo">
               <WorkOrderManagement
-                workOrders={workOrders}
+                workOrders={workOrders.filter(wo => wo.type === 'preventivo')}
                 assets={assets}
                 user={user}
                 isAdmin={isAdmin}
+                type="preventivo"
+              />
+            </TabsContent>
+
+            <TabsContent value="correctivo">
+              <WorkOrderManagement
+                workOrders={workOrders.filter(wo => wo.type === 'correctivo')}
+                assets={assets}
+                user={user}
+                isAdmin={isAdmin}
+                type="correctivo"
               />
             </TabsContent>
 
