@@ -298,9 +298,18 @@ export default function NotificationsPage() {
           </TabsContent>
 
           {/* Exams Tab */}
-          <TabsContent value="exams">
-            <ExamManagement user={user} exams={exams} />
-          </TabsContent>
+           <TabsContent value="exams">
+             {!user ? (
+               <Card>
+                 <CardContent className="py-12 text-center">
+                   <Clock className="w-12 h-12 mx-auto mb-4 text-slate-300 animate-spin" />
+                   <p className="text-slate-500">Cargando usuario...</p>
+                 </CardContent>
+               </Card>
+             ) : (
+               <ExamManagement user={user} exams={exams} />
+             )}
+           </TabsContent>
 
           {/* Send Notification Tab (Admin only) */}
           {user?.role === 'admin' && (
