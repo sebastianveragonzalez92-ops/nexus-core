@@ -23,8 +23,10 @@ import {
 } from './notificationHelpers';
 
 export default function ExamManagement({ user, exams }) {
-  const [showForm, setShowForm] = useState(false);
-  const [editingExam, setEditingExam] = useState(null);
+   // Only admins can manage exams
+   const isAdmin = user && user.role === 'admin';
+   const [showForm, setShowForm] = useState(false);
+   const [editingExam, setEditingExam] = useState(null);
   const [formData, setFormData] = useState({
     exam_type: 'general',
     exam_name: '',
