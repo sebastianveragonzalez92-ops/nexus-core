@@ -11,24 +11,24 @@ import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
 
 const getNavItems = (userRole) => {
-  const baseItems = [
+  const items = [
     { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
     { name: 'Capacitaciones', page: 'Courses', icon: Layers },
     { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
     { name: 'Gamificación', page: 'Gamification', icon: Award },
-    { name: 'Certificados', page: 'Certificates', icon: Activity },
+    { name: 'Certificados', page: 'Certificates', icon: Award },
     { name: 'Notificaciones', page: 'Notifications', icon: Bell },
     { name: 'Tutor IA', page: 'Tutor', icon: Bot },
     { name: 'Actividad', page: 'Activity', icon: Activity },
   ];
 
   if (userRole === 'admin') {
-    baseItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
+    items.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
   }
 
-  baseItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
+  items.push({ name: 'Configuración', page: 'Settings', icon: Settings });
   
-  return baseItems;
+  return items;
 };
 
 export default function Layout({ children, currentPageName }) {
