@@ -31,7 +31,7 @@ export default function Courses() {
   });
 
   // Usuarios normales solo ven cursos publicados, admins ven todos
-  const courses = user?.role === 'admin' ? allCourses : allCourses.filter(c => c.status === 'published');
+  const courses = !user || user.role === 'admin' ? allCourses : allCourses.filter(c => c.status === 'published');
 
   const { data: enrollments = [] } = useQuery({
     queryKey: ['myEnrollments', user?.email],
