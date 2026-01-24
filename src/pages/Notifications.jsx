@@ -160,7 +160,10 @@ export default function NotificationsPage() {
               <Bell className="w-4 h-4 mr-2" />
               Notificaciones
             </TabsTrigger>
-
+            <TabsTrigger value="exams">
+              <Calendar className="w-4 h-4 mr-2" />
+              Exámenes Ocupacionales
+            </TabsTrigger>
             {user?.role === 'admin' && (
               <TabsTrigger value="send">
                 <Send className="w-4 h-4 mr-2" />
