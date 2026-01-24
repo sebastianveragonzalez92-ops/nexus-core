@@ -76,16 +76,22 @@ export default function NotificationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('📤 NotificationForm: handleSubmit called, formData:', formData);
+    console.log('📤 NotificationForm: handleSubmit INICIADO');
+    console.log('📤 formData:', formData);
+    console.log('📤 users:', users);
+    
     if (!formData.title || !formData.message) {
+      console.error('❌ Título o mensaje vacío');
       toast.error('Título y mensaje son obligatorios');
       return;
     }
     if (formData.recipient_type === 'individual' && !formData.recipient_email) {
+      console.error('❌ Destinatario individual sin email');
       toast.error('Selecciona un destinatario');
       return;
     }
-    console.log('📤 NotificationForm: Enviando notificación...');
+    
+    console.log('📤 Validaciones OK, llamando sendMutation...');
     sendMutation.mutate(formData);
   };
 
