@@ -15,9 +15,6 @@ import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 export default function ExamManagement({ user, exams }) {
-  console.log('🔍 ExamManagement: user.role =', user?.role, '| isAdmin =', user?.role === 'admin');
-  const isAdmin = user?.role === 'admin';
-  
   const [showForm, setShowForm] = useState(false);
   const [editingExam, setEditingExam] = useState(null);
   const [formData, setFormData] = useState({
@@ -31,6 +28,7 @@ export default function ExamManagement({ user, exams }) {
   });
 
   const queryClient = useQueryClient();
+  const isAdmin = user?.role === 'admin';
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
