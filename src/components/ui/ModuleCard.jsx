@@ -100,6 +100,7 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
       whileHover={{ y: -2, transition: { duration: 0.2 } }}
       className={cardClasses}
       onClick={handleCardClick}
+      onMouseDown={() => console.log('mouseDown en módulo:', module.name)}
     >
       {/* Status indicator */}
       <div className={cn(
