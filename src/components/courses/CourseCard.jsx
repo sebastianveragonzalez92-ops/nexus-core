@@ -28,7 +28,7 @@ export default function CourseCard({ course, index, onEdit, onDelete, user }) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    window.location.href = createPageUrl('CourseDetail') + `?id=${course.id}`;
+    navigate(createPageUrl('CourseDetail') + `?id=${course.id}`);
   };
 
   return (
