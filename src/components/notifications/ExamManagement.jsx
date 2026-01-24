@@ -343,7 +343,7 @@ export default function ExamManagement({ user, exams }) {
                         Ver Documento
                       </Button>
                     )}
-                    {user && user.role === 'admin' && (
+                    {isAdmin && (
                       <>
                         <Button
                           size="sm"
