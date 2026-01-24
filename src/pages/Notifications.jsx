@@ -16,6 +16,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 import NotificationForm from '../components/notifications/NotificationForm';
+import ExamManagement from '../components/notifications/ExamManagement';
 
 export default function NotificationsPage() {
   console.log('🚀 Notificaciones: COMPONENTE MONTADO');
@@ -308,6 +309,20 @@ export default function NotificationsPage() {
           </TabsContent>
 
 
+
+          {/* Exams Tab */}
+          <TabsContent value="exams">
+            {!user ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Clock className="w-12 h-12 mx-auto mb-4 text-slate-300 animate-spin" />
+                  <p className="text-slate-500">Cargando...</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <ExamManagement user={user} exams={exams} />
+            )}
+          </TabsContent>
 
           {/* Send Notification Tab (Admin only) */}
           {user?.role === 'admin' && (
