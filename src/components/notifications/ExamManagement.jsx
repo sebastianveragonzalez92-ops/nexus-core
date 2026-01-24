@@ -83,6 +83,12 @@ export default function ExamManagement({ user, exams }) {
       toast.error('Nombre y fecha de vencimiento son obligatorios');
       return;
     }
+    
+    if (!user?.email) {
+      toast.error('Error: usuario no identificado');
+      console.error('ExamManagement - Error: user.email no disponible', user);
+      return;
+    }
 
     // Auto-calculate status based on expiry date
     const daysUntilExpiry = differenceInDays(new Date(formData.expiry_date), new Date());
