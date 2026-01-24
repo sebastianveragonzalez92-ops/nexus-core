@@ -32,13 +32,25 @@ const getNavItems = (userRole) => {
 };
 
 export default function Layout({ children, currentPageName }) {
+  console.log('🎨 Layout: Componente iniciando, página:', currentPageName);
+  
   const [user, setUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    console.log('🔵 Layout: useEffect ejecutándose');
+    base44.auth.me()
+      .then((userData) => {
+        console.log('✅ Layout: Usuario cargado:', userData);
+        setUser(userData);
+      })
+      .catch((error) => {
+        console.error('❌ Layout: Error al cargar usuario:', error);
+      });
   }, []);
+
+  console.log('🟢 Layout: Renderizando con usuario:', user?.email || 'sin usuario');
 
   const brandColor = user?.company_primary_color || '#6366f1';
   const brandName = user?.company_name || 'ModulaX';

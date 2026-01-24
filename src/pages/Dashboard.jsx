@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 
 export default function Dashboard() {
+  console.log('🚀 Dashboard: Componente iniciando...');
+  
   const [user, setUser] = useState(null);
   const [showModuleModal, setShowModuleModal] = useState(false);
   const [showSyncPanel, setShowSyncPanel] = useState(false);
@@ -23,17 +25,34 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch((error) => {
-      console.error('Error al cargar usuario:', error);
-      // Usuario no autenticado en app pública, continuar sin usuario
-      setUser(null);
-    });
+    console.log('🔵 Dashboard: useEffect de usuario ejecutándose');
+    base44.auth.me()
+      .then((userData) => {
+        console.log('✅ Dashboard: Usuario cargado:', userData);
+        setUser(userData);
+      })
+      .catch((error) => {
+        console.error('❌ Dashboard: Error al cargar usuario:', error);
+        setUser(null);
+      });
   }, []);
+
+  console.log('🟢 Dashboard: Estado del usuario:', user);
 
   // Modules query
   const { data: modules = [], isLoading: modulesLoading } = useQuery({
     queryKey: ['modules'],
-    queryFn: () => base44.entities.Module.list('-created_date'),
+    queryFn: async () => {
+      console.log('📦 Dashboard: Cargando módulos...');
+      try {
+        const result = await base44.entities.Module.list('-created_date');
+        console.log('✅ Dashboard: Módulos cargados:', result?.length || 0);
+        return result;
+      } catch (error) {
+        console.error('❌ Dashboard: Error cargando módulos:', error);
+        return [];
+      }
+    },
   });
 
   // Activity query
