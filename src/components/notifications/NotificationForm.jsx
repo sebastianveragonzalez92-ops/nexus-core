@@ -76,6 +76,7 @@ export default function NotificationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('📤 NotificationForm: handleSubmit called, formData:', formData);
     if (!formData.title || !formData.message) {
       toast.error('Título y mensaje son obligatorios');
       return;
@@ -84,6 +85,7 @@ export default function NotificationForm() {
       toast.error('Selecciona un destinatario');
       return;
     }
+    console.log('📤 NotificationForm: Enviando notificación...');
     sendMutation.mutate(formData);
   };
 
