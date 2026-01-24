@@ -168,7 +168,7 @@ export default function ExamManagement({ user, exams }) {
            <h2 className="text-xl font-bold text-slate-900">Mis Exámenes Ocupacionales</h2>
            <p className="text-sm text-slate-500">Gestiona y monitorea tus exámenes médicos</p>
          </div>
-         {user && user.role === 'admin' && (
+         {isAdmin && (
            <Button onClick={() => setShowForm(!showForm)}>
              <Plus className="w-4 h-4 mr-2" />
              {showForm ? 'Cancelar' : 'Agregar Examen'}
