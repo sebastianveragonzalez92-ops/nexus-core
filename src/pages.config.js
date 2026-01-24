@@ -12,6 +12,7 @@ import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
+import WebViewerDemo from './pages/WebViewerDemo';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "Notifications": Notifications,
     "Settings": Settings,
     "Tutor": Tutor,
+    "WebViewerDemo": WebViewerDemo,
 }
 
 export const pagesConfig = {
