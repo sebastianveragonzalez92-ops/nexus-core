@@ -334,20 +334,19 @@ export default function Dashboard() {
           </Card>
         </motion.div>
 
-        {/* Modules Grid - Admin Only */}
-        {user?.role === 'admin' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <ModulesGrid
-              modules={modules}
-              onToggleModule={(module) => toggleModuleMutation.mutate(module)}
-              onAddModule={handleAddModule}
-            />
-          </motion.div>
-        )}
+        {/* Modules Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <ModulesGrid
+            modules={modules}
+            onToggleModule={user?.role === 'admin' ? (module) => toggleModuleMutation.mutate(module) : null}
+            onAddModule={handleAddModule}
+            isAdmin={user?.role === 'admin'}
+          />
+        </motion.div>
       </div>
 
       {/* Module Modal */}
