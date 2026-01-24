@@ -23,7 +23,7 @@ const categoryColors = {
   tecnico: 'bg-indigo-100 text-indigo-700',
 };
 
-export default function CourseCard({ course, index, onEdit, onDelete }) {
+export default function CourseCard({ course, index, onEdit, onDelete, user }) {
   const TypeIcon = typeIcons[course.type] || FileText;
   const navigate = useNavigate();
 
@@ -84,30 +84,32 @@ export default function CourseCard({ course, index, onEdit, onDelete }) {
           >
             {course.status === 'published' ? 'Publicado' : 'Borrador'}
           </Badge>
-          <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(course);
-              }}
-              className="h-8 w-8 p-0"
-            >
-              <Edit className="w-4 h-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(course.id);
-              }}
-              className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
+          {user?.role === 'admin' && (
+            <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(course);
+                }}
+                className="h-8 w-8 p-0"
+              >
+                <Edit className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(course.id);
+                }}
+                className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

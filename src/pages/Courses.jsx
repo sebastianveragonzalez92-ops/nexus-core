@@ -282,6 +282,7 @@ export default function Courses() {
                 key={course.id}
                 course={course}
                 index={index}
+                user={user}
                 onEdit={handleEdit}
                 onDelete={(id) => deleteMutation.mutate(id)}
               />
