@@ -18,11 +18,11 @@ Deno.serve(async (req) => {
     // Get access token for Google Sheets
     const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlesheets');
 
-    // Fetch data from Google Sheets
-    const sheetsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${Deno.env.get('GOOGLE_SHEETS_API_KEY') || ''}`;
+    // Format range properly for Google Sheets API
+    const formattedRange = range.includes('!') ? range : `${range}!A:Z`;
     
     const sheetsResponse = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(formattedRange)}`,
       {
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
     );
 
     if (!sheetsResponse.ok) {
-      return Response.json({ error: 'Failed to fetch from Google Sheets' }, { status: 400 });
+      const errorData = await sheetsResponse.text();
+      return Response.json({ error: `Failed to fetch from Google Sheets: ${errorData}` }, { status: 400 });
     }
 
     const sheetsData = await sheetsResponse.json();
