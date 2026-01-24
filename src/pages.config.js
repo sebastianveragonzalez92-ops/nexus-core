@@ -13,6 +13,7 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
+import Maintenance from './pages/Maintenance';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Settings": Settings,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
+    "Maintenance": Maintenance,
 }
 
 export const pagesConfig = {
