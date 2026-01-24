@@ -37,7 +37,12 @@ export default function NotificationForm() {
   // Send notification mutation
   const sendMutation = useMutation({
     mutationFn: async (data) => {
+      console.log('🚀 sendMutation: INICIANDO');
+      console.log('🚀 recipient_type:', data.recipient_type);
+      console.log('🚀 users count:', users.length);
+      
       if (data.recipient_type === 'all') {
+        console.log('🚀 Creando notificaciones para TODOS los usuarios');
         const notifications = users.map(user => ({
           user_email: user.email,
           type: data.type,
@@ -45,18 +50,27 @@ export default function NotificationForm() {
           message: data.message,
           action_url: data.action_url || '',
         }));
-        return await base44.entities.Notification.bulkCreate(notifications);
+        console.log('🚀 Payload bulkCreate:', notifications);
+        const result = await base44.entities.Notification.bulkCreate(notifications);
+        console.log('🚀 bulkCreate resultado:', result);
+        return result;
       } else {
-        return await base44.entities.Notification.create({
+        console.log('🚀 Creando notificación INDIVIDUAL para:', data.recipient_email);
+        const payload = {
           user_email: data.recipient_email,
           type: data.type,
           title: data.title,
           message: data.message,
           action_url: data.action_url || '',
-        });
+        };
+        console.log('🚀 Payload create:', payload);
+        const result = await base44.entities.Notification.create(payload);
+        console.log('🚀 create resultado:', result);
+        return result;
       }
     },
     onSuccess: () => {
+      console.log('✅ Notificación enviada exitosamente');
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       toast.success('Notificación enviada exitosamente');
       setFormData({
@@ -69,7 +83,8 @@ export default function NotificationForm() {
       });
     },
     onError: (error) => {
-      console.error('Error sending notification:', error);
+      console.error('❌ Error sending notification:', error);
+      console.error('❌ Error details:', error.response?.data || error.message);
       toast.error('Error al enviar notificación: ' + (error.message || 'Error desconocido'));
     },
   });
