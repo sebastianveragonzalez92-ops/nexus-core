@@ -58,18 +58,26 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
   const targetPage = pageMap[module.name];
 
   const handleCardClick = (e) => {
+    console.log('Click en módulo:', module.name, 'isActive:', isActive, 'targetPage:', targetPage);
+    
     // Prevenir propagación de clicks en el área del switch
-    const target = e.target;
-    if (target.closest('[role="switch"]') || target.closest('button[role="switch"]')) {
+    if (isAdmin && (e.target.closest('[role="switch"]') || e.target.closest('button[role="switch"]'))) {
+      console.log('Click en switch - no redirigir');
       return;
     }
     
-    if (isActive && targetPage) {
-      console.log('Módulo:', module.name, '→ Página:', targetPage);
-      window.location.href = createPageUrl(targetPage);
-    } else if (isActive && !targetPage) {
-      console.warn('Módulo sin mapeo de página:', module.name);
+    if (!isActive) {
+      console.log('Módulo inactivo - no redirigir');
+      return;
     }
+    
+    if (!targetPage) {
+      console.warn('Sin mapeo de página para:', module.name);
+      return;
+    }
+    
+    console.log('Redirigiendo a:', createPageUrl(targetPage));
+    window.location.href = createPageUrl(targetPage);
   };
 
   const handleSwitchChange = () => {
