@@ -19,6 +19,7 @@ import NotificationForm from '../components/notifications/NotificationForm';
 import ExamManagement from '../components/notifications/ExamManagement';
 
 export default function NotificationsPage() {
+  console.log('🚀 Notificaciones: COMPONENTE MONTADO');
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
