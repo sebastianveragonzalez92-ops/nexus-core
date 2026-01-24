@@ -23,7 +23,11 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    base44.auth.me().then(setUser).catch((error) => {
+      console.error('Error al cargar usuario:', error);
+      // Redirigir al login si no está autenticado
+      base44.auth.redirectToLogin();
+    });
   }, []);
 
   // Modules query

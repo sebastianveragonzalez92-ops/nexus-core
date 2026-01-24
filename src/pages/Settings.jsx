@@ -61,7 +61,11 @@ export default function Settings() {
         auto_sync: u.auto_sync ?? true,
         offline_mode: u.offline_mode ?? true,
       }));
-    }).catch(() => {});
+    }).catch((error) => {
+      console.error('Error al cargar usuario:', error);
+      // Redirigir al login si no está autenticado
+      base44.auth.redirectToLogin();
+    });
   }, []);
 
   const handleLogoUpload = async (e) => {

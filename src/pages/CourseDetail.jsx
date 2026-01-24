@@ -34,7 +34,9 @@ export default function CourseDetail() {
   const courseId = urlParams.get('id');
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    base44.auth.me().then(setUser).catch((error) => {
+      console.error('Error al cargar usuario:', error);
+    });
   }, []);
 
   // Fetch course
