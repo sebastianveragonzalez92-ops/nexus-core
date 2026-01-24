@@ -81,8 +81,7 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
   const cardClasses = cn(
     "group relative p-6 rounded-3xl border transition-all duration-300",
     "bg-white hover:shadow-xl hover:shadow-slate-200/50",
-    isActive ? "border-slate-200" : "border-slate-100 opacity-60",
-    isActive && targetPage && "cursor-pointer"
+    isActive ? "border-slate-200 cursor-pointer" : "border-slate-100 opacity-60"
   );
 
   return (
