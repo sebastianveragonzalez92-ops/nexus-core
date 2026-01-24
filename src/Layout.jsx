@@ -59,6 +59,8 @@ export default function Layout({ children, currentPageName }) {
   const brandLogo = user?.company_logo;
   const navItems = getNavItems(user?.role);
 
+  console.log('🔍 Layout: currentPageName prop recibida:', currentPageName);
+
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [currentPageName]);
