@@ -113,19 +113,45 @@ export default function ReportPDFExport({ report }) {
       doc.setTextColor(30, 30, 30);
     };
 
+    const labelColW = 65;
+    const valueColX = margin + labelColW;
+    const rowH = 7;
+    let rowIndex = 0;
+
     const infoRow = (label, value) => {
       if (!value) return;
-      addPageIfNeeded(8);
+      addPageIfNeeded(rowH + 2);
+
+      // Alternating row background
+      if (rowIndex % 2 === 0) {
+        doc.setFillColor(245, 247, 250);
+      } else {
+        doc.setFillColor(255, 255, 255);
+      }
+      doc.setDrawColor(200, 210, 220);
+      doc.setLineWidth(0.2);
+      doc.rect(margin, y - 4.5, contentW, rowH, 'FD');
+
+      // Vertical divider between label and value
+      doc.line(valueColX, y - 4.5, valueColX, y - 4.5 + rowH);
+
+      // Label
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(80, 80, 80);
-      doc.text(label + ':', margin, y);
+      doc.setTextColor(50, 50, 50);
+      doc.text(label, margin + 2, y);
+
+      // Value
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(20, 20, 20);
-      const lines = doc.splitTextToSize(String(value), contentW - 55);
-      doc.text(lines, margin + 55, y);
-      y += lines.length * 5 + 1;
+      const lines = doc.splitTextToSize(String(value), contentW - labelColW - 4);
+      doc.text(lines, valueColX + 3, y);
+
+      y += rowH;
+      rowIndex++;
     };
+
+    const resetRowIndex = () => { rowIndex = 0; };
 
     // --- Info General ---
     sectionTitle('Información General');
