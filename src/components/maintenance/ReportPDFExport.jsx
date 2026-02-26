@@ -115,7 +115,7 @@ export default function ReportPDFExport({ report }) {
 
     const labelColW = 65;
     const valueColX = margin + labelColW;
-    const rowH = 7;
+    const rowH = 8;
     let rowIndex = 0;
 
     const infoRow = (label, value) => {
@@ -130,22 +130,22 @@ export default function ReportPDFExport({ report }) {
       }
       doc.setDrawColor(200, 210, 220);
       doc.setLineWidth(0.2);
-      doc.rect(margin, y - 4.5, contentW, rowH, 'FD');
+      doc.rect(margin, y, contentW, rowH, 'FD');
 
       // Vertical divider between label and value
-      doc.line(valueColX, y - 4.5, valueColX, y - 4.5 + rowH);
+      doc.line(valueColX, y, valueColX, y + rowH);
 
-      // Label
+      // Label - vertically centered in row
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(50, 50, 50);
-      doc.text(label, margin + 2, y);
+      doc.text(label, margin + 2, y + 5.5);
 
       // Value
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(20, 20, 20);
       const lines = doc.splitTextToSize(String(value), contentW - labelColW - 4);
-      doc.text(lines, valueColX + 3, y);
+      doc.text(lines, valueColX + 3, y + 5.5);
 
       y += rowH;
       rowIndex++;
