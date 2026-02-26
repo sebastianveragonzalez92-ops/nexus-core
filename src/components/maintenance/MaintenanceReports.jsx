@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Plus, FileText, MapPin, Camera, PenLine, ChevronRight, CheckCircle2, XCircle } from 'lucide-react';
 import MaintenanceReportForm from './MaintenanceReportForm';
 import { ALL_ITEMS } from './ComponentChecklist';
+import ReportPDFExport from './ReportPDFExport';
 
 const statusColors = {
   borrador: 'bg-yellow-100 text-yellow-700',
