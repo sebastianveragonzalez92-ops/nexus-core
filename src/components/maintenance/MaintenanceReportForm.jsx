@@ -112,7 +112,7 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
               <Input type="date" value={form.report_date} onChange={e => set('report_date', e.target.value)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha próxima mantención</Label>
+              <Label>Fecha próxima mantención <span className="text-slate-400 text-xs">(auto: +3 meses)</span></Label>
               <Input type="date" value={form.fecha_proxima_mantencion} onChange={e => set('fecha_proxima_mantencion', e.target.value)} />
             </div>
             <div className="space-y-1.5">
