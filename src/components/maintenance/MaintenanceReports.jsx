@@ -122,7 +122,10 @@ export default function MaintenanceReports({ assets = [], reportType = 'preventi
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-blue-600">MineProtect CAS10 FMS - Mantención Equipos Pesados</DialogTitle>
+            <div className="flex items-center justify-between pr-6">
+              <DialogTitle className="text-blue-600">MineProtect CAS10 FMS - Mantención Equipos Pesados</DialogTitle>
+              {selected && <ReportPDFExport report={selected} />}
+            </div>
           </DialogHeader>
           {selected && (
             <div className="space-y-6 max-h-[75vh] overflow-y-auto pr-1">
