@@ -9,6 +9,7 @@ import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
 import ImportFromSheets from '@/components/maintenance/ImportFromSheets';
 import ExportButton from '@/components/maintenance/ExportButton';
+import MaintenanceReports from '@/components/maintenance/MaintenanceReports';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
