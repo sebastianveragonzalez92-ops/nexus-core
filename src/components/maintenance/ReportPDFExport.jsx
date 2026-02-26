@@ -155,6 +155,7 @@ export default function ReportPDFExport({ report }) {
 
     // --- Info General ---
     sectionTitle('Información General');
+    resetRowIndex();
     infoRow('Empresa', report.empresa);
     infoRow('División', report.division);
     infoRow('Tipo de mantención', report.type);
@@ -170,6 +171,7 @@ export default function ReportPDFExport({ report }) {
     // --- CAS Series ---
     if (report.cas_series?.antena_qc1000 || report.cas_series?.pantalla_qd1400) {
       sectionTitle('CAS Números de Series');
+      resetRowIndex();
       infoRow('Antena QC1000', report.cas_series?.antena_qc1000);
       infoRow('Pantalla QD1400/QD200', report.cas_series?.pantalla_qd1400);
       y += 4;
@@ -178,6 +180,7 @@ export default function ReportPDFExport({ report }) {
     // --- FMS Series ---
     if (report.fms_series?.core_lp || report.fms_series?.pantalla || report.fms_series?.gps1) {
       sectionTitle('FMS Números de Series');
+      resetRowIndex();
       infoRow('Core LP', report.fms_series?.core_lp);
       infoRow('Pantalla', report.fms_series?.pantalla);
       infoRow('GPS 1', report.fms_series?.gps1);
