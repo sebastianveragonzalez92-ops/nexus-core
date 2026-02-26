@@ -93,7 +93,7 @@ export default function Maintenance() {
               />
             </TabsContent>
 
-            <TabsContent value="preventivo">
+            <TabsContent value="preventivo" className="space-y-8">
               <WorkOrderManagement
                 workOrders={workOrders.filter(wo => wo.type === 'preventivo')}
                 assets={assets}
@@ -101,9 +101,12 @@ export default function Maintenance() {
                 isAdmin={isAdmin}
                 type="preventivo"
               />
+              <div className="border-t border-slate-200 pt-8">
+                <MaintenanceReports assets={assets} reportType="preventivo" />
+              </div>
             </TabsContent>
 
-            <TabsContent value="correctivo">
+            <TabsContent value="correctivo" className="space-y-8">
               <WorkOrderManagement
                 workOrders={workOrders.filter(wo => wo.type === 'correctivo')}
                 assets={assets}
@@ -111,6 +114,9 @@ export default function Maintenance() {
                 isAdmin={isAdmin}
                 type="correctivo"
               />
+              <div className="border-t border-slate-200 pt-8">
+                <MaintenanceReports assets={assets} reportType="correctivo" />
+              </div>
             </TabsContent>
 
             <TabsContent value="history">
