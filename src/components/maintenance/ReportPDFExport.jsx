@@ -301,6 +301,8 @@ async function loadImageAsBase64(url) {
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       resolve(canvas.toDataURL('image/jpeg', 0.85));
     };
