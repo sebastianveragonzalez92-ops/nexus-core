@@ -61,28 +61,31 @@ export default function Maintenance() {
           transition={{ duration: 0.3 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
-              <TabsTrigger value="dashboard" className="gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Dashboard
-              </TabsTrigger>
-              <TabsTrigger value="preventivo" className="gap-2">
-                <ListTodo className="w-4 h-4" />
-                Preventivos
-              </TabsTrigger>
-              <TabsTrigger value="correctivo" className="gap-2">
-                <Wrench className="w-4 h-4" />
-                Correctivos
-              </TabsTrigger>
-              <TabsTrigger value="history" className="gap-2">
-                <Wrench className="w-4 h-4" />
-                Historial
-              </TabsTrigger>
-              <TabsTrigger value="import" className="gap-2">
-                <ListTodo className="w-4 h-4" />
-                Importar
-              </TabsTrigger>
-            </TabsList>
+            <div className="mb-8 overflow-x-auto">
+              <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-5">
+                <TabsTrigger value="dashboard" className="gap-2 whitespace-nowrap px-4">
+                  <BarChart3 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Dashboard</span>
+                  <span className="sm:hidden">Panel</span>
+                </TabsTrigger>
+                <TabsTrigger value="preventivo" className="gap-2 whitespace-nowrap px-4">
+                  <ListTodo className="w-4 h-4" />
+                  Preventivos
+                </TabsTrigger>
+                <TabsTrigger value="correctivo" className="gap-2 whitespace-nowrap px-4">
+                  <Wrench className="w-4 h-4" />
+                  Correctivos
+                </TabsTrigger>
+                <TabsTrigger value="history" className="gap-2 whitespace-nowrap px-4">
+                  <Wrench className="w-4 h-4" />
+                  Historial
+                </TabsTrigger>
+                <TabsTrigger value="import" className="gap-2 whitespace-nowrap px-4">
+                  <ListTodo className="w-4 h-4" />
+                  Importar
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="dashboard" className="space-y-6">
               <MaintenanceDashboard
