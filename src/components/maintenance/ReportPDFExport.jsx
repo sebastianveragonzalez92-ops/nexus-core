@@ -66,13 +66,13 @@ export default function ReportPDFExport({ report }) {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(30, 30, 30);
-        doc.text(companyName || 'Empresa', margin, 14);
+        doc.text(companyName || reportTitle, margin, 14);
       }
-    } else if (companyName) {
+    } else {
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(30, 30, 30);
-      doc.text(companyName, margin, 14);
+      doc.text(companyName || reportTitle, margin, 14);
     }
 
     // Right side: division + document code
