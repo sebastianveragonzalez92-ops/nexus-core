@@ -1,17 +1,35 @@
 import React, { useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Camera, X, Loader2, Plus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Camera, X, Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const PHOTO_LABELS = [
+  'Fotografía frontal del equipo',
+  'CAS - Antena QC1000',
+  'CAS - Pantalla QD1400',
+  'CAS - Mastil',
+  'FMS - Pantalla',
+  'FMS - GPS',
+  'FMS - CORE',
+  'FMS - Cable Display',
+  'FMS - Cable Core Power',
+  'FMS - Bracket Smartscreen',
+  'FMS - Bracket Core',
+  'FMS - Bracket Antena GPS',
+  'Fotografía lateral del equipo',
+  'Fotografía trasera del equipo',
+  'Detalle daño / hallazgo',
+];
 
 export default function LabeledPhotoCapture({ entries = [], onEntriesChange }) {
   const [uploading, setUploading] = useState(false);
-  const [newLabel, setNewLabel] = useState('');
+  const [selectedLabel, setSelectedLabel] = useState('');
   const fileInputRef = useRef(null);
   const pendingLabel = useRef('');
 
   const handleAddPhoto = () => {
-    if (!newLabel.trim()) return;
-    pendingLabel.current = newLabel.trim();
+    if (!selectedLabel) return;
+    pendingLabel.current = selectedLabel;
     fileInputRef.current?.click();
   };
 
@@ -21,7 +39,7 @@ export default function LabeledPhotoCapture({ entries = [], onEntriesChange }) {
     setUploading(true);
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     onEntriesChange([...entries, { label: pendingLabel.current, url: file_url }]);
-    setNewLabel('');
+    setSelectedLabel('');
     setUploading(false);
     e.target.value = '';
   };
@@ -32,21 +50,24 @@ export default function LabeledPhotoCapture({ entries = [], onEntriesChange }) {
     <div className="space-y-4">
       {/* Add photo row */}
       <div className="flex gap-2">
-        <Input
-          placeholder="Etiqueta (ej: CAS - Antena QC1000)"
-          value={newLabel}
-          onChange={e => setNewLabel(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleAddPhoto()}
-          className="flex-1"
-        />
+        <Select value={selectedLabel} onValueChange={setSelectedLabel}>
+          <SelectTrigger className="flex-1">
+            <SelectValue placeholder="Seleccionar componente a fotografiar..." />
+          </SelectTrigger>
+          <SelectContent>
+            {PHOTO_LABELS.map(label => (
+              <SelectItem key={label} value={label}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <button
           type="button"
           onClick={handleAddPhoto}
-          disabled={uploading || !newLabel.trim()}
+          disabled={uploading || !selectedLabel}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors shrink-0"
         >
           {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
-          Agregar foto
+          Tomar foto
         </button>
       </div>
 
@@ -57,8 +78,8 @@ export default function LabeledPhotoCapture({ entries = [], onEntriesChange }) {
         <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100">
           {entries.map((entry, idx) => (
             <div key={idx} className="flex items-center gap-3 p-3">
-              <span className="text-sm font-medium text-slate-700 flex-1">{entry.label}</span>
-              <img src={entry.url} alt={entry.label} className="w-20 h-14 object-cover rounded-lg border border-slate-200 shrink-0" />
+              <span className="text-sm font-semibold text-slate-700 flex-1">{entry.label}</span>
+              <img src={entry.url} alt={entry.label} className="w-24 h-16 object-cover rounded-lg border border-slate-200 shrink-0" />
               <button type="button" onClick={() => remove(idx)} className="p-1 text-slate-400 hover:text-red-500 transition-colors">
                 <X className="w-4 h-4" />
               </button>
