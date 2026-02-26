@@ -85,6 +85,12 @@ export default function Maintenance() {
                   <ListTodo className="w-4 h-4" />
                   Importar
                 </TabsTrigger>
+                {isAdmin && (
+                  <TabsTrigger value="plantillas" className="gap-2 whitespace-nowrap px-4">
+                    <ListTodo className="w-4 h-4" />
+                    Plantillas
+                  </TabsTrigger>
+                )}
               </TabsList>
             </div>
 
