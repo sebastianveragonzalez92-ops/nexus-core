@@ -40,7 +40,17 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
   const [form, setForm] = useState({ ...defaultForm, type: reportType });
   const queryClient = useQueryClient();
 
-  const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
+  const set = (key, val) => {
+    setForm(f => {
+      const updated = { ...f, [key]: val };
+      if (key === 'report_date' && val) {
+        const d = new Date(val);
+        d.setMonth(d.getMonth() + 3);
+        updated.fecha_proxima_mantencion = d.toISOString().split('T')[0];
+      }
+      return updated;
+    });
+  };
   const setNested = (key, sub, val) => setForm(f => ({ ...f, [key]: { ...f[key], [sub]: val } }));
 
   const { mutate: saveReport, isPending } = useMutation({
