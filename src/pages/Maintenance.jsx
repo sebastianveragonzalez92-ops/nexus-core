@@ -144,6 +144,12 @@ export default function Maintenance() {
                 }}
               />
             </TabsContent>
+
+            {isAdmin && (
+              <TabsContent value="plantillas">
+                <ReportTemplateManager />
+              </TabsContent>
+            )}
           </Tabs>
         </motion.div>
       </div>
