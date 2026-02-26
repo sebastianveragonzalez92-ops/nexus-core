@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
@@ -9,6 +10,30 @@ export default function ReportPDFExport({ report }) {
 
   const generatePDF = async () => {
     setLoading(true);
+
+    // Load default template if any
+    let template = null;
+    try {
+      const templates = await base44.entities.ReportTemplate.filter({ is_default: true }, '-created_date', 1);
+      if (templates.length > 0) template = templates[0];
+    } catch {}
+
+    const headerColor = template?.header_color || '#2563eb';
+    const reportTitle = template?.report_title || 'MineProtect CAS10 FMS - Mantención Equipos Pesados';
+    const companyName = template?.company_name || '';
+    const division = template?.division || '';
+    const documentCode = template?.document_code || '';
+    const logoUrl = template?.company_logo_url || '';
+
+    // Parse hex color to RGB
+    const hexToRgb = (hex) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return [r, g, b];
+    };
+    const [hr, hg, hb] = hexToRgb(headerColor);
+
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pageW = 210;
     const margin = 14;
@@ -22,17 +47,56 @@ export default function ReportPDFExport({ report }) {
       }
     };
 
-    // Header
-    doc.setFillColor(37, 99, 235);
-    doc.rect(0, 0, pageW, 22, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(13);
+    // Header - white background with logo on left, company info on right, title below
+    const headerBgH = 28;
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageW, headerBgH + 12, 'F');
+
+    // Top border line with header color
+    doc.setDrawColor(hr, hg, hb);
+    doc.setLineWidth(1);
+    doc.line(0, 0, pageW, 0);
+
+    // Logo or company name on the left
+    if (logoUrl) {
+      try {
+        const logoData = await loadImageAsBase64(logoUrl);
+        doc.addImage(logoData, 'JPEG', margin, 4, 35, 18);
+      } catch {
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 30, 30);
+        doc.text(companyName || 'Empresa', margin, 14);
+      }
+    } else if (companyName) {
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text(companyName, margin, 14);
+    }
+
+    // Right side: division + document code
+    if (division || documentCode) {
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
+      if (division) doc.text(division, pageW - margin, 10, { align: 'right' });
+      if (documentCode) doc.text(documentCode, pageW - margin, 16, { align: 'right' });
+    }
+
+    // Separator line
+    y = headerBgH;
+    doc.setDrawColor(hr, hg, hb);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageW - margin, y);
+    y += 6;
+
+    // Report title in header color
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('MineProtect CAS10 FMS - Mantención Equipos Pesados', pageW / 2, 10, { align: 'center' });
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Tipo: ${report.type === 'preventivo' ? 'Preventivo' : 'Correctivo'}`, pageW / 2, 17, { align: 'center' });
-    y = 30;
+    doc.setTextColor(hr, hg, hb);
+    doc.text(reportTitle, margin, y);
+    y += 10;
 
     // Section helper
     const sectionTitle = (title) => {
