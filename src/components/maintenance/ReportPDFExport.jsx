@@ -103,10 +103,10 @@ export default function ReportPDFExport({ report }) {
       addPageIfNeeded(12);
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(37, 99, 235);
+      doc.setTextColor(hr, hg, hb);
       doc.text(title, margin, y);
       y += 2;
-      doc.setDrawColor(37, 99, 235);
+      doc.setDrawColor(hr, hg, hb);
       doc.setLineWidth(0.4);
       doc.line(margin, y, margin + contentW, y);
       y += 5;
