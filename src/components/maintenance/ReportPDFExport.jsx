@@ -101,32 +101,40 @@ export default function ReportPDFExport({ report }) {
       addPageIfNeeded(20);
       sectionTitle(title);
 
-      const colW = contentW / 2 - 2;
-      ALL_ITEMS.forEach((item, idx) => {
-        addPageIfNeeded(7);
-        const col = idx % 2;
-        const x = margin + col * (colW + 4);
+      const labelColW = contentW - 25;
+      const valueColX = margin + labelColW + 2;
+
+      ALL_ITEMS.forEach((item) => {
         const val = values[item];
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
+        const labelLines = doc.splitTextToSize(item, labelColW - 4);
+        const rowH = labelLines.length * 4.5 + 2;
+        addPageIfNeeded(rowH + 2);
+
+        // Row background alternating
+        doc.setFillColor(248, 250, 252);
+        doc.rect(margin, y - 3.5, contentW, rowH, 'F');
+        doc.setDrawColor(220, 220, 230);
+        doc.setLineWidth(0.2);
+        doc.rect(margin, y - 3.5, contentW, rowH, 'S');
+
+        doc.setFontSize(8.5);
+        doc.setFont('helvetica', 'bold');
         doc.setTextColor(40, 40, 40);
-        const labelLines = doc.splitTextToSize(item, colW - 18);
-        doc.text(labelLines, x, y);
+        doc.text(labelLines, margin + 2, y);
+
         if (val) {
           doc.setTextColor(22, 163, 74);
           doc.setFont('helvetica', 'bold');
-          doc.text('Yes', x + colW - 10, y);
+          doc.text('Yes', valueColX, y);
         } else {
           doc.setTextColor(220, 38, 38);
           doc.setFont('helvetica', 'bold');
-          doc.text('No', x + colW - 10, y);
+          doc.text('No', valueColX, y);
         }
         doc.setTextColor(40, 40, 40);
-        if (col === 1 || idx === ALL_ITEMS.length - 1) {
-          y += labelLines.length * 4 + 2;
-        }
+        y += rowH;
       });
-      y += 4;
+      y += 5;
     };
 
     componentTable(report.componentes_pre, 'Componentes Operativos Pre-mantención');
