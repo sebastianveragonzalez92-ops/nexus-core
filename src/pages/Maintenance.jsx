@@ -10,6 +10,7 @@ import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
 import ImportFromSheets from '@/components/maintenance/ImportFromSheets';
 import ExportButton from '@/components/maintenance/ExportButton';
 import MaintenanceReports from '@/components/maintenance/MaintenanceReports';
+import ReportTemplateManager from '@/components/maintenance/ReportTemplateManager';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
