@@ -263,6 +263,7 @@ export default function ReportPDFExport({ report }) {
     if (report.location) {
       addPageIfNeeded(15);
       sectionTitle('Ubicación GPS');
+      resetRowIndex();
       infoRow('Coordenadas', `${report.location.lat?.toFixed(5)}, ${report.location.lng?.toFixed(5)}`);
       if (report.location.accuracy) infoRow('Precisión', `${Math.round(report.location.accuracy)} m`);
       y += 4;
