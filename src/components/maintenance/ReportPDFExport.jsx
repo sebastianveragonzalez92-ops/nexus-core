@@ -115,11 +115,11 @@ export default function ReportPDFExport({ report }) {
         if (val) {
           doc.setTextColor(22, 163, 74);
           doc.setFont('helvetica', 'bold');
-          doc.text('✓ Yes', x + colW - 14, y);
+          doc.text('Yes', x + colW - 10, y);
         } else {
           doc.setTextColor(220, 38, 38);
           doc.setFont('helvetica', 'bold');
-          doc.text('✗ No', x + colW - 14, y);
+          doc.text('No', x + colW - 10, y);
         }
         doc.setTextColor(40, 40, 40);
         if (col === 1 || idx === ALL_ITEMS.length - 1) {
