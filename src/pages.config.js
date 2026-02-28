@@ -62,11 +62,12 @@ import Maintenance from './pages/Maintenance';
 import Modules from './pages/Modules';
 import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
+import Pricing from './pages/Pricing';
 import Settings from './pages/Settings';
 import SpareParts from './pages/SpareParts';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import Pricing from './pages/Pricing';
+import Landing from './pages/Landing';
 import __Layout from './Layout.jsx';
 
 
@@ -86,11 +87,12 @@ export const PAGES = {
     "Modules": Modules,
     "MyCourses": MyCourses,
     "Notifications": Notifications,
+    "Pricing": Pricing,
     "Settings": Settings,
     "SpareParts": SpareParts,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "Pricing": Pricing,
+    "Landing": Landing,
 }
 
 export const pagesConfig = {
