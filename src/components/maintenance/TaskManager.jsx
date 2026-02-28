@@ -64,8 +64,8 @@ function TaskCard({ task, onEdit, onDelete }) {
             )}
           </div>
           <div className="flex gap-1 shrink-0">
-            <Button variant="ghost" size="icon" onClick={() => onEdit(task)}><Pencil className="w-4 h-4 text-slate-400" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => onDelete(task.id)}><Trash2 className="w-4 h-4 text-red-400" /></Button>
+            {onEdit && <Button variant="ghost" size="icon" onClick={() => onEdit(task)}><Pencil className="w-4 h-4 text-slate-400" /></Button>}
+            {onDelete && <Button variant="ghost" size="icon" onClick={() => onDelete(task.id)}><Trash2 className="w-4 h-4 text-red-400" /></Button>}
           </div>
         </div>
       </CardContent>
@@ -146,9 +146,11 @@ export default function TaskManager({ user }) {
             <div className="text-center py-14 border-2 border-dashed border-slate-200 rounded-2xl">
               <CheckSquare className="w-10 h-10 text-slate-300 mx-auto mb-3" />
               <p className="text-slate-500 font-medium">Sin tareas aún</p>
-              <Button onClick={() => setShowForm(true)} variant="outline" className="mt-4 gap-2">
-                <Plus className="w-4 h-4" /> Crear tarea
-              </Button>
+              {canManage && (
+                <Button onClick={() => setShowForm(true)} variant="outline" className="mt-4 gap-2">
+                  <Plus className="w-4 h-4" /> Crear tarea
+                </Button>
+              )}
             </div>
           ) : (
             tasks.map(t => (
