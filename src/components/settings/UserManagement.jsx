@@ -48,7 +48,7 @@ export default function UserManagement({ currentUser }) {
     setIsInviting(true);
     try {
       // base44 only supports 'admin' or 'user' for invite; role is updated after
-      const baseRole = role === 'admin' ? 'admin' : 'user';
+      const baseRole = role === 'admin' ? 'admin' : 'user'; // base44 invite only supports admin/user, role updated separately
       await base44.users.inviteUser(email, baseRole);
       toast.success(`Invitación enviada a ${email}`);
       setSuccess(true);
