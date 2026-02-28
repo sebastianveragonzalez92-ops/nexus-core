@@ -83,7 +83,7 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
         <motion.h1 
-          className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-indigo-300 via-violet-300 to-indigo-300 bg-clip-text text-transparent"
+          className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent"
           {...fadeInUp}
         >
           Mantenimiento inteligente para industria minera
