@@ -43,7 +43,7 @@ export default function Landing() {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 hover:bg-slate-800 rounded-lg"
+            className="md:hidden p-2 hover:bg-blue-900 rounded-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X /> : <Menu />}
