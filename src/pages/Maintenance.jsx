@@ -83,6 +83,10 @@ export default function Maintenance() {
                   <Wrench className="w-4 h-4" />
                   Historial
                 </TabsTrigger>
+                <TabsTrigger value="equipos" className="gap-2 whitespace-nowrap px-4">
+                  <Cpu className="w-4 h-4" />
+                  Equipos
+                </TabsTrigger>
                 <TabsTrigger value="tareas" className="gap-2 whitespace-nowrap px-4">
                   <CheckSquare className="w-4 h-4" />
                   Tareas
