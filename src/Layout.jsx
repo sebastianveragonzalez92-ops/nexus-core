@@ -69,7 +69,6 @@ const getNavGroups = (userRole) => {
     if (isAdmin) {
       adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: BookOpen });
       adminItems.push({ name: 'Usuarios', page: 'Settings', icon: Settings });
-      adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
     }
     if (isSupervisor) {
       adminItems.push({ name: 'Reportes', page: 'Activity', icon: Activity });
