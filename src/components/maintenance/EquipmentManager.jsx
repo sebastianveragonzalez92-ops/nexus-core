@@ -94,11 +94,12 @@ function EquipmentRow({ eq, reports, onEdit, onDelete }) {
   );
 }
 
-export default function EquipmentManager() {
+export default function EquipmentManager({ user }) {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState('');
   const queryClient = useQueryClient();
+  const canManage = ['admin', 'supervisor'].includes(user?.role);
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],

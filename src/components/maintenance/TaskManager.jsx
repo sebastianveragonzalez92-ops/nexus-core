@@ -73,11 +73,12 @@ function TaskCard({ task, onEdit, onDelete }) {
   );
 }
 
-export default function TaskManager() {
+export default function TaskManager({ user }) {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [calendarTask, setCalendarTask] = useState(null);
   const queryClient = useQueryClient();
+  const canManage = ['admin', 'supervisor'].includes(user?.role);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['maintenanceTasks'],
