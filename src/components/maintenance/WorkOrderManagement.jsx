@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import WorkOrderApprovalFlow from './WorkOrderApprovalFlow';
+import WorkOrderPartsPanel from './WorkOrderPartsPanel';
 
 export default function WorkOrderManagement({ workOrders, assets, user }) {
   const isAdmin = hasPermission(user, 'maintenance.work_orders.create');
