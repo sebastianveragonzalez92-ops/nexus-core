@@ -40,7 +40,7 @@ export default function Maintenance() {
   });
 
   const isAdmin = user?.role === 'admin';
-  // Keep isAdmin for legacy template tab guard
+  const canManageTemplates = ['admin', 'supervisor_mantenimiento'].includes(user?.role);
 
   return (
     <div className="min-h-screen bg-slate-50">
