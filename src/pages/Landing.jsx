@@ -28,9 +28,7 @@ export default function Landing() {
       <nav className="sticky top-0 z-50 bg-blue-950/80 backdrop-blur-xl border-b border-cyan-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-              <Network className="w-6 h-6 text-white" />
-            </div>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696eb833e2d4849e4ac7b478/52e7396d8_image.png" alt="Nexus" className="w-10 h-10" />
             <span className="font-bold text-lg">Nexus</span>
           </div>
 
