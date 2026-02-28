@@ -195,6 +195,36 @@ export default function ChecklistTemplateManager({ templates, user }) {
               />
             </div>
 
+            {/* Roles Aplicables */}
+            <div>
+              <label className="block text-sm font-medium text-slate-900 mb-3">
+                Asignar a Roles Específicos
+              </label>
+              <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-lg">
+                {['admin', 'supervisor', 'tecnico', 'inspector', 'especialista', 'capacitador', 'operador'].map(role => (
+                  <label key={role} className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={formData.applicable_roles?.includes(role) || false}
+                      onCheckedChange={(checked) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          applicable_roles: checked
+                            ? [...(prev.applicable_roles || []), role]
+                            : (prev.applicable_roles || []).filter(r => r !== role)
+                        }));
+                      }}
+                    />
+                    <span className="text-sm capitalize">{role}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                {formData.applicable_roles?.length === 0 || !formData.applicable_roles
+                  ? 'Si no seleccionas roles, estará disponible para todos'
+                  : `Disponible para: ${formData.applicable_roles.join(', ')}`}
+              </p>
+            </div>
+
             {/* Items */}
             <div>
               <div className="flex items-center justify-between mb-4">
