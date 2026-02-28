@@ -77,7 +77,7 @@ export default function Maintenance() {
                   { value: 'tareas', label: 'Tareas', icon: CheckSquare },
                   { value: 'reportes', label: 'Reportes', icon: FileText },
                   { value: 'import', label: 'Importar', icon: Download },
-                  ...(isAdmin ? [{ value: 'plantillas', label: 'Plantillas', icon: FileStack }] : []),
+                  ...(canManageTemplates ? [{ value: 'plantillas', label: 'Plantillas', icon: FileStack }] : []),
                 ].map(({ value, label, icon: Icon }) => (
                   <TabsTrigger
                     key={value}
