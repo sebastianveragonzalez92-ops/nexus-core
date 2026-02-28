@@ -40,7 +40,7 @@ export default function Maintenance() {
   });
 
   const isAdmin = user?.role === 'admin';
-  const canManageTemplates = ['admin', 'supervisor_mantenimiento'].includes(user?.role);
+  const canManageTemplates = ['admin', 'supervisor'].includes(user?.role);
 
   return (
     <div className="min-h-screen bg-slate-50">
