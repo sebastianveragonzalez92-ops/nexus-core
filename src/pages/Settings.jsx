@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, User, Shield, Bell, Database, Globe, Save, LogOut, Users, Upload, Image } from 'lucide-react';
+import { User, Shield, Bell, Database, Globe, Save, LogOut, Users, Upload, Image, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import InviteUserCard from '@/components/settings/InviteUserCard';
+import UserManagement from '@/components/settings/UserManagement';
+import AuditLog from '@/components/settings/AuditLog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
 
 const settingsSections = [
   { id: 'profile', label: 'Perfil', icon: User },
