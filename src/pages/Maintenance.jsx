@@ -147,7 +147,7 @@ export default function Maintenance() {
               />
             </TabsContent>
 
-            {isAdmin && (
+            {canManageTemplates && (
               <TabsContent value="plantillas">
                 <ReportTemplateManager />
               </TabsContent>
