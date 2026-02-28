@@ -197,11 +197,7 @@ export default function Trial() {
                     ))}
                   </ul>
                   <Button
-                    className={`w-full h-11 ${
-                      plan.highlighted
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white'
-                        : 'bg-white border-2 border-slate-300 text-slate-900 hover:bg-slate-50'
-                    }`}
+                    className="w-full h-11 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white"
                     onClick={() => window.location.href = createPageUrl('Pricing')}
                   >
                     Suscribirse ahora
