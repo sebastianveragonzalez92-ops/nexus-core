@@ -228,7 +228,7 @@ export default function Landing() {
         <Button 
           onClick={handleLogin}
           size="lg"
-          className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 h-12 px-8 text-lg"
+          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 h-12 px-8 text-lg"
         >
           Comenzar ahora
           <ChevronRight className="w-5 h-5 ml-2" />
