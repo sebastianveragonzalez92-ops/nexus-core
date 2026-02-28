@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, Package, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { registerStockMovement } from '@/components/spareparts/stockMovementHelpers';
 
 export default function WorkOrderPartsPanel({ workOrderId }) {
   const queryClient = useQueryClient();

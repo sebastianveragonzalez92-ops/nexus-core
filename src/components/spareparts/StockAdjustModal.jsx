@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { X, Plus, Minus } from 'lucide-react';
+import { registerStockMovement } from './stockMovementHelpers';
 
 export default function StockAdjustModal({ part, onSave, onCancel, isLoading }) {
   const [mode, setMode] = useState('entrada'); // 'entrada' | 'salida' | 'ajuste'
