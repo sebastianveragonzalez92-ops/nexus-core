@@ -95,9 +95,12 @@ export default function Dashboard() {
     mutationFn: async (data) => {
       const module = await base44.entities.Module.create(data);
       await base44.entities.ActivityLog.create({
+        user_email: user?.email,
         action: 'create',
+        target_name: data.name,
         module: data.name,
-        details: `Módulo "${data.name}" creado`,
+        details: {},
+        description: `Módulo "${data.name}" creado`,
       });
       return module;
     },
@@ -113,9 +116,12 @@ export default function Dashboard() {
     mutationFn: async ({ id, data }) => {
       const module = await base44.entities.Module.update(id, data);
       await base44.entities.ActivityLog.create({
+        user_email: user?.email,
         action: 'update',
+        target_name: data.name,
         module: data.name,
-        details: `Módulo "${data.name}" actualizado`,
+        details: {},
+        description: `Módulo "${data.name}" actualizado`,
       });
       return module;
     },
@@ -133,9 +139,12 @@ export default function Dashboard() {
       const newStatus = module.status === 'active' ? 'inactive' : 'active';
       await base44.entities.Module.update(module.id, { status: newStatus });
       await base44.entities.ActivityLog.create({
+        user_email: user?.email,
         action: 'update',
+        target_name: module.name,
         module: module.name,
-        details: `Módulo "${module.name}" ${newStatus === 'active' ? 'activado' : 'desactivado'}`,
+        details: {},
+        description: `Módulo "${module.name}" ${newStatus === 'active' ? 'activado' : 'desactivado'}`,
       });
     },
     onSuccess: () => {

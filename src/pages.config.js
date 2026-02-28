@@ -61,6 +61,7 @@ import FAQ from './pages/FAQ';
 import ForgotPassword from './pages/ForgotPassword';
 import Gamification from './pages/Gamification';
 import InstructorDashboard from './pages/InstructorDashboard';
+import KPIs from './pages/KPIs';
 import Landing from './pages/Landing';
 import Maintenance from './pages/Maintenance';
 import Modules from './pages/Modules';
@@ -74,7 +75,6 @@ import Trial from './pages/Trial';
 import TrialWelcome from './pages/TrialWelcome';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import KPIs from './pages/KPIs';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +93,7 @@ export const PAGES = {
     "ForgotPassword": ForgotPassword,
     "Gamification": Gamification,
     "InstructorDashboard": InstructorDashboard,
+    "KPIs": KPIs,
     "Landing": Landing,
     "Maintenance": Maintenance,
     "Modules": Modules,
@@ -106,7 +107,6 @@ export const PAGES = {
     "TrialWelcome": TrialWelcome,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "KPIs": KPIs,
 }
 
 export const pagesConfig = {
