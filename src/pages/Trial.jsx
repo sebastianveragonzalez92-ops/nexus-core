@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { createPageUrl } from '@/utils';
-import { ChevronRight, Check, Clock, Zap, BookOpen, Users, BarChart3, Lock } from 'lucide-react';
+import { ChevronRight, Check, Clock, Zap, BookOpen, Users, BarChart3, Lock, Wrench, Gauge } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Trial() {
