@@ -79,11 +79,11 @@ export default function ModuleModal({ isOpen, onClose, onSave, module }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-50 max-h-[80vh] flex flex-col"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-50 max-h-[85vh]"
           >
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mx-4 flex flex-col max-h-[80vh]">
+            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mx-4 flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-100">
+              <div className="flex items-center justify-between p-6 border-b border-slate-100 shrink-0">
                 <h2 className="text-xl font-semibold text-slate-900">
                   {module ? 'Editar módulo' : 'Nuevo módulo'}
                 </h2>
