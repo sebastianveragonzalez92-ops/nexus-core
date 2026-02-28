@@ -31,7 +31,7 @@ export default function Landing() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="font-bold text-lg">ModulaX</span>
+            <span className="font-bold text-lg">Nexus</span>
           </div>
 
           {/* Desktop Menu */}
@@ -243,7 +243,7 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="border-t border-cyan-700/30 py-12 text-center text-slate-500">
-        <p>© 2026 ModulaX. Todos los derechos reservados.</p>
+        <p>© 2026 Nexus. Todos los derechos reservados.</p>
       </footer>
     </div>
   );
