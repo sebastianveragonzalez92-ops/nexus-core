@@ -157,8 +157,8 @@ export default function TaskManager({ user }) {
               <TaskCard
                 key={t.id}
                 task={t}
-                onEdit={(task) => { setEditing(task); setShowForm(true); }}
-                onDelete={handleDelete}
+                onEdit={canManage ? (task) => { setEditing(task); setShowForm(true); } : null}
+                onDelete={canManage ? handleDelete : null}
               />
             ))
           )}
