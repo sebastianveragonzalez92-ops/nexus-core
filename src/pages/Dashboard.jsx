@@ -369,10 +369,12 @@ export default function Dashboard() {
               onViewAll={() => {}}
             />
           </motion.div>
-        </div>
+          </div>
+          )}
 
-        {/* Recent Courses */}
-        <motion.div
+          {/* Recent Courses - Solo para técnico */}
+          {user?.role !== 'admin' && user?.role !== 'supervisor' && (
+          <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
