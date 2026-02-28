@@ -134,6 +134,10 @@ export default function Maintenance() {
               </div>
             </TabsContent>
 
+            <TabsContent value="tareas">
+              <TaskManager />
+            </TabsContent>
+
             <TabsContent value="history">
               <MaintenanceHistory
                 workOrders={workOrders}
