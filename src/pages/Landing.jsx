@@ -121,17 +121,17 @@ export default function Landing() {
           className="grid grid-cols-3 gap-4 mt-16 max-w-2xl mx-auto"
           {...fadeInUp}
         >
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-400">95%</div>
-            <div className="text-sm text-slate-400">Reducción de fallas</div>
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-2xl font-bold text-indigo-600">95%</div>
+            <div className="text-sm text-slate-600">Reducción de fallas</div>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-400">500+</div>
-            <div className="text-sm text-slate-400">Empresas activas</div>
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-2xl font-bold text-indigo-600">500+</div>
+            <div className="text-sm text-slate-600">Empresas activas</div>
           </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-400">24/7</div>
-            <div className="text-sm text-slate-400">Soporte técnico</div>
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-2xl font-bold text-indigo-600">24/7</div>
+            <div className="text-sm text-slate-600">Soporte técnico</div>
           </div>
         </motion.div>
       </section>
