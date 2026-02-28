@@ -52,8 +52,8 @@ export default function Landing() {
           {/* Desktop CTA */}
           <div className="hidden md:flex gap-3">
             <Button 
-               variant="outline" 
-               className="border-cyan-600 text-white hover:bg-blue-900"
+               style={{ borderColor: 'rgb(6, 182, 212)', color: 'white' }}
+               className="border-2 hover:bg-blue-900"
                onClick={handleLogin}
              >
                Ingresar
