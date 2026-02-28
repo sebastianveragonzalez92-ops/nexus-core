@@ -109,6 +109,18 @@ export default function Checklists() {
             />
           </TabsContent>
 
+          {/* Alerts Tab */}
+          <TabsContent value="alerts" className="space-y-6">
+            <AlertPanel userRole={user?.role} />
+            {canManageTemplates && (
+              <>
+                <div className="border-t pt-6">
+                  <AlertConfiguration userRole={user?.role} />
+                </div>
+              </>
+            )}
+          </TabsContent>
+
           {/* Templates Tab */}
           {canManageTemplates && (
             <TabsContent value="templates" className="space-y-6">
@@ -118,8 +130,8 @@ export default function Checklists() {
               />
             </TabsContent>
           )}
-        </Tabs>
-      </div>
-    </div>
-  );
-}
+          </Tabs>
+          </div>
+          </div>
+          );
+          }
