@@ -197,7 +197,8 @@ export default function Dashboard() {
     return null;
   };
 
-    // Learning stats for technician
+  // Learning stats for technician
+  const renderRoleSpecificContent = () => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
