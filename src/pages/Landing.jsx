@@ -35,11 +35,11 @@ export default function Landing() {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="hover:text-indigo-400 transition">Características</a>
-            <a href="#pricing" className="hover:text-indigo-400 transition">Precios</a>
-            <a href="#benefits" className="hover:text-indigo-400 transition">Beneficios</a>
-          </div>
+           <div className="hidden md:flex items-center gap-8">
+             <a href="#features" className="hover:text-cyan-400 transition">Características</a>
+             <a href="#pricing" className="hover:text-cyan-400 transition">Precios</a>
+             <a href="#benefits" className="hover:text-cyan-400 transition">Beneficios</a>
+           </div>
 
           {/* Mobile Menu Button */}
           <button 
