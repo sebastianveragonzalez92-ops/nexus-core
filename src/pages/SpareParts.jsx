@@ -101,6 +101,13 @@ export default function SpareParts() {
       </div>
     
 
+      <Tabs defaultValue="inventario">
+        <TabsList className="mb-2">
+          <TabsTrigger value="inventario" className="gap-2"><Package className="w-4 h-4" />Inventario</TabsTrigger>
+          <TabsTrigger value="historial" className="gap-2"><History className="w-4 h-4" />Historial de movimientos</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="inventario" className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl border border-slate-200 p-4">
@@ -237,6 +244,13 @@ export default function SpareParts() {
         </div>
       )}
 
+        </TabsContent>
+
+        <TabsContent value="historial">
+          <StockMovementHistory spareParts={parts} />
+        </TabsContent>
+      </Tabs>
+
       {/* Modals */}
       {showForm && (
         <SparePartForm
@@ -253,6 +267,7 @@ export default function SpareParts() {
           onSave={handleStockAdjust}
           onCancel={() => setAdjustingPart(null)}
           isLoading={updateMutation.isPending}
+          user={user}
         />
       )}
     </div>
