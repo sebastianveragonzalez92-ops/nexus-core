@@ -23,15 +23,6 @@ export default function DashboardHeader({ user, pendingCount, onSync }) {
 
       <div className="flex items-center gap-3">
         <ConnectionStatus pendingCount={pendingCount} onSync={onSync} />
-        
-        <div className="hidden md:flex items-center gap-2">
-          
-
-
-          
-
-
-        </div>
       </div>
     </motion.header>);
 
