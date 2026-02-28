@@ -203,12 +203,75 @@ export default function ChecklistHistory({ executions, canReview }) {
                     </div>
                   )}
 
+                  {/* AI Report Section */}
+                  {!reports[execution.template_name] && canReview && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleGenerateReport(execution.template_name)}
+                      disabled={generatingReport === execution.template_name}
+                      className="text-violet-600 border-violet-200 hover:bg-violet-50 w-full"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {generatingReport === execution.template_name
+                        ? 'Generando reporte...'
+                        : 'Generar Reporte IA'}
+                    </Button>
+                  )}
+
+                  {reports[execution.template_name] && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 p-4 rounded-lg space-y-3"
+                    >
+                      <h4 className="font-semibold text-violet-900 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" />
+                        Reporte Inteligente
+                      </h4>
+
+                      <div className="space-y-2 text-sm">
+                        <div>
+                          <p className="text-violet-700 font-medium">Riesgo General</p>
+                          <p className="text-violet-600">
+                            Score: {reports[execution.template_name].risk_score}/100
+                          </p>
+                        </div>
+
+                        {reports[execution.template_name].recurring_issues?.length > 0 && (
+                          <div>
+                            <p className="text-violet-700 font-medium">Problemas Recurrentes</p>
+                            <ul className="text-violet-600 space-y-1">
+                              {reports[execution.template_name].recurring_issues.slice(0, 3).map((issue, idx) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                                  {issue.issue}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {reports[execution.template_name].priority_recommendations?.length > 0 && (
+                          <div>
+                            <p className="text-violet-700 font-medium">Recomendaciones</p>
+                            <ul className="text-violet-600 space-y-1">
+                              {reports[execution.template_name].priority_recommendations.slice(0, 2).map((rec, idx) => (
+                                <li key={idx}>• {rec}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+
                   {/* Export Button */}
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-slate-700 hover:bg-slate-100"
+                      className="text-slate-700 hover:bg-slate-100 flex-1"
                     >
                       <Download className="w-4 h-4 mr-2" />
                       Descargar PDF
