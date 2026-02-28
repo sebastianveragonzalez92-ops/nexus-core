@@ -14,6 +14,8 @@ import StockMovementHistory from '@/components/spareparts/StockMovementHistory';
 
 export default function SpareParts() {
   const queryClient = useQueryClient();
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
