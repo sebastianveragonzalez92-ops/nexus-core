@@ -68,6 +68,9 @@ import SpareParts from './pages/SpareParts';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
 import Landing from './pages/Landing';
+import FAQ from './pages/FAQ';
+import Support from './pages/Support';
+import ForgotPassword from './pages/ForgotPassword';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +96,9 @@ export const PAGES = {
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
     "Landing": Landing,
+    "FAQ": FAQ,
+    "Support": Support,
+    "ForgotPassword": ForgotPassword,
 }
 
 export const pagesConfig = {
