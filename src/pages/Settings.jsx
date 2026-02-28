@@ -325,12 +325,18 @@ export default function Settings() {
                     <div className="flex items-center gap-2 mb-2">
                       <Shield className="w-4 h-4 text-indigo-600" />
                       <span className="text-sm font-semibold text-indigo-900">
-                        Rol: {user?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                        Rol: {ROLE_LABELS[user?.role] || user?.role || 'Usuario'}
                       </span>
                     </div>
                     <p className="text-xs text-indigo-700">
-                      {user?.role === 'admin' 
-                        ? 'Tienes acceso completo a todas las funcionalidades de la plataforma'
+                      {user?.role === 'admin'
+                        ? 'Tienes acceso completo a todas las funcionalidades'
+                        : user?.role === 'supervisor_mantenimiento'
+                        ? 'Puedes gestionar OTs, aprobar trabajos y ver reportes'
+                        : user?.role === 'tecnico'
+                        ? 'Puedes ejecutar OTs y crear informes de mantención'
+                        : user?.role === 'admin_activos'
+                        ? 'Puedes gestionar equipos y activos de la plataforma'
                         : 'Tienes acceso estándar a la plataforma'}
                     </p>
                   </div>
