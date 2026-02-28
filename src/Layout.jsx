@@ -19,6 +19,7 @@ const getNavItems = (userRole) => {
           { name: 'Gamificación', page: 'Gamification', icon: Award },
           { name: 'Certificados', page: 'Certificates', icon: Award },
           { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
+          { name: 'Repuestos', page: 'SpareParts', icon: Wrench },
           { name: 'Notificaciones', page: 'Notifications', icon: Bell },
           { name: 'Tutor IA', page: 'Tutor', icon: Bot },
           { name: 'Actividad', page: 'Activity', icon: Activity },
