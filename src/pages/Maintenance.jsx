@@ -110,12 +110,7 @@ export default function Maintenance() {
             </div>
 
             <TabsContent value="dashboard" className="space-y-6">
-              <MaintenanceDashboard
-                workOrders={workOrders}
-                assets={assets}
-                kpiValues={kpiValues}
-                user={user}
-              />
+              <MaintenanceDashboard user={user} />
             </TabsContent>
 
             <TabsContent value="preventivo" className="space-y-8">
