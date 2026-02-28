@@ -68,16 +68,16 @@ export default function Landing() {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-700 p-4 space-y-3">
-            <a href="#features" className="block hover:text-indigo-400">Características</a>
-            <a href="#pricing" className="block hover:text-indigo-400">Precios</a>
-            <a href="#benefits" className="block hover:text-indigo-400">Beneficios</a>
-            <Button onClick={handleLogin} className="w-full bg-indigo-600">
-              Comenzar
-            </Button>
-          </div>
-        )}
+         {mobileMenuOpen && (
+           <div className="md:hidden border-t border-cyan-700/30 p-4 space-y-3">
+             <a href="#features" className="block hover:text-cyan-400">Características</a>
+             <a href="#pricing" className="block hover:text-cyan-400">Precios</a>
+             <a href="#benefits" className="block hover:text-cyan-400">Beneficios</a>
+             <Button onClick={handleLogin} className="w-full bg-cyan-600 hover:bg-cyan-700">
+               Comenzar
+             </Button>
+           </div>
+         )}
       </nav>
 
       {/* Hero Section */}
