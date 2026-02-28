@@ -33,6 +33,8 @@ const getNavGroups = (userRole) => {
       items: [
         { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
         { name: 'Repuestos', page: 'SpareParts', icon: Wrench },
+        { name: 'Equipos', page: 'Equipment', icon: Cpu },
+        ...(['admin', 'supervisor'].includes(userRole) ? [{ name: 'Crear Tarea', page: 'CreateTask', icon: ClipboardList }] : []),
       ],
     },
     {
