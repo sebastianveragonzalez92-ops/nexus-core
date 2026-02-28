@@ -236,7 +236,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-700 py-12 text-center text-slate-500">
+      <footer className="border-t border-cyan-700/30 py-12 text-center text-slate-500">
         <p>© 2026 ModulaX. Todos los derechos reservados.</p>
       </footer>
     </div>
