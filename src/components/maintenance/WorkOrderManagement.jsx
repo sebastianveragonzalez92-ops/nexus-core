@@ -232,10 +232,14 @@ export default function WorkOrderManagement({ workOrders, assets, user, isAdmin 
                   <CardContent className="p-4">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
                           <span className="font-semibold text-slate-900">#{wo.number || wo.id.slice(0, 8)}</span>
                           <Badge className={getPriorityColor(wo.priority)}>{wo.priority}</Badge>
-                          <Badge className={getStatusColor(wo.status)}>{wo.status}</Badge>
+                          <WorkOrderApprovalFlow
+                            wo={wo}
+                            user={user}
+                            onRefresh={() => queryClient.invalidateQueries({ queryKey: ['workOrders'] })}
+                          />
                         </div>
                         <p className="text-slate-700 mb-1">{wo.description}</p>
                         <div className="text-sm text-slate-500 space-y-0.5">
