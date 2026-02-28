@@ -203,8 +203,8 @@ export default function Landing() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             { name: 'Gratuito', price: '$0', users: '5', maintenance: '10/mes', color: 'border-slate-200' },
-            { name: 'PRO', price: '$149', users: '50', maintenance: 'Ilimitado', color: 'border-indigo-500 shadow-lg shadow-indigo-500/30 scale-105' },
-            { name: 'Enterprise', price: '$399', users: 'Ilimitado', maintenance: 'Ilimitado', color: 'border-violet-500' }
+            { name: 'PRO', price: '$149', users: '50', maintenance: 'Ilimitado', color: 'border-cyan-500 shadow-lg shadow-cyan-500/30 scale-105' },
+            { name: 'Enterprise', price: '$399', users: 'Ilimitado', maintenance: 'Ilimitado', color: 'border-blue-500' }
           ].map((plan, idx) => (
             <div key={idx} className={`border-2 rounded-xl p-6 bg-white ${plan.color}`}>
               <h3 className="text-xl font-bold mb-2 text-slate-900">{plan.name}</h3>
