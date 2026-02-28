@@ -112,7 +112,6 @@ export default function Maintenance() {
                 workOrders={workOrders.filter(wo => wo.type === 'correctivo')}
                 assets={assets}
                 user={user}
-                isAdmin={isAdmin}
                 type="correctivo"
               />
               <div className="border-t border-slate-200 pt-8">
