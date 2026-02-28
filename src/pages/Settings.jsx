@@ -339,7 +339,11 @@ export default function Settings() {
             )}
 
             {activeSection === 'users' && (
-              <InviteUserCard currentUser={user} />
+              <UserManagement currentUser={user} />
+            )}
+
+            {activeSection === 'audit' && (
+              <AuditLog />
             )}
 
             {activeSection === 'notifications' && (
