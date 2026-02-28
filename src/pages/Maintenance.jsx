@@ -82,6 +82,10 @@ export default function Maintenance() {
                   <Wrench className="w-4 h-4" />
                   Historial
                 </TabsTrigger>
+                <TabsTrigger value="tareas" className="gap-2 whitespace-nowrap px-4">
+                  <CheckSquare className="w-4 h-4" />
+                  Tareas
+                </TabsTrigger>
                 <TabsTrigger value="import" className="gap-2 whitespace-nowrap px-4">
                   <ListTodo className="w-4 h-4" />
                   Importar
