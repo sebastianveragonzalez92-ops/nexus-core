@@ -17,6 +17,16 @@ import { CheckCircle2, AlertCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ChecklistExecutor({ template, user }) {
+  if (!template || !user) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-center py-8">
+          <p className="text-slate-500">Cargando checklist...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const [responses, setResponses] = useState({});
   const [shift, setShift] = useState('');
   const [observations, setObservations] = useState('');
@@ -28,19 +38,24 @@ export default function ChecklistExecutor({ template, user }) {
 
   const submitMutation = useMutation({
     mutationFn: async () => {
-      const requiredItems = template.items.filter(item => item.required);
+      if (!shift) {
+        throw new Error('Selecciona un turno');
+      }
+
+      const requiredItems = template.items?.filter(item => item.required) || [];
       const completedRequired = requiredItems.every(item => responses[item.id] !== undefined);
 
       if (!completedRequired) {
         throw new Error('Todos los items requeridos deben ser completados');
       }
 
-      const failures = template.items
+      const failures = (template.items || [])
         .filter(item => item.type === 'checkbox' && responses[item.id] === false)
         .map(item => item.name);
 
+      const itemCount = template.items?.length || 1;
       const complianceRate = failures.length === 0 ? 100 : Math.round(
-        ((template.items.length - failures.length) / template.items.length) * 100
+        ((itemCount - failures.length) / itemCount) * 100
       );
 
       // Validar con IA antes de guardar
@@ -62,11 +77,11 @@ export default function ChecklistExecutor({ template, user }) {
         template_id: template.id,
         template_name: template.name,
         user_email: user.email,
-        user_name: user.full_name,
+        user_name: user.full_name || user.email,
         team: user.department || 'Sin equipo',
         shift,
         execution_date: new Date().toISOString(),
-        responses: template.items.map(item => ({
+        responses: (template.items || []).map(item => ({
           item_id: item.id,
           item_name: item.name,
           response: responses[item.id],
@@ -114,8 +129,8 @@ export default function ChecklistExecutor({ template, user }) {
     }));
   };
 
-  const requiredCount = template.items.filter(i => i.required).length;
-  const completedCount = template.items.filter(i => responses[i.id] !== undefined).length;
+  const requiredCount = (template.items || []).filter(i => i.required).length;
+  const completedCount = (template.items || []).filter(i => responses[i.id] !== undefined).length;
 
   return (
     <motion.div
@@ -156,7 +171,7 @@ export default function ChecklistExecutor({ template, user }) {
 
           {/* Checklist Items */}
           <div className="space-y-4 bg-slate-50 p-4 rounded-lg">
-            {template.items.map((item, idx) => (
+            {(template.items || []).map((item, idx) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, x: -20 }}
