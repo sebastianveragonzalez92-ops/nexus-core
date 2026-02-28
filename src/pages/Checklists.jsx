@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Clipboard } from 'lucide-react';
-import ChecklistTemplateManager from '@/components/checklists/ChecklistTemplateManager';
-import ChecklistExecutor from '@/components/checklists/ChecklistExecutor';
-import ChecklistHistory from '@/components/checklists/ChecklistHistory';
+import ChecklistTemplateManager from '@/components/checklists/ChecklistTemplateManager.jsx';
+import ChecklistExecutor from '@/components/checklists/ChecklistExecutor.jsx';
+import ChecklistHistory from '@/components/checklists/ChecklistHistory.jsx';
 
 export default function Checklists() {
   const [user, setUser] = useState(null);
