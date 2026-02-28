@@ -107,7 +107,9 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
       whileHover={isActive ? { y: -6, transition: { duration: 0.2 } } : {}}
       className="h-full"
     >
-      <div className={cn(
+      <div 
+        onClick={handleCardClick}
+        className={cn(
         "group relative h-full p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col",
         isActive 
           ? "bg-white border-slate-200 hover:shadow-2xl hover:shadow-slate-300/40 hover:border-slate-300 cursor-pointer" 
