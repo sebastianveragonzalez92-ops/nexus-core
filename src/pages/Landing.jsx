@@ -122,15 +122,15 @@ export default function Landing() {
           {...fadeInUp}
         >
           <div className="bg-white rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-600">95%</div>
+            <div className="text-2xl font-bold text-cyan-600">95%</div>
             <div className="text-sm text-slate-600">Reducción de fallas</div>
           </div>
           <div className="bg-white rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-600">500+</div>
+            <div className="text-2xl font-bold text-cyan-600">500+</div>
             <div className="text-sm text-slate-600">Empresas activas</div>
           </div>
           <div className="bg-white rounded-lg p-4">
-            <div className="text-2xl font-bold text-indigo-600">24/7</div>
+            <div className="text-2xl font-bold text-cyan-600">24/7</div>
             <div className="text-sm text-slate-600">Soporte técnico</div>
           </div>
         </motion.div>
