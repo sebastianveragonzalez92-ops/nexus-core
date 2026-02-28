@@ -112,9 +112,11 @@ export default function TaskManager({ user }) {
           <h2 className="text-lg font-semibold text-slate-900">Gestión de Tareas</h2>
           <p className="text-sm text-slate-500">{stats.total} tareas · {stats.pendiente} pendientes · {stats.en_progreso} en progreso</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-          <Plus className="w-4 h-4" /> Nueva Tarea
-        </Button>
+        {canManage && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+            <Plus className="w-4 h-4" /> Nueva Tarea
+          </Button>
+        )}
       </div>
 
       {/* Stats */}

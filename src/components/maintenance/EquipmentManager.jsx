@@ -188,7 +188,7 @@ export default function EquipmentManager({ user }) {
         <div className="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
           <Cpu className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <p className="text-slate-500 font-medium">{search ? 'Sin resultados' : 'Sin equipos registrados'}</p>
-          {!search && (
+          {!search && canManage && (
             <Button onClick={() => setShowForm(true)} variant="outline" className="mt-4 gap-2">
               <Plus className="w-4 h-4" /> Agregar equipo
             </Button>
