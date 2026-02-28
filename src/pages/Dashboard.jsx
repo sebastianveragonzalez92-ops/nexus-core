@@ -180,6 +180,105 @@ export default function Dashboard() {
     ? Math.round(myEnrollments.reduce((sum, e) => sum + (e.progress_percent || 0), 0) / myEnrollments.length)
     : 0;
 
+  // Contenido específico por rol
+  const renderRoleSpecificContent = () => {
+    if (user?.role === 'admin' || user?.role === 'supervisor') {
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <Link to={createPageUrl('Maintenance')} className="block">
+            <StatsCard
+              title="Panel Mantenimiento"
+              value="OT"
+              subtitle="Gestionar mantenimiento"
+              icon={Wrench}
+              color="blue"
+              index={0}
+            />
+          </Link>
+          <Link to={createPageUrl('Equipment')} className="block">
+            <StatsCard
+              title="Equipos"
+              value="📊"
+              subtitle="Estado operativo"
+              icon={Cpu}
+              color="purple"
+              index={1}
+            />
+          </Link>
+          <Link to={createPageUrl('SpareParts')} className="block">
+            <StatsCard
+              title="Inventario"
+              value="📦"
+              subtitle="Repuestos"
+              icon={Activity}
+              color="emerald"
+              index={2}
+            />
+          </Link>
+          {user?.role === 'admin' && (
+            <Link to={createPageUrl('Courses')} className="block">
+              <StatsCard
+                title="Capacitaciones"
+                value={courses.length}
+                subtitle="en catálogo"
+                icon={BookOpen}
+                color="amber"
+                index={3}
+              />
+            </Link>
+          )}
+        </div>
+      );
+    }
+
+    // Contenido para técnico
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <Link to={createPageUrl('MyCourses')} className="block">
+          <StatsCard
+            title="Cursos Completados"
+            value={completedCourses}
+            subtitle={`de ${myEnrollments.length} inscritos`}
+            icon={BookOpen}
+            color="indigo"
+            index={0}
+          />
+        </Link>
+        <Link to={createPageUrl('MyCourses')} className="block">
+          <StatsCard
+            title="Progreso General"
+            value={`${avgProgress}%`}
+            subtitle="promedio"
+            icon={TrendingUp}
+            color="emerald"
+            trend={avgProgress > 50 ? 12 : -5}
+            index={1}
+          />
+        </Link>
+        <Link to={createPageUrl('MyCourses')} className="block">
+          <StatsCard
+            title="En Progreso"
+            value={inProgressCourses}
+            subtitle="cursos activos"
+            icon={RefreshCw}
+            color="violet"
+            index={2}
+          />
+        </Link>
+        <Link to={createPageUrl('MyCourses')} className="block">
+          <StatsCard
+            title="Mis Certificados"
+            value="📜"
+            subtitle="Logros obtenidos"
+            icon={Award}
+            color="amber"
+            index={3}
+          />
+        </Link>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -190,56 +289,17 @@ export default function Dashboard() {
         />
 
         {/* Stock alerts banner */}
-        <div className="mb-6">
-          <StockAlertsBanner user={user} />
-        </div>
+        {(user?.role === 'admin' || user?.role === 'supervisor') && (
+          <div className="mb-6">
+            <StockAlertsBanner user={user} />
+          </div>
+        )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <Link to={createPageUrl('MyCourses')} className="block">
-            <StatsCard
-              title="Cursos Completados"
-              value={completedCourses}
-              subtitle={`de ${myEnrollments.length} inscritos`}
-              icon={BookOpen}
-              color="indigo"
-              index={0}
-            />
-          </Link>
-          <Link to={createPageUrl('MyCourses')} className="block">
-            <StatsCard
-              title="Progreso General"
-              value={`${avgProgress}%`}
-              subtitle="promedio"
-              icon={TrendingUp}
-              color="emerald"
-              trend={avgProgress > 50 ? 12 : -5}
-              index={1}
-            />
-          </Link>
-          <Link to={createPageUrl('MyCourses')} className="block">
-            <StatsCard
-              title="En Progreso"
-              value={inProgressCourses}
-              subtitle="cursos activos"
-              icon={RefreshCw}
-              color="violet"
-              index={2}
-            />
-          </Link>
-          <Link to={createPageUrl('Courses')} className="block">
-            <StatsCard
-              title="Cursos Disponibles"
-              value={courses.length}
-              subtitle="en catálogo"
-              icon={Users}
-              color="amber"
-              index={3}
-            />
-          </Link>
-        </div>
+        {/* Stats por rol */}
+        {renderRoleSpecificContent()}
 
         {/* Main Content Grid */}
+        {user?.role !== 'admin' && user?.role !== 'supervisor' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* My Courses */}
           <motion.div
@@ -358,8 +418,10 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </motion.div>
+        )}
 
-        {/* Modules Grid */}
+        {/* Modules Grid - Solo para Admin */}
+        {user?.role === 'admin' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -372,6 +434,7 @@ export default function Dashboard() {
             isAdmin={user?.role === 'admin'}
           />
         </motion.div>
+        )}
       </div>
 
       {/* Module Modal */}
