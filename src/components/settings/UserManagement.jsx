@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { ROLE_LABELS, ROLE_COLORS } from '@/lib/permissions';
+import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
 
 const ROLES = [
   { value: 'admin', label: 'Administrador', desc: 'Acceso total a la plataforma' },
