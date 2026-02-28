@@ -120,11 +120,11 @@ export default function Maintenance() {
             </TabsContent>
 
             <TabsContent value="equipos">
-              <EquipmentManager />
+              <EquipmentManager user={user} />
             </TabsContent>
 
             <TabsContent value="tareas">
-              <TaskManager />
+              <TaskManager user={user} />
             </TabsContent>
 
             <TabsContent value="history">
