@@ -30,8 +30,6 @@ export default function MaintenanceDashboard({ user }) {
 
   const stats = useMemo(() => {
     const operativo = equipment.filter(e => e.status === 'operativo').length;
-    const enMantenimiento = equipment.filter(e => e.status === 'mantenimiento').length;
-    const fueraServicio = equipment.filter(e => e.status === 'fuera_servicio').length;
 
     const proximasMantencion = equipment.filter(e =>
       e.fecha_proxima_mantencion && e.fecha_proxima_mantencion >= today && e.fecha_proxima_mantencion <= in30Days
@@ -44,7 +42,7 @@ export default function MaintenanceDashboard({ user }) {
     const interventionsThisMonth = records.filter(r => r.fecha?.startsWith(thisMonth)).length;
     const totalHours = records.reduce((s, r) => s + (r.horas_trabajadas || 0), 0);
 
-    return { operativo, enMantenimiento, fueraServicio, proximasMantencion, vencidas, interventionsThisMonth, totalHours };
+    return { operativo, proximasMantencion, vencidas, interventionsThisMonth, totalHours };
   }, [equipment, records, today, in30Days]);
 
   const byTypeChart = useMemo(() => Object.entries(
@@ -64,8 +62,6 @@ export default function MaintenanceDashboard({ user }) {
 
   const equipmentStatusData = [
     { name: 'Operativo', value: stats.operativo, fill: '#22c55e' },
-    { name: 'Mantenimiento', value: stats.enMantenimiento, fill: '#eab308' },
-    { name: 'Fuera servicio', value: stats.fueraServicio, fill: '#ef4444' },
     { name: 'Standby', value: equipment.filter(e => e.status === 'standby').length, fill: '#94a3b8' },
   ].filter(d => d.value > 0);
 
@@ -76,8 +72,6 @@ export default function MaintenanceDashboard({ user }) {
         {[
           { label: 'Equipos totales', value: equipment.length, icon: Cpu, color: 'border-l-slate-400 text-slate-700' },
           { label: 'Operativos', value: stats.operativo, icon: CheckCircle, color: 'border-l-green-500 text-green-700' },
-          { label: 'En mantención', value: stats.enMantenimiento, icon: Wrench, color: 'border-l-yellow-500 text-yellow-700' },
-          { label: 'Fuera servicio', value: stats.fueraServicio, icon: AlertTriangle, color: 'border-l-red-500 text-red-700' },
           { label: 'Intervenciones mes', value: stats.interventionsThisMonth, icon: Calendar, color: 'border-l-indigo-500 text-indigo-700' },
           { label: 'Horas acumuladas', value: `${stats.totalHours.toFixed(0)}h`, icon: Clock, color: 'border-l-blue-500 text-blue-700' },
         ].map(({ label, value, icon: Icon, color }) => (
