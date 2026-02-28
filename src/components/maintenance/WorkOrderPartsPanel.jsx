@@ -10,7 +10,7 @@ import { Plus, Trash2, Package, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { registerStockMovement } from '@/components/spareparts/stockMovementHelpers';
 
-export default function WorkOrderPartsPanel({ workOrderId }) {
+export default function WorkOrderPartsPanel({ workOrderId, user }) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [selectedPartId, setSelectedPartId] = useState('');
@@ -29,12 +29,24 @@ export default function WorkOrderPartsPanel({ workOrderId }) {
 
   const addMutation = useMutation({
     mutationFn: async ({ partData, cantidadUsada }) => {
+      const part = spareParts.find(p => p.id === partData.spare_part_id);
+      const stockAnterior = part.stock_actual || 0;
+      const nuevoStock = Math.max(0, stockAnterior - cantidadUsada);
       // 1. Registrar uso en la OT
       await base44.entities.WorkOrderPart.create(partData);
-      // 2. Descontar stock del repuesto
-      const part = spareParts.find(p => p.id === partData.spare_part_id);
-      const nuevoStock = Math.max(0, (part.stock_actual || 0) - cantidadUsada);
+      // 2. Descontar stock
       await base44.entities.SparePart.update(partData.spare_part_id, { stock_actual: nuevoStock });
+      // 3. Registrar movimiento
+      await registerStockMovement({
+        part,
+        tipo: 'salida',
+        cantidad: cantidadUsada,
+        stockAnterior,
+        stockPosterior: nuevoStock,
+        user,
+        notas: partData.notas || `Usado en OT`,
+        workOrderId,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['workOrderParts', workOrderId]);
@@ -50,13 +62,24 @@ export default function WorkOrderPartsPanel({ workOrderId }) {
 
   const removeMutation = useMutation({
     mutationFn: async (record) => {
+      const part = spareParts.find(p => p.id === record.spare_part_id);
+      const stockAnterior = part?.stock_actual || 0;
+      const nuevoStock = stockAnterior + record.cantidad;
       // 1. Eliminar registro
       await base44.entities.WorkOrderPart.delete(record.id);
       // 2. Restaurar stock
-      const part = spareParts.find(p => p.id === record.spare_part_id);
       if (part) {
-        await base44.entities.SparePart.update(record.spare_part_id, {
-          stock_actual: (part.stock_actual || 0) + record.cantidad,
+        await base44.entities.SparePart.update(record.spare_part_id, { stock_actual: nuevoStock });
+        // 3. Registrar movimiento de entrada (devolución)
+        await registerStockMovement({
+          part,
+          tipo: 'entrada',
+          cantidad: record.cantidad,
+          stockAnterior,
+          stockPosterior: nuevoStock,
+          user,
+          notas: `Devolución desde OT`,
+          workOrderId,
         });
       }
     },
