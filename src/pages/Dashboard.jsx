@@ -270,6 +270,13 @@ export default function Dashboard() {
         {/* Maintenance metrics dashboard */}
         {renderMaintenanceDashboard()}
 
+        {/* Learning stats for technicians */}
+        {user?.role !== 'admin' && user?.role !== 'supervisor' && (
+          <div className="mb-8">
+            {renderRoleSpecificContent()}
+          </div>
+        )}
+
         {/* Main Content Grid */}
         {user?.role !== 'admin' && user?.role !== 'supervisor' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
