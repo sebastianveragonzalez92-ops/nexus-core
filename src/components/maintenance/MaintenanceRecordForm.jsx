@@ -183,14 +183,10 @@ export default function MaintenanceRecordForm({ record, equipmentId, onSave, onC
       </div>
 
       {/* Hours, cost, next maintenance */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <div>
           <Label>Horas trabajadas</Label>
           <Input type="number" step="0.5" min="0" value={form.horas_trabajadas} onChange={e => set('horas_trabajadas', e.target.value)} className="mt-1" />
-        </div>
-        <div>
-          <Label>Costo</Label>
-          <Input type="number" step="0.01" min="0" value={form.costo} onChange={e => set('costo', e.target.value)} className="mt-1" />
         </div>
         <div>
           <Label>Próxima mantención</Label>
