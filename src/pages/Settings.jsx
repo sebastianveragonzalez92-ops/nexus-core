@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { User, Shield, Bell, Database, Globe, Save, LogOut, Users, Upload, Image, ClipboardList } from 'lucide-react';
+import { User, Shield, Bell, Database, Globe, Save, LogOut, Users, Upload, Image, ClipboardList, Lock, Users2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +9,9 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import UserManagement from '@/components/settings/UserManagement';
-import AuditLog from '@/components/settings/AuditLog';
+import RoleManagement from '@/components/settings/RoleManagement';
+import UserGroupManager from '@/components/settings/UserGroupManager';
+import AuditLogViewer from '@/components/settings/AuditLogViewer';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
@@ -17,6 +19,8 @@ import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
 const settingsSections = [
   { id: 'profile', label: 'Perfil', icon: User },
   { id: 'users', label: 'Usuarios', icon: Users, adminOnly: true },
+  { id: 'roles', label: 'Gestión de Roles', icon: Lock, adminOnly: true },
+  { id: 'groups', label: 'Grupos de Usuarios', icon: Users2, adminOnly: true },
   { id: 'audit', label: 'Auditoría', icon: ClipboardList, adminOnly: true },
   { id: 'notifications', label: 'Notificaciones', icon: Bell },
   { id: 'security', label: 'Seguridad', icon: Shield },
@@ -348,8 +352,16 @@ export default function Settings() {
               <UserManagement currentUser={user} />
             )}
 
+            {activeSection === 'roles' && (
+              <RoleManagement />
+            )}
+
+            {activeSection === 'groups' && (
+              <UserGroupManager />
+            )}
+
             {activeSection === 'audit' && (
-              <AuditLog />
+              <AuditLogViewer />
             )}
 
             {activeSection === 'notifications' && (
