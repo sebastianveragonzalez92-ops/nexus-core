@@ -10,8 +10,8 @@ export default function DashboardHeader({ user, pendingCount, onSync }) {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8"
-    >
+      className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+
       <div>
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
           Bienvenido{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}
@@ -25,14 +25,14 @@ export default function DashboardHeader({ user, pendingCount, onSync }) {
         <ConnectionStatus pendingCount={pendingCount} onSync={onSync} />
         
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-slate-100">
-            <Bell className="w-5 h-5 text-slate-500" />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-slate-100">
-            <Settings className="w-5 h-5 text-slate-500" />
-          </Button>
+          
+
+
+          
+
+
         </div>
       </div>
-    </motion.header>
-  );
+    </motion.header>);
+
 }
