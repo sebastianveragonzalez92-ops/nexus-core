@@ -357,8 +357,15 @@ export default function ChecklistTemplateManager({ templates, user }) {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-slate-600">
-                    {template.items?.length || 0} items · Categoría: {template.category}
+                  <div className="space-y-1">
+                    <div className="text-sm text-slate-600">
+                      {template.items?.length || 0} items · Categoría: {template.category}
+                    </div>
+                    {template.applicable_roles?.length > 0 && (
+                      <div className="text-xs text-slate-500">
+                        Roles: {template.applicable_roles.join(', ')}
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <Button
