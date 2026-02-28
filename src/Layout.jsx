@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
+import SubscriptionGuard from './components/SubscriptionGuard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
@@ -124,8 +125,9 @@ export default function Layout({ children, currentPageName }) {
   }, [actualPageName]);
 
   return (
-    <ExtensionBlockerGuard>
-      <div className="min-h-screen bg-slate-50">
+    <SubscriptionGuard userEmail={user?.email}>
+      <ExtensionBlockerGuard>
+        <div className="min-h-screen bg-slate-50">
       {/* Mobile sidebar backdrop */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -322,5 +324,6 @@ export default function Layout({ children, currentPageName }) {
       </main>
       </div>
       </ExtensionBlockerGuard>
+      </SubscriptionGuard>
       );
       }
