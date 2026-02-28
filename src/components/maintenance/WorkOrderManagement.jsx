@@ -26,8 +26,6 @@ export default function WorkOrderManagement({ workOrders, assets, user, isAdmin 
     estimated_hours: '',
   });
 
-  const queryClient = useQueryClient();
-
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       if (editingWO) {
