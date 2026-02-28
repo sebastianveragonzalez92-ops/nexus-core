@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ChevronDown, Download } from 'lucide-react';
+import { ChevronDown, Download, Sparkles, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { toast } from 'sonner';
 
 export default function ChecklistHistory({ executions, canReview }) {
   const [expandedId, setExpandedId] = useState(null);
+  const [generatingReport, setGeneratingReport] = useState(null);
+  const [reports, setReports] = useState({});
 
   const getStatusColor = (status) => {
     const colors = {
