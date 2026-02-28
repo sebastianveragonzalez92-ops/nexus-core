@@ -51,6 +51,7 @@ import AIQuizGenerator from './pages/AIQuizGenerator';
 import Activity from './pages/Activity';
 import CertificateTemplates from './pages/CertificateTemplates';
 import Certificates from './pages/Certificates';
+import Checklists from './pages/Checklists';
 import CourseDetail from './pages/CourseDetail';
 import Courses from './pages/Courses';
 import CreateTask from './pages/CreateTask';
@@ -73,7 +74,6 @@ import Trial from './pages/Trial';
 import TrialWelcome from './pages/TrialWelcome';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import Checklists from './pages/Checklists';
 import __Layout from './Layout.jsx';
 
 
@@ -82,6 +82,7 @@ export const PAGES = {
     "Activity": Activity,
     "CertificateTemplates": CertificateTemplates,
     "Certificates": Certificates,
+    "Checklists": Checklists,
     "CourseDetail": CourseDetail,
     "Courses": Courses,
     "CreateTask": CreateTask,
@@ -104,7 +105,6 @@ export const PAGES = {
     "TrialWelcome": TrialWelcome,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "Checklists": Checklists,
 }
 
 export const pagesConfig = {

@@ -31,6 +31,7 @@ const getNavGroups = (userRole) => {
     { name: 'Panel Mantenimiento', page: 'Maintenance', icon: Wrench },
     { name: 'Equipos', page: 'Equipment', icon: Cpu },
     { name: 'Repuestos', page: 'SpareParts', icon: Activity },
+    { name: 'Checklists', page: 'Checklists', icon: ClipboardList },
   ];
   
   if (isAdmin || isSupervisor) {
