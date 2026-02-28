@@ -180,9 +180,9 @@ export default function Landing() {
                 {...fadeInUp}
                 transition={{ delay: idx * 0.1 }}
               >
-                <Card className="bg-white border-slate-200 h-full hover:border-indigo-500 transition">
+                <Card className="bg-white border-slate-200 h-full hover:border-cyan-500 transition">
                   <CardHeader>
-                    <Icon className="w-10 h-10 text-indigo-600 mb-4" />
+                    <Icon className="w-10 h-10 text-cyan-600 mb-4" />
                     <CardTitle className="text-slate-900">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
