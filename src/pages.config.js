@@ -74,6 +74,7 @@ import Trial from './pages/Trial';
 import TrialWelcome from './pages/TrialWelcome';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
+import KPIs from './pages/KPIs';
 import __Layout from './Layout.jsx';
 
 
@@ -105,6 +106,7 @@ export const PAGES = {
     "TrialWelcome": TrialWelcome,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
+    "KPIs": KPIs,
 }
 
 export const pagesConfig = {
