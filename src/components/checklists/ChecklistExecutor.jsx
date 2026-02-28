@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ChecklistExecutor({ template, user }) {
