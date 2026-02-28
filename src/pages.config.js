@@ -71,6 +71,7 @@ import Landing from './pages/Landing';
 import FAQ from './pages/FAQ';
 import Support from './pages/Support';
 import ForgotPassword from './pages/ForgotPassword';
+import TrialWelcome from './pages/TrialWelcome';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +100,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "Support": Support,
     "ForgotPassword": ForgotPassword,
+    "TrialWelcome": TrialWelcome,
 }
 
 export const pagesConfig = {
