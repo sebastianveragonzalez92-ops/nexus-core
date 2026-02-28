@@ -12,6 +12,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { createPageUrl } from '@/utils';
 
+import { Wrench } from 'lucide-react';
+
 const typeIcons = {
   new_course: BookOpen,
   course_update: Sparkles,
@@ -19,6 +21,12 @@ const typeIcons = {
   quiz_deadline: Clock,
   direct_message: Mail,
   general: Bell,
+  work_order_assigned: Wrench,
+  work_order_approval_needed: Wrench,
+  work_order_approved: Wrench,
+  work_order_rejected: Wrench,
+  maintenance_reminder: Clock,
+  maintenance_overdue: Clock,
 };
 
 const typeColors = {
@@ -28,6 +36,12 @@ const typeColors = {
   quiz_deadline: 'text-amber-600 bg-amber-50',
   direct_message: 'text-rose-600 bg-rose-50',
   general: 'text-slate-600 bg-slate-50',
+  work_order_assigned: 'text-indigo-600 bg-indigo-50',
+  work_order_approval_needed: 'text-amber-600 bg-amber-50',
+  work_order_approved: 'text-green-600 bg-green-50',
+  work_order_rejected: 'text-red-600 bg-red-50',
+  maintenance_reminder: 'text-blue-600 bg-blue-50',
+  maintenance_overdue: 'text-red-600 bg-red-50',
 };
 
 export default function NotificationCenter({ user }) {
