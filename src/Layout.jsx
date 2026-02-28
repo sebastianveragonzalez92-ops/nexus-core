@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Sparkles, Bot, BookOpen, Bell, Award, Wrench
+  Menu, X, ChevronRight, Sparkles, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
