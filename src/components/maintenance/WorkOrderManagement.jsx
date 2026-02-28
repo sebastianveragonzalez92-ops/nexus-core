@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Plus, Edit, Trash2, Calendar, AlertTriangle } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { Plus, Edit, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import WorkOrderApprovalFlow from './WorkOrderApprovalFlow';
 
 export default function WorkOrderManagement({ workOrders, assets, user, isAdmin }) {
+  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingWO, setEditingWO] = useState(null);
   const [formData, setFormData] = useState({
