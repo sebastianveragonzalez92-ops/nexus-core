@@ -29,6 +29,9 @@ export async function registerStockMovement({
   workOrderId,
   workOrderNumber,
 }) {
+  // Trigger proactive stock alert if new stock is at or below minimum
+  await checkAndTriggerStockAlert(part, stockPosterior);
+
   await base44.entities.StockMovement.create({
     spare_part_id: part.id,
     spare_part_code: part.code,

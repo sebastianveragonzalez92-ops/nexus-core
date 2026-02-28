@@ -189,6 +189,11 @@ export default function Dashboard() {
           onSync={handleSync}
         />
 
+        {/* Stock alerts banner */}
+        <div className="mb-6">
+          <StockAlertsBanner user={user} />
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           <Link to={createPageUrl('MyCourses')} className="block">
