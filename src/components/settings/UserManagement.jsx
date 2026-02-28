@@ -14,9 +14,9 @@ import { cn } from '@/lib/utils';
 import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
 
 const ROLES = [
-  { value: 'admin', label: 'Administrador', desc: 'Acceso total a la plataforma' },
+  { value: 'admin', label: 'Administrador', desc: 'Acceso total a la plataforma y gestión de usuarios' },
   { value: 'supervisor', label: 'Supervisor', desc: 'Gestiona OTs, aprueba trabajos, ve reportes' },
-  { value: 'tecnico', label: 'Técnico', desc: 'Ejecuta OTs y crea reportes de mantención' },
+  { value: 'tecnico', label: 'Técnico', desc: 'Ejecuta OTs, crea reportes y toma cursos' },
 ];
 
 export default function UserManagement({ currentUser }) {

@@ -1,12 +1,44 @@
-/**
- * Permissions system based on user roles
- * Roles: admin, supervisor_mantenimiento, tecnico, admin_activos, user
- */
-
+// Role definitions and permissions
 export const ROLES = {
-  ADMIN: 'admin',
-  SUPERVISOR: 'supervisor',
-  TECNICO: 'tecnico',
+  admin: {
+    label: 'Administrador',
+    color: 'bg-red-100 text-red-800 border-red-300',
+    permissions: [
+      'manage_users',
+      'invite_users',
+      'change_roles',
+      'manage_courses',
+      'manage_equipment',
+      'manage_spare_parts',
+      'approve_work_orders',
+      'view_reports',
+      'access_settings',
+      'manage_templates',
+    ],
+  },
+  supervisor: {
+    label: 'Supervisor',
+    color: 'bg-amber-100 text-amber-800 border-amber-300',
+    permissions: [
+      'create_work_orders',
+      'approve_work_orders',
+      'manage_equipment',
+      'view_reports',
+      'manage_tasks',
+      'create_courses',
+    ],
+  },
+  tecnico: {
+    label: 'Técnico',
+    color: 'bg-blue-100 text-blue-800 border-blue-300',
+    permissions: [
+      'execute_work_orders',
+      'create_maintenance_reports',
+      'view_equipment',
+      'view_courses',
+      'take_courses',
+    ],
+  },
 };
 
 export const ROLE_LABELS = {
@@ -16,52 +48,24 @@ export const ROLE_LABELS = {
 };
 
 export const ROLE_COLORS = {
-  admin: 'bg-red-100 text-red-700 border-red-200',
-  supervisor: 'bg-violet-100 text-violet-700 border-violet-200',
-  tecnico: 'bg-blue-100 text-blue-700 border-blue-200',
+  admin: 'bg-red-100 text-red-800 border-red-300',
+  supervisor: 'bg-amber-100 text-amber-800 border-amber-300',
+  tecnico: 'bg-blue-100 text-blue-800 border-blue-300',
 };
 
-// Define what each role can do
-const PERMISSIONS = {
-  'maintenance.view': ['admin', 'supervisor', 'tecnico'],
-  'maintenance.work_orders.create': ['admin', 'supervisor'],
-  'maintenance.work_orders.edit': ['admin', 'supervisor'],
-  'maintenance.work_orders.delete': ['admin'],
-  'maintenance.work_orders.approve': ['admin', 'supervisor'],
-  'maintenance.work_orders.assign': ['admin', 'supervisor'],
-  'maintenance.reports.create': ['admin', 'supervisor', 'tecnico'],
-  'maintenance.reports.approve': ['admin', 'supervisor'],
-  'maintenance.history.view': ['admin', 'supervisor', 'tecnico'],
-  'maintenance.templates.manage': ['admin', 'supervisor'],
-  'maintenance.import': ['admin', 'supervisor'],
-  'assets.view': ['admin', 'supervisor', 'tecnico'],
-  'assets.create': ['admin', 'supervisor'],
-  'assets.edit': ['admin', 'supervisor'],
-  'assets.delete': ['admin'],
-  'tasks.view': ['admin', 'supervisor', 'tecnico'],
-  'tasks.create': ['admin', 'supervisor'],
-  'tasks.edit': ['admin', 'supervisor', 'tecnico'],
-  'tasks.delete': ['admin', 'supervisor'],
-  'users.view': ['admin'],
-  'users.invite': ['admin'],
-  'users.change_role': ['admin'],
-  'reports.view': ['admin', 'supervisor'],
-  'dashboard.maintenance': ['admin', 'supervisor', 'tecnico'],
-  'audit.view': ['admin', 'supervisor'],
+// Check if user has specific permission
+export const hasPermission = (userRole, permission) => {
+  if (!userRole || !ROLES[userRole]) return false;
+  return ROLES[userRole].permissions?.includes(permission) || false;
 };
 
-export function hasPermission(user, permission) {
-  if (!user) return false;
-  const role = user.role || 'user';
-  const allowed = PERMISSIONS[permission];
-  if (!allowed) return false;
-  return allowed.includes(role);
-}
+// Check if user has any of multiple permissions
+export const hasAnyPermission = (userRole, permissions) => {
+  return permissions.some(perm => hasPermission(userRole, perm));
+};
 
-export function isAdmin(user) {
-  return user?.role === 'admin';
-}
-
-export function canManageMaintenance(user) {
-  return hasPermission(user, 'maintenance.work_orders.create');
-}
+// Get user's permissions
+export const getUserPermissions = (userRole) => {
+  if (!userRole || !ROLES[userRole]) return [];
+  return ROLES[userRole].permissions || [];
+};
