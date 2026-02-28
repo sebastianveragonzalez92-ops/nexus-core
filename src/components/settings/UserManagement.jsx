@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { UserPlus, Mail, Shield, Send, Check, Users, ChevronDown } from 'lucide-react';
+import { UserPlus, Mail, Send, Check, Users, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
+import AdvancedSearch from '@/components/AdvancedSearch';
 
 const ROLES = [
   { value: 'admin', label: 'Administrador', desc: 'Acceso total a la plataforma y gestión de usuarios' },
@@ -24,6 +25,8 @@ export default function UserManagement({ currentUser }) {
   const [role, setRole] = useState('user');
   const [isInviting, setIsInviting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
   const queryClient = useQueryClient();
 
   const { data: allUsers = [], isLoading } = useQuery({
@@ -62,6 +65,14 @@ export default function UserManagement({ currentUser }) {
     }
   };
 
+  const filteredUsers = allUsers.filter(u => {
+    const matchSearch = !search ||
+      u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+      u.email?.toLowerCase().includes(search.toLowerCase());
+    const matchRole = roleFilter === 'all' || u.role === roleFilter;
+    return matchSearch && matchRole;
+  });
+
   return (
     <div className="space-y-6">
       {/* Users List */}
@@ -75,14 +86,37 @@ export default function UserManagement({ currentUser }) {
           </CardTitle>
           <CardDescription>{allUsers.length} usuarios en la plataforma</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* Search and Filters */}
+          <AdvancedSearch
+            searchPlaceholder="Buscar por nombre o email..."
+            searchValue={search}
+            onSearch={setSearch}
+            filters={[
+              {
+                key: 'role',
+                label: 'Rol',
+                options: [
+                  { value: 'admin', label: 'Administrador' },
+                  { value: 'supervisor', label: 'Supervisor' },
+                  { value: 'tecnico', label: 'Técnico' },
+                  { value: 'user', label: 'Usuario' },
+                ],
+              },
+            ]}
+            activeFilters={{ role: roleFilter }}
+            onFilterChange={(key, value) => setRoleFilter(value)}
+            showAdvanced={true}
+          />
+
+          {/* Users List */}
           {isLoading ? (
             <p className="text-center py-8 text-slate-500">Cargando...</p>
-          ) : allUsers.length === 0 ? (
+          ) : filteredUsers.length === 0 ? (
             <p className="text-center py-8 text-slate-500">No hay usuarios</p>
           ) : (
             <div className="space-y-2">
-              {allUsers.map((u) => (
+              {filteredUsers.map((u) => (
                 <motion.div
                   key={u.id}
                   initial={{ opacity: 0, y: 5 }}
