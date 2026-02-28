@@ -100,14 +100,15 @@ export default function Landing() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
           {...fadeInUp}
         >
-          <Button 
-            onClick={handleLogin}
-            style={{ background: 'linear-gradient(to right, rgb(6, 182, 212), rgb(37, 99, 235))', color: 'white' }}
-            className="h-12 px-8 text-lg hover:opacity-90"
-          >
-            Prueba gratis 14 días
-            <ChevronRight className="w-5 h-5 ml-2" />
-          </Button>
+          <Link to={createPageUrl('Trial')}>
+            <Button 
+              style={{ background: 'linear-gradient(to right, rgb(6, 182, 212), rgb(37, 99, 235))', color: 'white' }}
+              className="h-12 px-8 text-lg hover:opacity-90"
+            >
+              Prueba gratis 14 días
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
           <Button 
             style={{ borderColor: 'rgb(6, 182, 212)', color: 'white' }}
             className="border-2 h-12 px-8 text-lg hover:bg-blue-900"
