@@ -66,6 +66,7 @@ import Settings from './pages/Settings';
 import SpareParts from './pages/SpareParts';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
+import Pricing from './pages/Pricing';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +90,7 @@ export const PAGES = {
     "SpareParts": SpareParts,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
+    "Pricing": Pricing,
 }
 
 export const pagesConfig = {
