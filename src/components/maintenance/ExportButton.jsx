@@ -3,10 +3,12 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Download, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ExportDataModal from './ExportDataModal';
 
 export default function ExportButton() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleExport = async () => {
     setLoading(true);
@@ -21,13 +23,15 @@ export default function ExportButton() {
   };
 
   return (
-    <div className="space-y-3">
-      <Button
-        onClick={handleExport}
-        disabled={loading}
-        variant="outline"
-        className="gap-2"
-      >
+    <>
+      <div className="space-y-3">
+        <div className="flex gap-2">
+          <Button
+            onClick={handleExport}
+            disabled={loading}
+            variant="outline"
+            className="gap-2"
+          >
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -38,8 +42,17 @@ export default function ExportButton() {
             <Download className="w-4 h-4" />
             Exportar a Google Drive
           </>
-        )}
-      </Button>
+          )}
+        </Button>
+        <Button
+          onClick={() => setModalOpen(true)}
+          variant="outline"
+          className="gap-2"
+        >
+          <Download className="w-4 h-4" />
+          Exportar a Google Sheets
+        </Button>
+        </div>
 
       {result && (
         <motion.div
@@ -74,6 +87,9 @@ export default function ExportButton() {
           )}
         </motion.div>
       )}
-    </div>
+      </div>
+
+      <ExportDataModal open={modalOpen} onOpenChange={setModalOpen} />
+    </>
   );
 }
