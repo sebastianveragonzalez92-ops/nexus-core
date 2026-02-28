@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Layers, Activity, RefreshCw, Zap, TrendingUp, BookOpen, Users } from 'lucide-react';
+import { Layers, Activity, RefreshCw, Zap, TrendingUp, BookOpen, Users, Award, Wrench, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
