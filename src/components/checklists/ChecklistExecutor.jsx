@@ -246,10 +246,39 @@ export default function ChecklistExecutor({ template, user }) {
             />
           </div>
 
+          {/* Validation Alert */}
+          {validationData && validationData.risk_level && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`p-4 rounded-lg border-l-4 ${
+                validationData.risk_level === 'crítico' ? 'bg-red-50 border-red-400' :
+                validationData.risk_level === 'alto' ? 'bg-orange-50 border-orange-400' :
+                'bg-yellow-50 border-yellow-400'
+              }`}
+            >
+              <div className="flex gap-3">
+                <AlertTriangle className="w-5 h-5 mt-0.5 text-orange-600 flex-shrink-0" />
+                <div className="flex-1">
+                  <h4 className="font-semibold text-slate-900 mb-1">
+                    Validación IA: Riesgo {validationData.risk_level}
+                  </h4>
+                  {validationData.pattern_alerts?.length > 0 && (
+                    <ul className="text-sm text-slate-700 space-y-1">
+                      {validationData.pattern_alerts.slice(0, 2).map((alert, idx) => (
+                        <li key={idx}>• {alert}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* Submit Button */}
           <Button
             onClick={() => submitMutation.mutate()}
-            disabled={submitMutation.isPending || !shift}
+            disabled={submitMutation.isPending || validating || !shift}
             className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
           >
             {submitted ? (
@@ -260,7 +289,7 @@ export default function ChecklistExecutor({ template, user }) {
             ) : (
               <>
                 <AlertCircle className="w-5 h-5 mr-2" />
-                {submitMutation.isPending ? 'Guardando...' : 'Enviar Checklist'}
+                {submitMutation.isPending || validating ? 'Validando...' : 'Enviar Checklist'}
               </>
             )}
           </Button>
