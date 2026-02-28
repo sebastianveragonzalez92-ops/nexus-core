@@ -17,7 +17,7 @@ export default function CreateTask() {
 
   if (loading) return null;
 
-  const allowed = ['admin', 'supervisor'].includes(user?.role);
+  const allowed = ['admin', 'supervisor_mantenimiento'].includes(user?.role);
 
   if (!allowed) {
     return (
