@@ -259,7 +259,7 @@ export default function WorkOrderManagement({ workOrders, assets, user }) {
                         </div>
                       )}
                     </div>
-                    <WorkOrderPartsPanel workOrderId={wo.id} />
+                    <WorkOrderPartsPanel workOrderId={wo.id} user={user} />
                   </CardContent>
                 </Card>
               </motion.div>

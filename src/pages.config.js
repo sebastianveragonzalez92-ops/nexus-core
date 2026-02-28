@@ -61,9 +61,9 @@ import Modules from './pages/Modules';
 import MyCourses from './pages/MyCourses';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
+import SpareParts from './pages/SpareParts';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import SpareParts from './pages/SpareParts';
 import __Layout from './Layout.jsx';
 
 
@@ -82,9 +82,9 @@ export const PAGES = {
     "MyCourses": MyCourses,
     "Notifications": Notifications,
     "Settings": Settings,
+    "SpareParts": SpareParts,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "SpareParts": SpareParts,
 }
 
 export const pagesConfig = {

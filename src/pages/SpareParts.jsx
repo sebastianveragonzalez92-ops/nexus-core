@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, AlertTriangle, Package, Filter } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Search, AlertTriangle, Package, Filter, History } from 'lucide-react';
 import SparePartCard from '@/components/spareparts/SparePartCard';
 import SparePartForm from '@/components/spareparts/SparePartForm';
 import StockAdjustModal from '@/components/spareparts/StockAdjustModal';
+import StockMovementHistory from '@/components/spareparts/StockMovementHistory';
 
 export default function SpareParts() {
   const queryClient = useQueryClient();
