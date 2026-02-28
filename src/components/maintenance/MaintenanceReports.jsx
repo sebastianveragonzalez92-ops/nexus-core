@@ -51,11 +51,23 @@ export default function MaintenanceReports({ assets = [], reportType = 'preventi
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    base44.auth.me().then(setUser).catch(console.error);
+  }, []);
+
   const { data: reports = [] } = useQuery({
-    queryKey: ['maintenanceReports', reportType],
-    queryFn: () => base44.entities.MaintenanceReport.filter({ type: reportType }, '-created_date', 100)
+    queryKey: ['maintenanceReports', reportType, user?.email, user?.role],
+    queryFn: () => {
+      if (!user) return [];
+      const filter = user.role === 'admin'
+        ? { type: reportType }
+        : { type: reportType, created_by: user.email };
+      return base44.entities.MaintenanceReport.filter(filter, '-created_date', 100);
+    },
+    enabled: !!user,
   });
 
   const activeReports = reports.filter(r => !r.archived);
