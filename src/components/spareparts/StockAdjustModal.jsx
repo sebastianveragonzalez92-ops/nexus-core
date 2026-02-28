@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { X, Plus, Minus } from 'lucide-react';
 import { registerStockMovement } from './stockMovementHelpers';
 
-export default function StockAdjustModal({ part, onSave, onCancel, isLoading }) {
+export default function StockAdjustModal({ part, onSave, onCancel, isLoading, user }) {
   const [mode, setMode] = useState('entrada'); // 'entrada' | 'salida' | 'ajuste'
   const [cantidad, setCantidad] = useState(1);
   const [nota, setNota] = useState('');
@@ -16,7 +16,16 @@ export default function StockAdjustModal({ part, onSave, onCancel, isLoading }) 
     ? Math.max(0, part.stock_actual - cantidad)
     : cantidad;
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    await registerStockMovement({
+      part,
+      tipo: mode,
+      cantidad: mode === 'ajuste' ? Math.abs(newStock - part.stock_actual) : cantidad,
+      stockAnterior: part.stock_actual,
+      stockPosterior: newStock,
+      user,
+      notas: nota || null,
+    });
     onSave({ stock_actual: newStock });
   };
 
