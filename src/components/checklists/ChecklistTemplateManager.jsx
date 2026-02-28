@@ -76,6 +76,40 @@ export default function ChecklistTemplateManager({ templates, user }) {
     }));
   };
 
+  const handleSuggestItems = async () => {
+    if (!formData.category) {
+      toast.error('Selecciona una categoría primero');
+      return;
+    }
+
+    setLoadingSuggestions(true);
+    try {
+      const response = await base44.functions.invoke('suggestChecklistItems', {
+        category: formData.category,
+        type: formData.name,
+        shift: 'general',
+      });
+
+      const suggestedItems = response.data.items.map((item, idx) => ({
+        ...item,
+        id: `item_${Date.now()}_${idx}`,
+        order: idx,
+      }));
+
+      setFormData(prev => ({
+        ...prev,
+        items: [...prev.items, ...suggestedItems],
+      }));
+
+      toast.success(`${suggestedItems.length} items sugeridos por IA`);
+    } catch (error) {
+      toast.error('Error al generar sugerencias');
+      console.error(error);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
   const handleUpdateItem = (id, field, value) => {
     setFormData(prev => ({
       ...prev,
