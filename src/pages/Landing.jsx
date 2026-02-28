@@ -196,7 +196,7 @@ export default function Landing() {
       </section>
 
       {/* Pricing Preview */}
-      <section id="pricing" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-gradient-to-b from-slate-800/50 to-slate-900 rounded-2xl">
+       <section id="pricing" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-gradient-to-b from-blue-950/50 to-slate-950 rounded-2xl">
         <h2 className="text-4xl font-bold text-center mb-4">Planes simples y transparentes</h2>
         <p className="text-center text-slate-400 mb-12">Sin sorpresas, sin contratos largos</p>
 
