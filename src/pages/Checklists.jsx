@@ -70,9 +70,13 @@ export default function Checklists() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="execute">Ejecutar Checklist</TabsTrigger>
             <TabsTrigger value="history">Historial</TabsTrigger>
+            <TabsTrigger value="alerts" className="flex items-center gap-2">
+              <Bell className="w-4 h-4" />
+              Alertas
+            </TabsTrigger>
             {canManageTemplates && <TabsTrigger value="templates">Gestionar Templates</TabsTrigger>}
           </TabsList>
 
