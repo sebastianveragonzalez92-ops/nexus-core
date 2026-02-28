@@ -109,8 +109,8 @@ export default function Landing() {
             <ChevronRight className="w-5 h-5 ml-2" />
           </Button>
           <Button 
-            variant="outline"
-            className="border-cyan-500 text-white hover:bg-blue-900 h-12 px-8 text-lg"
+            style={{ borderColor: 'rgb(6, 182, 212)', color: 'white' }}
+            className="border-2 h-12 px-8 text-lg hover:bg-blue-900"
             onClick={() => document.getElementById('features').scrollIntoView()}
           >
             Ver características
