@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { getUserSubscription } from '@/components/subscriptionHelpers';
+import { getUserSubscription } from '@/components/subscriptionHelpers.js';
 import FeatureLimitGuard from '@/components/FeatureLimitGuard';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

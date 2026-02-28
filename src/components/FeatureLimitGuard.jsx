@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getFeatureLimit, getUpgradeMessage } from '@/lib/subscriptionHelpers';
+import { getFeatureLimit, getUpgradeMessage } from '@/components/subscriptionHelpers';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
