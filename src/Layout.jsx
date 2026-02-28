@@ -50,10 +50,9 @@ const getNavGroups = (userRole) => {
   const adminItems = [];
   if (userRole === 'admin') {
     adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
+    adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
+    groups.push({ label: 'Administración', items: adminItems });
   }
-  adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
-
-  groups.push({ label: 'Administración', items: adminItems });
 
   return groups;
 };
