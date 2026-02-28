@@ -40,6 +40,7 @@ export default function Maintenance() {
   });
 
   const isAdmin = user?.role === 'admin';
+  // Keep isAdmin for legacy template tab guard
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -99,7 +100,6 @@ export default function Maintenance() {
                 workOrders={workOrders.filter(wo => wo.type === 'preventivo')}
                 assets={assets}
                 user={user}
-                isAdmin={isAdmin}
                 type="preventivo"
               />
               <div className="border-t border-slate-200 pt-8">
