@@ -4,10 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Clipboard } from 'lucide-react';
+import { Plus, Clipboard, Bell } from 'lucide-react';
 import ChecklistTemplateManager from '@/components/checklists/ChecklistTemplateManager.jsx';
 import ChecklistExecutor from '@/components/checklists/ChecklistExecutor.jsx';
 import ChecklistHistory from '@/components/checklists/ChecklistHistory.jsx';
+import AlertPanel from '@/components/checklists/AlertPanel.jsx';
+import AlertConfiguration from '@/components/checklists/AlertConfiguration.jsx';
 
 export default function Checklists() {
   const [user, setUser] = useState(null);
