@@ -11,27 +11,49 @@ import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import ExtensionBlockerGuard from './components/ExtensionBlockerGuard';
 
-const getNavItems = (userRole) => {
-        const items = [
-          { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
-          { name: 'Capacitaciones', page: 'Courses', icon: Layers },
-          { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
-          { name: 'Gamificación', page: 'Gamification', icon: Award },
-          { name: 'Certificados', page: 'Certificates', icon: Award },
-          { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
-          { name: 'Repuestos', page: 'SpareParts', icon: Wrench },
-          { name: 'Notificaciones', page: 'Notifications', icon: Bell },
-          { name: 'Tutor IA', page: 'Tutor', icon: Bot },
-          { name: 'Actividad', page: 'Activity', icon: Activity },
-        ];
+const getNavGroups = (userRole) => {
+  const groups = [
+    {
+      label: null,
+      items: [
+        { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
+      ],
+    },
+    {
+      label: 'Capacitación',
+      items: [
+        { name: 'Capacitaciones', page: 'Courses', icon: Layers },
+        { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+        { name: 'Gamificación', page: 'Gamification', icon: Award },
+        { name: 'Certificados', page: 'Certificates', icon: Award },
+      ],
+    },
+    {
+      label: 'Mantenimiento',
+      items: [
+        { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
+        { name: 'Repuestos', page: 'SpareParts', icon: Wrench },
+      ],
+    },
+    {
+      label: 'General',
+      items: [
+        { name: 'Notificaciones', page: 'Notifications', icon: Bell },
+        { name: 'Tutor IA', page: 'Tutor', icon: Bot },
+        { name: 'Actividad', page: 'Activity', icon: Activity },
+      ],
+    },
+  ];
 
+  const adminItems = [];
   if (userRole === 'admin') {
-    items.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
+    adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
   }
+  adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
 
-  items.push({ name: 'Configuración', page: 'Settings', icon: Settings });
-  
-  return items;
+  groups.push({ label: 'Administración', items: adminItems });
+
+  return groups;
 };
 
 export default function Layout({ children, currentPageName }) {
