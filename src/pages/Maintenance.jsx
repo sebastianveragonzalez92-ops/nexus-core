@@ -12,6 +12,7 @@ import ExportButton from '@/components/maintenance/ExportButton';
 import MaintenanceReports from '@/components/maintenance/MaintenanceReports';
 import ReportTemplateManager from '@/components/maintenance/ReportTemplateManager';
 import TaskManager from '@/components/maintenance/TaskManager';
+import EquipmentManager from '@/components/maintenance/EquipmentManager';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
