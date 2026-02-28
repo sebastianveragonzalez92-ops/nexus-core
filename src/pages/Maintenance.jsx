@@ -139,6 +139,10 @@ export default function Maintenance() {
               </div>
             </TabsContent>
 
+            <TabsContent value="equipos">
+              <EquipmentManager />
+            </TabsContent>
+
             <TabsContent value="tareas">
               <TaskManager />
             </TabsContent>
