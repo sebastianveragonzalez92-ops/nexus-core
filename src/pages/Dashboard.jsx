@@ -14,6 +14,7 @@ import ModuleModal from '@/components/modals/ModuleModal';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
+import StockAlertsBanner from '@/components/spareparts/StockAlertsBanner';
 
 export default function Dashboard() {
   console.log('🚀 Dashboard: Componente iniciando...');

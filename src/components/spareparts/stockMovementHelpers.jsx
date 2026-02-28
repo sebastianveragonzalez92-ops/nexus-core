@@ -1,4 +1,18 @@
+
 import { base44 } from '@/api/base44Client';
+
+/**
+ * Verifica si tras un movimiento el stock quedó en alerta y dispara notificaciones.
+ */
+export async function checkAndTriggerStockAlert(part, newStock) {
+  if (newStock <= (part.stock_minimo ?? 0)) {
+    try {
+      await base44.functions.invoke('stockAlerts', {});
+    } catch {
+      // Non-blocking: alert dispatch errors should not interrupt the main flow
+    }
+  }
+}
 
 /**
  * Registra un movimiento de stock en el historial.
