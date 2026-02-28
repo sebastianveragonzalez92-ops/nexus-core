@@ -54,8 +54,8 @@ function EquipmentRow({ eq, reports, onEdit, onDelete }) {
             <Button variant="ghost" size="icon" onClick={() => setExpanded(!expanded)} title="Ver historial">
               {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => onEdit(eq)}><Pencil className="w-4 h-4 text-slate-400" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => onDelete(eq.id)}><Trash2 className="w-4 h-4 text-red-400" /></Button>
+            {onEdit && <Button variant="ghost" size="icon" onClick={() => onEdit(eq)}><Pencil className="w-4 h-4 text-slate-400" /></Button>}
+            {onDelete && <Button variant="ghost" size="icon" onClick={() => onDelete(eq.id)}><Trash2 className="w-4 h-4 text-red-400" /></Button>}
           </div>
         </div>
 
@@ -150,9 +150,11 @@ export default function EquipmentManager({ user }) {
           <h2 className="text-lg font-semibold text-slate-900">Equipos</h2>
           <p className="text-sm text-slate-500">{stats.total} equipos registrados{overdueCount > 0 ? ` · ⚠️ ${overdueCount} con mantención vencida` : ''}</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-          <Plus className="w-4 h-4" /> Agregar equipo
-        </Button>
+        {canManage && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+            <Plus className="w-4 h-4" /> Agregar equipo
+          </Button>
+        )}
       </div>
 
       {/* Stats */}
