@@ -180,14 +180,30 @@ export default function ChecklistTemplateManager({ templates, user }) {
                 <label className="block text-sm font-medium text-slate-900">
                   Items del Checklist
                 </label>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleAddItem}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Agregar Item
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSuggestItems}
+                    disabled={loadingSuggestions || !formData.category}
+                    className="text-violet-600 border-violet-200 hover:bg-violet-50"
+                  >
+                    {loadingSuggestions ? (
+                      <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4 mr-2" />
+                    )}
+                    Sugerir con IA
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleAddItem}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Agregar Item
+                  </Button>
+                </div>
               </div>
 
               <div className="space-y-4 bg-slate-50 p-4 rounded-lg">
