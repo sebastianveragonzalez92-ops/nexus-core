@@ -50,11 +50,24 @@ function ComponentTable({ values = {}, title }) {
 export default function MaintenanceReports({ assets = [], reportType = 'preventivo' }) {
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: reports = [] } = useQuery({
     queryKey: ['maintenanceReports', reportType],
-    queryFn: () => base44.entities.MaintenanceReport.filter({ type: reportType }, '-created_date', 50)
+    queryFn: () => base44.entities.MaintenanceReport.filter({ type: reportType }, '-created_date', 100)
   });
+
+  const activeReports = reports.filter(r => !r.archived);
+  const archivedReports = reports.filter(r => r.archived);
+  const visibleReports = showArchived ? archivedReports : activeReports;
+
+  const handleArchive = async (report, e) => {
+    e.stopPropagation();
+    await base44.entities.MaintenanceReport.update(report.id, { archived: !report.archived });
+    queryClient.invalidateQueries({ queryKey: ['maintenanceReports', reportType] });
+    if (selected?.id === report.id) setSelected(null);
+  };
 
   return (
     <div className="space-y-4">
