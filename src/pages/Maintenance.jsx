@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
-import { Wrench, BarChart3, ListTodo } from 'lucide-react';
+import { Wrench, BarChart3, ListTodo, CheckSquare } from 'lucide-react';
 import MaintenanceDashboard from '@/components/maintenance/MaintenanceDashboard';
 import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
@@ -11,6 +11,7 @@ import ImportFromSheets from '@/components/maintenance/ImportFromSheets';
 import ExportButton from '@/components/maintenance/ExportButton';
 import MaintenanceReports from '@/components/maintenance/MaintenanceReports';
 import ReportTemplateManager from '@/components/maintenance/ReportTemplateManager';
+import TaskManager from '@/components/maintenance/TaskManager';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
