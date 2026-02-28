@@ -128,10 +128,31 @@ export default function ChecklistTemplateManager({ templates, user }) {
     setNewTemplate(null);
   };
 
+  const handleEditClick = (template) => {
+    setFormData({
+      name: template.name,
+      description: template.description,
+      category: template.category,
+      items: template.items || [],
+    });
+    setEditingTemplate(template.id);
+  };
+
+  const handleCloseDialog = () => {
+    setNewTemplate(false);
+    setEditingTemplate(null);
+    setFormData({
+      name: '',
+      description: '',
+      category: 'epp',
+      items: [{ id: 'item_1', name: '', type: 'checkbox', required: true, order: 0 }],
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Dialog para crear/editar */}
-      <Dialog open={newTemplate} onOpenChange={setNewTemplate}>
+      <Dialog open={newTemplate || editingTemplate} onOpenChange={handleCloseDialog}>
         <DialogTrigger asChild>
           <Button className="bg-gradient-to-r from-blue-600 to-cyan-600">
             <Plus className="w-5 h-5 mr-2" />
@@ -140,7 +161,7 @@ export default function ChecklistTemplateManager({ templates, user }) {
         </DialogTrigger>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Crear Nuevo Template</DialogTitle>
+            <DialogTitle>{editingTemplate ? 'Editar Template' : 'Crear Nuevo Template'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-6 py-6">
@@ -267,7 +288,7 @@ export default function ChecklistTemplateManager({ templates, user }) {
             <div className="flex gap-3 justify-end pt-6 border-t">
               <Button
                 variant="outline"
-                onClick={() => setNewTemplate(false)}
+                onClick={handleCloseDialog}
               >
                 Cancelar
               </Button>
@@ -276,7 +297,7 @@ export default function ChecklistTemplateManager({ templates, user }) {
                 className="bg-gradient-to-r from-green-600 to-emerald-600"
                 disabled={createMutation.isPending}
               >
-                {createMutation.isPending ? 'Creando...' : 'Crear Template'}
+                {createMutation.isPending ? 'Guardando...' : editingTemplate ? 'Guardar Cambios' : 'Crear Template'}
               </Button>
             </div>
           </div>
@@ -313,7 +334,7 @@ export default function ChecklistTemplateManager({ templates, user }) {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => setEditingTemplate(template)}
+                      onClick={() => handleEditClick(template)}
                     >
                       <Edit2 className="w-4 h-4" />
                     </Button>
