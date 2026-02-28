@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
-import { Wrench, BarChart3, ListTodo, CheckSquare, Cpu } from 'lucide-react';
+import { Wrench, BarChart3, ClipboardList, CheckSquare, Cpu, History, FileText, Download, FileStack } from 'lucide-react';
 import MaintenanceDashboard from '@/components/maintenance/MaintenanceDashboard';
 import WorkOrderManagement from '@/components/maintenance/WorkOrderManagement';
 import MaintenanceHistory from '@/components/maintenance/MaintenanceHistory';
