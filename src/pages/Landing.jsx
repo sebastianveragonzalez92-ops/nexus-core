@@ -202,14 +202,14 @@ export default function Landing() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {[
-            { name: 'Gratuito', price: '$0', users: '5', maintenance: '10/mes', color: 'border-slate-600' },
+            { name: 'Gratuito', price: '$0', users: '5', maintenance: '10/mes', color: 'border-slate-200' },
             { name: 'PRO', price: '$149', users: '50', maintenance: 'Ilimitado', color: 'border-indigo-500 shadow-lg shadow-indigo-500/30 scale-105' },
             { name: 'Enterprise', price: '$399', users: 'Ilimitado', maintenance: 'Ilimitado', color: 'border-violet-500' }
           ].map((plan, idx) => (
-            <div key={idx} className={`border-2 rounded-xl p-6 bg-slate-800/50 ${plan.color}`}>
-              <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-              <div className="text-3xl font-bold mb-4">{plan.price}<span className="text-lg text-slate-400">/mes</span></div>
-              <div className="space-y-2 text-sm text-slate-300 mb-6">
+            <div key={idx} className={`border-2 rounded-xl p-6 bg-white ${plan.color}`}>
+              <h3 className="text-xl font-bold mb-2 text-slate-900">{plan.name}</h3>
+              <div className="text-3xl font-bold mb-4 text-slate-900">{plan.price}<span className="text-lg text-slate-600">/mes</span></div>
+              <div className="space-y-2 text-sm text-slate-700 mb-6">
                 <p>👥 {plan.users} usuarios</p>
                 <p>🔧 {plan.maintenance} registros</p>
               </div>
