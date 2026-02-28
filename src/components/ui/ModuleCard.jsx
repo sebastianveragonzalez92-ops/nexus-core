@@ -99,70 +99,87 @@ export default function ModuleCard({ module, onToggle, index = 0, isAdmin = fals
     }
   };
 
-  const cardClasses = cn(
-    "group relative p-6 rounded-3xl border transition-all duration-300",
-    "bg-white hover:shadow-xl hover:shadow-slate-200/50",
-    isActive ? "border-slate-200 cursor-pointer" : "border-slate-100 opacity-60"
-  );
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
-      whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      className={cardClasses}
-      onClick={handleCardClick}
-      onMouseDown={() => console.log('mouseDown en módulo:', module.name)}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: index * 0.06, duration: 0.4, type: 'spring' }}
+      whileHover={isActive ? { y: -6, transition: { duration: 0.2 } } : {}}
+      className="h-full"
     >
-      {/* Status indicator */}
       <div className={cn(
-        "absolute top-4 right-4 w-2 h-2 rounded-full transition-colors",
-        isActive ? "bg-emerald-400" : "bg-slate-300"
-      )} />
-
-      {/* Icon */}
-      <div className={cn(
-        "w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300",
+        "group relative h-full p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col",
         isActive 
-          ? "bg-gradient-to-br from-indigo-500 to-violet-500 shadow-lg shadow-indigo-200" 
-          : "bg-slate-100"
+          ? "bg-white border-slate-200 hover:shadow-2xl hover:shadow-slate-300/40 hover:border-slate-300 cursor-pointer" 
+          : "bg-slate-50/50 border-slate-100 opacity-50 hover:opacity-60"
       )}>
-        <IconComponent className={cn(
-          "w-7 h-7 transition-colors",
-          isActive ? "text-white" : "text-slate-400"
-        )} />
-      </div>
+        {/* Status indicator */}
+        <motion.div 
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className={cn(
+            "absolute top-4 right-4 w-3 h-3 rounded-full transition-all duration-300",
+            isActive ? "bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-lg shadow-emerald-300" : "bg-slate-300"
+          )} 
+        />
 
-      {/* Content */}
-      <div className="mb-5">
-        <h3 className="text-lg font-semibold text-slate-900 mb-1.5">
-          {module.name}
-        </h3>
-        <p className="text-sm text-slate-500 leading-relaxed line-clamp-2">
-          {module.description || 'Sin descripción'}
-        </p>
-      </div>
+        {/* Icon */}
+        <motion.div 
+          whileHover={isActive ? { scale: 1.1, rotate: 5 } : {}}
+          className={cn(
+            "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300",
+            isActive 
+              ? "bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-300" 
+              : "bg-slate-200"
+          )}>
+          <IconComponent className={cn(
+            "w-8 h-8 transition-colors",
+            isActive ? "text-white" : "text-slate-400"
+          )} />
+        </motion.div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between">
-        <Badge 
-          variant="outline" 
-          className={cn("text-xs font-medium border", categoryColors[module.category])}
-        >
-          {module.category}
-        </Badge>
-        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-          {isActive && targetPage && (
-            <ArrowRight className="w-4 h-4 text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-          )}
-          {isAdmin && (
-            <Switch
-              checked={isActive}
-              onCheckedChange={handleSwitchChange}
-              className="data-[state=checked]:bg-indigo-500"
-            />
-          )}
+        {/* Content */}
+        <div className="mb-4 flex-1">
+          <h3 className={cn(
+            "font-bold mb-2 transition-colors",
+            isActive ? "text-lg text-slate-900" : "text-base text-slate-600"
+          )}>
+            {module.name}
+          </h3>
+          <p className={cn(
+            "text-sm leading-relaxed line-clamp-3",
+            isActive ? "text-slate-600" : "text-slate-500"
+          )}>
+            {module.description || 'Sin descripción'}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <Badge 
+            variant="outline" 
+            className={cn("text-xs font-semibold border-2", categoryColors[module.category])}
+          >
+            {module.category}
+          </Badge>
+          <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+            {isActive && targetPage && (
+              <motion.div
+                initial={{ opacity: 0, x: -4 }}
+                whileHover={{ opacity: 1, x: 0 }}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <ArrowRight className="w-5 h-5 text-indigo-600" />
+              </motion.div>
+            )}
+            {isAdmin && (
+              <Switch
+                checked={isActive}
+                onCheckedChange={handleSwitchChange}
+                className="data-[state=checked]:bg-indigo-600"
+              />
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
