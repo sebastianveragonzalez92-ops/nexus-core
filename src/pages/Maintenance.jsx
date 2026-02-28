@@ -66,7 +66,7 @@ export default function Maintenance() {
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="mb-8 overflow-x-auto">
-              <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-7">
+              <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-8">
                 <TabsTrigger value="dashboard" className="gap-2 whitespace-nowrap px-4">
                   <BarChart3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Dashboard</span>
@@ -91,6 +91,10 @@ export default function Maintenance() {
                 <TabsTrigger value="tareas" className="gap-2 whitespace-nowrap px-4">
                   <CheckSquare className="w-4 h-4" />
                   Tareas
+                </TabsTrigger>
+                <TabsTrigger value="reportes" className="gap-2 whitespace-nowrap px-4">
+                  <BarChart3 className="w-4 h-4" />
+                  Reportes
                 </TabsTrigger>
                 <TabsTrigger value="import" className="gap-2 whitespace-nowrap px-4">
                   <ListTodo className="w-4 h-4" />
@@ -154,6 +158,10 @@ export default function Maintenance() {
                 assets={assets}
                 user={user}
               />
+            </TabsContent>
+
+            <TabsContent value="reportes">
+              <ConsolidatedReports />
             </TabsContent>
 
             <TabsContent value="import">
