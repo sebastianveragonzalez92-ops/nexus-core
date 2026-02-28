@@ -214,7 +214,11 @@ export default function Landing() {
                 <p>👥 {plan.users} usuarios</p>
                 <p>🔧 {plan.maintenance} registros</p>
               </div>
-              <Button className="w-full" onClick={handleLogin}>
+              <Button 
+                style={{ background: 'linear-gradient(to right, rgb(6, 182, 212), rgb(37, 99, 235))', color: 'white' }} 
+                className="w-full hover:opacity-90"
+                onClick={handleLogin}
+              >
                 Comenzar
               </Button>
             </div>
