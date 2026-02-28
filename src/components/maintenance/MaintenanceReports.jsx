@@ -76,25 +76,37 @@ export default function MaintenanceReports({ assets = [], reportType = 'preventi
           <h2 className="text-lg font-semibold text-slate-900">
             Informes {reportType === 'preventivo' ? 'Preventivos' : 'Correctivos'}
           </h2>
-          <p className="text-sm text-slate-500">{reports.length} informes registrados</p>
+          <p className="text-sm text-slate-500">{activeReports.length} informes activos · {archivedReports.length} archivados</p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-          <Plus className="w-4 h-4" /> Nuevo Informe
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowArchived(!showArchived)}
+            className={`gap-2 ${showArchived ? 'bg-amber-50 border-amber-300 text-amber-700' : ''}`}
+          >
+            <Archive className="w-4 h-4" />
+            {showArchived ? 'Ver activos' : 'Archivados'}
+          </Button>
+          <Button onClick={() => setShowForm(true)} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+            <Plus className="w-4 h-4" /> Nuevo Informe
+          </Button>
+        </div>
       </div>
 
-      {reports.length === 0 ? (
+      {visibleReports.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
           <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium">Sin informes aún</p>
-          <Button onClick={() => setShowForm(true)} variant="outline" className="mt-4 gap-2">
-            <Plus className="w-4 h-4" /> Crear Informe
-          </Button>
+          <p className="text-slate-500 font-medium">{showArchived ? 'Sin informes archivados' : 'Sin informes aún'}</p>
+          {!showArchived && (
+            <Button onClick={() => setShowForm(true)} variant="outline" className="mt-4 gap-2">
+              <Plus className="w-4 h-4" /> Crear Informe
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid gap-3">
-          {reports.map(r => (
-            <Card key={r.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setSelected(r)}>
+          {visibleReports.map(r => (
+            <Card key={r.id} className={`cursor-pointer hover:shadow-md transition-shadow ${r.archived ? 'opacity-70' : ''}`} onClick={() => setSelected(r)}>
               <CardContent className="p-4 flex items-center justify-between gap-4">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
@@ -104,6 +116,7 @@ export default function MaintenanceReports({ assets = [], reportType = 'preventi
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <p className="font-medium text-slate-900 truncate">{r.title || `${r.tipo_equipo} ${r.numero_interno_equipo}`}</p>
                       <Badge className={statusColors[r.status]}>{r.status}</Badge>
+                      {r.archived && <Badge className="bg-amber-100 text-amber-700">Archivado</Badge>}
                     </div>
                     <p className="text-sm text-slate-500">{r.empresa} {r.division && `· ${r.division}`}</p>
                     <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
@@ -114,7 +127,18 @@ export default function MaintenanceReports({ assets = [], reportType = 'preventi
                     </div>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => handleArchive(r, e)}
+                    title={r.archived ? 'Desarchivar' : 'Archivar'}
+                    className="text-slate-400 hover:text-amber-600"
+                  >
+                    {r.archived ? <ArchiveRestore className="w-4 h-4" /> : <Archive className="w-4 h-4" />}
+                  </Button>
+                  <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
+                </div>
               </CardContent>
             </Card>
           ))}
