@@ -88,7 +88,7 @@ export default function Layout({ children, currentPageName }) {
   const brandColor = user?.company_primary_color || '#6366f1';
   const brandName = user?.company_name || 'ModulaX';
   const brandLogo = user?.company_logo;
-  const navItems = getNavItems(user?.role);
+  const navGroups = getNavGroups(user?.role);
 
   useEffect(() => {
     setIsSidebarOpen(false);
