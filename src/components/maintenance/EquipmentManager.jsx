@@ -3,11 +3,11 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Cpu, Pencil, Trash2, Search, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Cpu, Pencil, Trash2, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import EquipmentForm from './EquipmentForm';
+import AdvancedSearch from '@/components/AdvancedSearch';
 
 const statusConfig = {
   operativo: { label: 'Operativo', color: 'bg-green-100 text-green-700' },
@@ -96,6 +96,7 @@ export default function EquipmentManager({ user }) {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState({ status: 'all', tipo: 'all' });
   const queryClient = useQueryClient();
   const canManage = ['admin', 'supervisor'].includes(user?.role);
 
@@ -121,13 +122,16 @@ export default function EquipmentManager({ user }) {
     queryClient.invalidateQueries({ queryKey: ['equipment'] });
   };
 
-  const filtered = equipment.filter(e =>
-    !search ||
-    e.nombre?.toLowerCase().includes(search.toLowerCase()) ||
-    e.tipo_equipo?.toLowerCase().includes(search.toLowerCase()) ||
-    e.numero_interno?.toLowerCase().includes(search.toLowerCase()) ||
-    e.empresa?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = equipment.filter(e => {
+    const matchSearch = !search ||
+      e.nombre?.toLowerCase().includes(search.toLowerCase()) ||
+      e.tipo_equipo?.toLowerCase().includes(search.toLowerCase()) ||
+      e.numero_interno?.toLowerCase().includes(search.toLowerCase()) ||
+      e.empresa?.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = filters.status === 'all' || e.status === filters.status;
+    const matchType = filters.tipo === 'all' || e.tipo_equipo === filters.tipo;
+    return matchSearch && matchStatus && matchType;
+  });
 
   const stats = {
     total: equipment.length,
@@ -166,16 +170,29 @@ export default function EquipmentManager({ user }) {
         ))}
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <Input
-          placeholder="Buscar por nombre, tipo, N° interno, empresa…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+      {/* Advanced Search */}
+      <AdvancedSearch
+        searchPlaceholder="Buscar por nombre, tipo, N° interno, empresa…"
+        searchValue={search}
+        onSearch={setSearch}
+        filters={[
+          {
+            key: 'status',
+            label: 'Estado',
+            options: [
+              { value: 'operativo', label: 'Operativo' },
+              { value: 'standby', label: 'Standby' },
+            ],
+          },
+          {
+            key: 'tipo',
+            label: 'Tipo',
+            options: [...new Set(equipment.map(e => e.tipo_equipo))].map(t => ({ value: t, label: t })),
+          },
+        ]}
+        activeFilters={filters}
+        onFilterChange={(key, value) => setFilters({ ...filters, [key]: value })}
+      />
 
       {/* List */}
       {filtered.length === 0 ? (
