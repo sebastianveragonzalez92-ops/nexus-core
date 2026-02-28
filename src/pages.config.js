@@ -56,8 +56,11 @@ import Courses from './pages/Courses';
 import CreateTask from './pages/CreateTask';
 import Dashboard from './pages/Dashboard';
 import Equipment from './pages/Equipment';
+import FAQ from './pages/FAQ';
+import ForgotPassword from './pages/ForgotPassword';
 import Gamification from './pages/Gamification';
 import InstructorDashboard from './pages/InstructorDashboard';
+import Landing from './pages/Landing';
 import Maintenance from './pages/Maintenance';
 import Modules from './pages/Modules';
 import MyCourses from './pages/MyCourses';
@@ -65,14 +68,11 @@ import Notifications from './pages/Notifications';
 import Pricing from './pages/Pricing';
 import Settings from './pages/Settings';
 import SpareParts from './pages/SpareParts';
+import Support from './pages/Support';
+import Trial from './pages/Trial';
+import TrialWelcome from './pages/TrialWelcome';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import Landing from './pages/Landing';
-import FAQ from './pages/FAQ';
-import Support from './pages/Support';
-import ForgotPassword from './pages/ForgotPassword';
-import TrialWelcome from './pages/TrialWelcome';
-import Trial from './pages/Trial';
 import __Layout from './Layout.jsx';
 
 
@@ -86,8 +86,11 @@ export const PAGES = {
     "CreateTask": CreateTask,
     "Dashboard": Dashboard,
     "Equipment": Equipment,
+    "FAQ": FAQ,
+    "ForgotPassword": ForgotPassword,
     "Gamification": Gamification,
     "InstructorDashboard": InstructorDashboard,
+    "Landing": Landing,
     "Maintenance": Maintenance,
     "Modules": Modules,
     "MyCourses": MyCourses,
@@ -95,14 +98,11 @@ export const PAGES = {
     "Pricing": Pricing,
     "Settings": Settings,
     "SpareParts": SpareParts,
+    "Support": Support,
+    "Trial": Trial,
+    "TrialWelcome": TrialWelcome,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "Landing": Landing,
-    "FAQ": FAQ,
-    "Support": Support,
-    "ForgotPassword": ForgotPassword,
-    "TrialWelcome": TrialWelcome,
-    "Trial": Trial,
 }
 
 export const pagesConfig = {

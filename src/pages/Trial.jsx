@@ -96,12 +96,12 @@ export default function Trial() {
                   <p className="text-5xl font-bold text-slate-900">{daysRemaining ?? '-'}</p>
                 </div>
                 <div className="flex-1">
-                  <div className="bg-slate-200 rounded-full h-4 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-cyan-500 to-blue-600 h-full transition-all"
-                      style={{ width: `${Math.max(0, Math.min(100, (daysRemaining / 14) * 100))}%` }}
-                    />
-                  </div>
+                 <div className="bg-slate-200 rounded-full h-4 overflow-hidden">
+                   <div
+                     className="bg-gradient-to-r from-cyan-500 to-blue-600 h-full transition-all"
+                     style={{ width: `${daysRemaining !== null ? Math.max(0, Math.min(100, (daysRemaining / 14) * 100)) : 0}%` }}
+                   />
+                 </div>
                   <p className="text-slate-600 text-sm mt-2">
                     {daysRemaining !== null && daysRemaining > 0
                       ? `Finaliza el ${new Date(subscription?.[0]?.trial_ends_at).toLocaleDateString('es-ES')}`
