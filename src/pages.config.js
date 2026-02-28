@@ -53,7 +53,9 @@ import CertificateTemplates from './pages/CertificateTemplates';
 import Certificates from './pages/Certificates';
 import CourseDetail from './pages/CourseDetail';
 import Courses from './pages/Courses';
+import CreateTask from './pages/CreateTask';
 import Dashboard from './pages/Dashboard';
+import Equipment from './pages/Equipment';
 import Gamification from './pages/Gamification';
 import InstructorDashboard from './pages/InstructorDashboard';
 import Maintenance from './pages/Maintenance';
@@ -64,8 +66,6 @@ import Settings from './pages/Settings';
 import SpareParts from './pages/SpareParts';
 import Tutor from './pages/Tutor';
 import WebViewerDemo from './pages/WebViewerDemo';
-import Equipment from './pages/Equipment';
-import CreateTask from './pages/CreateTask';
 import __Layout from './Layout.jsx';
 
 
@@ -76,7 +76,9 @@ export const PAGES = {
     "Certificates": Certificates,
     "CourseDetail": CourseDetail,
     "Courses": Courses,
+    "CreateTask": CreateTask,
     "Dashboard": Dashboard,
+    "Equipment": Equipment,
     "Gamification": Gamification,
     "InstructorDashboard": InstructorDashboard,
     "Maintenance": Maintenance,
@@ -87,8 +89,6 @@ export const PAGES = {
     "SpareParts": SpareParts,
     "Tutor": Tutor,
     "WebViewerDemo": WebViewerDemo,
-    "Equipment": Equipment,
-    "CreateTask": CreateTask,
 }
 
 export const pagesConfig = {

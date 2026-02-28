@@ -12,6 +12,10 @@ import NotificationCenter from './components/notifications/NotificationCenter';
 import ExtensionBlockerGuard from './components/ExtensionBlockerGuard';
 
 const getNavGroups = (userRole) => {
+  const isAdmin = userRole === 'admin';
+  const isSupervisor = userRole === 'supervisor';
+  const isTecnico = userRole === 'tecnico';
+
   const groups = [
     {
       label: null,
@@ -19,39 +23,63 @@ const getNavGroups = (userRole) => {
         { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
       ],
     },
-    {
-      label: 'Capacitación',
-      items: [
-        { name: 'Capacitaciones', page: 'Courses', icon: Layers },
-        { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
-        { name: 'Gamificación', page: 'Gamification', icon: Award },
-        { name: 'Certificados', page: 'Certificates', icon: Award },
-      ],
-    },
-    {
-      label: 'Mantenimiento',
-      items: [
-        { name: 'Mantenimiento', page: 'Maintenance', icon: Activity },
-        { name: 'Repuestos', page: 'SpareParts', icon: Wrench },
-        { name: 'Equipos', page: 'Equipment', icon: Cpu },
-        ...(['admin', 'supervisor'].includes(userRole) ? [{ name: 'Crear Tarea', page: 'CreateTask', icon: ClipboardList }] : []),
-      ],
-    },
-    {
-      label: 'General',
-      items: [
-        { name: 'Notificaciones', page: 'Notifications', icon: Bell },
-        { name: 'Tutor IA', page: 'Tutor', icon: Bot },
-        { name: 'Actividad', page: 'Activity', icon: Activity },
-      ],
-    },
   ];
 
-  const adminItems = [];
-  if (userRole === 'admin') {
-    adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
-    adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
-    groups.push({ label: 'Administración', items: adminItems });
+  // Mantenimiento (visible para todos, pero diferente según rol)
+  const maintenanceItems = [
+    { name: 'Panel Mantenimiento', page: 'Maintenance', icon: Wrench },
+    { name: 'Equipos', page: 'Equipment', icon: Cpu },
+    { name: 'Repuestos', page: 'SpareParts', icon: Activity },
+  ];
+  
+  if (isAdmin || isSupervisor) {
+    maintenanceItems.push({ name: 'Crear Tarea', page: 'CreateTask', icon: ClipboardList });
+  }
+
+  groups.push({
+    label: 'Mantenimiento',
+    items: maintenanceItems,
+  });
+
+  // Capacitación (visible para todos)
+  groups.push({
+    label: 'Aprendizaje',
+    items: [
+      { name: 'Mis Cursos', page: 'MyCourses', icon: BookOpen },
+      ...(isAdmin ? [{ name: 'Capacitaciones', page: 'Courses', icon: Layers }] : []),
+      { name: 'Certificados', page: 'Certificates', icon: Award },
+      { name: 'Gamificación', page: 'Gamification', icon: Award },
+    ],
+  });
+
+  // Herramientas (visible para todos)
+  groups.push({
+    label: 'Herramientas',
+    items: [
+      { name: 'Tutor IA', page: 'Tutor', icon: Bot },
+      { name: 'Notificaciones', page: 'Notifications', icon: Bell },
+      ...(isAdmin || isSupervisor ? [{ name: 'Actividad', page: 'Activity', icon: Activity }] : []),
+    ],
+  });
+
+  // Administración (solo admin y supervisor)
+  if (isAdmin || isSupervisor) {
+    const adminItems = [];
+    if (isAdmin) {
+      adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: Sparkles });
+      adminItems.push({ name: 'Usuarios', page: 'Settings', icon: Settings });
+      adminItems.push({ name: 'Configuración', page: 'Settings', icon: Settings });
+    }
+    if (isSupervisor) {
+      adminItems.push({ name: 'Reportes', page: 'Activity', icon: Activity });
+    }
+    
+    if (adminItems.length > 0) {
+      groups.push({
+        label: isAdmin ? 'Administración' : 'Supervisión',
+        items: adminItems,
+      });
+    }
   }
 
   return groups;
