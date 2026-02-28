@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, FileText, MapPin, Camera, PenLine, ChevronRight, CheckCircle2, XCircle } from 'lucide-react';
+import { Plus, FileText, MapPin, Camera, PenLine, ChevronRight, CheckCircle2, XCircle, Archive, ArchiveRestore } from 'lucide-react';
 import MaintenanceReportForm from './MaintenanceReportForm';
 import { ALL_ITEMS } from './ComponentChecklist';
 import ReportPDFExport from './ReportPDFExport';
