@@ -14,7 +14,8 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import WorkOrderApprovalFlow from './WorkOrderApprovalFlow';
 
-export default function WorkOrderManagement({ workOrders, assets, user, isAdmin }) {
+export default function WorkOrderManagement({ workOrders, assets, user }) {
+  const isAdmin = hasPermission(user, 'maintenance.work_orders.create');
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingWO, setEditingWO] = useState(null);
