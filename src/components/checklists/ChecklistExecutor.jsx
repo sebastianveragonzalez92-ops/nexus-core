@@ -23,6 +23,9 @@ export default function ChecklistExecutor({ template, user }) {
   const [submitted, setSubmitted] = useState(false);
   const queryClient = useQueryClient();
 
+  const [validationData, setValidationData] = useState(null);
+  const [validating, setValidating] = useState(false);
+
   const submitMutation = useMutation({
     mutationFn: async () => {
       const requiredItems = template.items.filter(item => item.required);
@@ -39,6 +42,21 @@ export default function ChecklistExecutor({ template, user }) {
       const complianceRate = failures.length === 0 ? 100 : Math.round(
         ((template.items.length - failures.length) / template.items.length) * 100
       );
+
+      // Validar con IA antes de guardar
+      setValidating(true);
+      try {
+        const validation = await base44.functions.invoke('validateChecklistEntry', {
+          templateName: template.name,
+          responses: Object.entries(responses).filter(([k, v]) => !k.endsWith('_notes')),
+          failures,
+        });
+        setValidationData(validation.data);
+      } catch (error) {
+        console.error('Validation error:', error);
+      } finally {
+        setValidating(false);
+      }
 
       const execution = await base44.entities.ChecklistExecution.create({
         template_id: template.id,
@@ -59,6 +77,7 @@ export default function ChecklistExecutor({ template, user }) {
         failures,
         observations,
         status: 'submitted',
+        ai_validation: validationData,
       });
 
       // Alerta si algo no cumple
@@ -79,6 +98,7 @@ export default function ChecklistExecutor({ template, user }) {
       setSubmitted(true);
       setResponses({});
       setObservations('');
+      setValidationData(null);
       toast.success('Checklist completado correctamente');
       setTimeout(() => setSubmitted(false), 3000);
     },
