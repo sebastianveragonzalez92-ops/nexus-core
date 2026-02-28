@@ -115,7 +115,7 @@ export default function Layout({ children, currentPageName }) {
 
 
 
-  const brandColor = user?.company_primary_color || '#6366f1';
+  const brandColor = user?.company_primary_color || '#06b6d4';
   const brandName = user?.company_name || 'Nexus';
   const brandLogo = user?.company_logo;
   const navGroups = getNavGroups(user?.role);
