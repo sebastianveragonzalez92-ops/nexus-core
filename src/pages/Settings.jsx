@@ -16,7 +16,8 @@ import { ROLE_LABELS, ROLE_COLORS } from '@/components/lib/permissions';
 
 const settingsSections = [
   { id: 'profile', label: 'Perfil', icon: User },
-  { id: 'users', label: 'Usuarios', icon: Users },
+  { id: 'users', label: 'Usuarios', icon: Users, adminOnly: true },
+  { id: 'audit', label: 'Auditoría', icon: ClipboardList, adminOnly: true },
   { id: 'notifications', label: 'Notificaciones', icon: Bell },
   { id: 'security', label: 'Seguridad', icon: Shield },
   { id: 'data', label: 'Datos', icon: Database },
