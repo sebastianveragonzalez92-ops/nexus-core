@@ -30,6 +30,26 @@ export default function ChecklistHistory({ executions, canReview }) {
     return 'text-red-600';
   };
 
+  const handleGenerateReport = async (templateName) => {
+    setGeneratingReport(templateName);
+    try {
+      const response = await base44.functions.invoke('generateChecklistReport', {
+        templateName,
+        dateRange: 30,
+      });
+      setReports(prev => ({
+        ...prev,
+        [templateName]: response.data,
+      }));
+      toast.success('Reporte generado por IA');
+    } catch (error) {
+      toast.error('Error al generar reporte');
+      console.error(error);
+    } finally {
+      setGeneratingReport(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {executions.length > 0 ? (
