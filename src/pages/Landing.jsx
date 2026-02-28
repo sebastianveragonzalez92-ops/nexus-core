@@ -52,18 +52,18 @@ export default function Landing() {
           {/* Desktop CTA */}
           <div className="hidden md:flex gap-3">
             <Button 
-              variant="outline" 
-              className="border-slate-600 text-white hover:bg-slate-800"
-              onClick={handleLogin}
-            >
-              Ingresar
-            </Button>
-            <Button 
-              onClick={handleLogin}
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
-            >
-              Comenzar gratis
-            </Button>
+               variant="outline" 
+               className="border-cyan-600 text-white hover:bg-blue-900"
+               onClick={handleLogin}
+             >
+               Ingresar
+             </Button>
+             <Button 
+               onClick={handleLogin}
+               className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+             >
+               Comenzar gratis
+             </Button>
           </div>
         </div>
 
