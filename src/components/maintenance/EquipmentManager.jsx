@@ -201,8 +201,8 @@ export default function EquipmentManager({ user }) {
               key={eq.id}
               eq={eq}
               reports={reports}
-              onEdit={(e) => { setEditing(e); setShowForm(true); }}
-              onDelete={handleDelete}
+              onEdit={canManage ? (e) => { setEditing(e); setShowForm(true); } : null}
+              onDelete={canManage ? handleDelete : null}
             />
           ))}
         </div>
