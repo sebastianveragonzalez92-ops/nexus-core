@@ -72,13 +72,23 @@ export default function Pricing() {
 
   const handleSelectPlan = async (planId) => {
     if (planId === 'free') {
-      // Plan gratuito - iniciar trial
       alert('¡Plan gratuito activado! Comienza ahora.');
       return;
     }
     
-    // Planes pagos - ir a Stripe
-    alert(`Redirigiendo a pago de plan ${planId.toUpperCase()}...`);
+    try {
+      const response = await base44.functions.invoke('createMercadoPagoPreference', {
+        plan: planId,
+        billingCycle: selectedBilling
+      });
+
+      if (response.data.init_point) {
+        window.location.href = response.data.init_point;
+      }
+    } catch (error) {
+      alert('Error al procesar el pago. Intenta nuevamente.');
+      console.error('Payment error:', error);
+    }
   };
 
   return (
