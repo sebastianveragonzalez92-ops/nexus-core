@@ -12,26 +12,37 @@ export default function ModulesGrid({ modules, onToggleModule, onAddModule, isAd
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}
+      className="mt-10"
     >
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900">Módulos</h2>
-          <p className="text-sm text-slate-500">
-            {isAdmin ? 'Activa o desactiva funcionalidades' : 'Accede a las funcionalidades del sistema'}
-          </p>
+      <div className="mb-8">
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-1">Módulos y Funcionalidades</h2>
+            <p className="text-sm text-slate-600">
+              {isAdmin ? '🎛️ Administra todos los módulos disponibles' : '🚀 Accede a las herramientas del sistema'}
+            </p>
+          </div>
+          {isAdmin && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Button
+                onClick={onAddModule}
+                className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl shadow-lg shadow-indigo-300 hover:shadow-xl hover:scale-105 transition-all duration-300"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Nuevo módulo
+              </Button>
+            </motion.div>
+          )}
         </div>
-        {isAdmin && (
-          <Button
-            onClick={onAddModule}
-            className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl transition-all"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nuevo módulo
-          </Button>
-        )}
+        {/* Decorative line */}
+        <div className="h-1 w-20 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max">
         {isAdmin ? (
           <>
             {modules.filter(m => m.status === 'active').map((module, index) => (
