@@ -93,6 +93,18 @@ export default function StockAdjustModal({ part, onSave, onCancel, isLoading, us
             </div>
           </div>
 
+          {/* Nota */}
+          <div className="space-y-1.5">
+            <Label>Notas (opcional)</Label>
+            <input
+              type="text"
+              placeholder="Motivo del ajuste..."
+              value={nota}
+              onChange={e => setNota(e.target.value)}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </div>
+
           {/* Preview */}
           <div className="bg-indigo-50 rounded-xl p-3 text-center border border-indigo-100">
             <div className="text-xs text-indigo-500">Nuevo stock</div>
