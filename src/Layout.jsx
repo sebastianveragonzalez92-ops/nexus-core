@@ -6,7 +6,7 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Sparkles, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList
+  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -165,7 +165,7 @@ export default function Layout({ children, currentPageName }) {
                 {brandLogo ? (
                   <img src={brandLogo} alt="Logo" className="w-full h-full object-contain p-1" />
                 ) : (
-                  <Sparkles className="w-5 h-5 text-white" />
+                  <Hexagon className="w-5 h-5 text-white" />
                 )}
               </div>
               {!isCollapsed && (
@@ -300,7 +300,7 @@ export default function Layout({ children, currentPageName }) {
                 {brandLogo ? (
                   <img src={brandLogo} alt="Logo" className="w-full h-full object-contain p-0.5" />
                 ) : (
-                  <Sparkles className="w-4 h-4 text-white" />
+                  <Hexagon className="w-4 h-4 text-white" />
                 )}
               </div>
               <span className="font-bold text-slate-900">{brandName}</span>
