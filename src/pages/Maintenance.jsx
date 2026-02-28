@@ -65,47 +65,28 @@ export default function Maintenance() {
           transition={{ duration: 0.3 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="mb-8 overflow-x-auto">
-              <TabsList className="flex w-max min-w-full sm:grid sm:grid-cols-8">
-                <TabsTrigger value="dashboard" className="gap-2 whitespace-nowrap px-4">
-                  <BarChart3 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Dashboard</span>
-                  <span className="sm:hidden">Panel</span>
-                </TabsTrigger>
-                <TabsTrigger value="preventivo" className="gap-2 whitespace-nowrap px-4">
-                  <ListTodo className="w-4 h-4" />
-                  Preventivos
-                </TabsTrigger>
-                <TabsTrigger value="correctivo" className="gap-2 whitespace-nowrap px-4">
-                  <Wrench className="w-4 h-4" />
-                  Correctivos
-                </TabsTrigger>
-                <TabsTrigger value="history" className="gap-2 whitespace-nowrap px-4">
-                  <Wrench className="w-4 h-4" />
-                  Historial
-                </TabsTrigger>
-                <TabsTrigger value="equipos" className="gap-2 whitespace-nowrap px-4">
-                  <Cpu className="w-4 h-4" />
-                  Equipos
-                </TabsTrigger>
-                <TabsTrigger value="tareas" className="gap-2 whitespace-nowrap px-4">
-                  <CheckSquare className="w-4 h-4" />
-                  Tareas
-                </TabsTrigger>
-                <TabsTrigger value="reportes" className="gap-2 whitespace-nowrap px-4">
-                  <BarChart3 className="w-4 h-4" />
-                  Reportes
-                </TabsTrigger>
-                <TabsTrigger value="import" className="gap-2 whitespace-nowrap px-4">
-                  <ListTodo className="w-4 h-4" />
-                  Importar
-                </TabsTrigger>
-                {isAdmin && (
-                  <TabsTrigger value="plantillas" className="gap-2 whitespace-nowrap px-4">
-                    <ListTodo className="w-4 h-4" />
-                    Plantillas
+            <div className="mb-8 overflow-x-auto scrollbar-hide">
+              <TabsList className="inline-flex h-auto p-1 gap-1 bg-slate-100 rounded-xl">
+                {[
+                  { value: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+                  { value: 'preventivo', label: 'Preventivos', icon: ClipboardList },
+                  { value: 'correctivo', label: 'Correctivos', icon: Wrench },
+                  { value: 'history', label: 'Historial', icon: History },
+                  { value: 'equipos', label: 'Equipos', icon: Cpu },
+                  { value: 'tareas', label: 'Tareas', icon: CheckSquare },
+                  { value: 'reportes', label: 'Reportes', icon: FileText },
+                  { value: 'import', label: 'Importar', icon: Download },
+                  ...(isAdmin ? [{ value: 'plantillas', label: 'Plantillas', icon: FileStack }] : []),
+                ].map(({ value, label, icon: Icon }) => (
+                  <TabsTrigger
+                    key={value}
+                    value={value}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all"
+                  >
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span>{label}</span>
                   </TabsTrigger>
-                )}
+                ))}
               </TabsList>
             </div>
 
