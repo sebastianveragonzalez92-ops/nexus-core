@@ -134,7 +134,9 @@ export default function Settings() {
             className="lg:w-64 shrink-0"
           >
             <nav className="bg-white rounded-2xl border border-slate-200 p-2 space-y-1">
-              {settingsSections.map(({ id, label, icon: Icon }) => (
+              {settingsSections
+                .filter(({ adminOnly }) => !adminOnly || user?.role === 'admin')
+                .map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => setActiveSection(id)}
