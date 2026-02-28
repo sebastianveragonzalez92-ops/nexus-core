@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { hasPermission } from '@/components/lib/permissions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
@@ -14,12 +13,15 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import WorkOrderApprovalFlow from './WorkOrderApprovalFlow';
 import WorkOrderPartsPanel from './WorkOrderPartsPanel';
+import AdvancedSearch from '@/components/AdvancedSearch';
 
 export default function WorkOrderManagement({ workOrders, assets, user }) {
   const isAdmin = hasPermission(user, 'maintenance.work_orders.create');
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingWO, setEditingWO] = useState(null);
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState({ type: 'all', priority: 'all', status: 'all' });
   const [formData, setFormData] = useState({
     asset_id: '',
     type: 'preventivo',
@@ -119,13 +121,24 @@ export default function WorkOrderManagement({ workOrders, assets, user }) {
     return colors[status] || colors.pendiente;
   };
 
+  const filteredWOs = workOrders.filter(wo => {
+    const matchSearch = !search ||
+      wo.description?.toLowerCase().includes(search.toLowerCase()) ||
+      wo.id?.toLowerCase().includes(search.toLowerCase()) ||
+      assets.find(a => a.id === wo.asset_id)?.name?.toLowerCase().includes(search.toLowerCase());
+    const matchType = filters.type === 'all' || wo.type === filters.type;
+    const matchPriority = filters.priority === 'all' || wo.priority === filters.priority;
+    const matchStatus = filters.status === 'all' || wo.status === filters.status;
+    return matchSearch && matchType && matchPriority && matchStatus;
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Órdenes de Trabajo</h2>
-          <p className="text-slate-600">Total: {workOrders.length}</p>
+          <p className="text-slate-600">Total: {filteredWOs.length}</p>
         </div>
         {isAdmin && (
           <Button onClick={() => setShowForm(!showForm)} className="gap-2">
@@ -134,6 +147,49 @@ export default function WorkOrderManagement({ workOrders, assets, user }) {
           </Button>
         )}
       </div>
+
+      {/* Advanced Search */}
+      <AdvancedSearch
+        searchPlaceholder="Buscar por descripción, ID o activo..."
+        searchValue={search}
+        onSearch={setSearch}
+        filters={[
+          {
+            key: 'type',
+            label: 'Tipo',
+            options: [
+              { value: 'preventivo', label: 'Preventivo' },
+              { value: 'correctivo', label: 'Correctivo' },
+              { value: 'predictivo', label: 'Predictivo' },
+              { value: 'mejora', label: 'Mejora' },
+            ],
+          },
+          {
+            key: 'priority',
+            label: 'Prioridad',
+            options: [
+              { value: 'baja', label: 'Baja' },
+              { value: 'media', label: 'Media' },
+              { value: 'alta', label: 'Alta' },
+              { value: 'urgente', label: 'Urgente' },
+            ],
+          },
+          {
+            key: 'status',
+            label: 'Estado',
+            options: [
+              { value: 'pendiente', label: 'Pendiente' },
+              { value: 'asignada', label: 'Asignada' },
+              { value: 'en_progreso', label: 'En progreso' },
+              { value: 'en_aprobacion', label: 'En aprobación' },
+              { value: 'completada', label: 'Completada' },
+              { value: 'cancelada', label: 'Cancelada' },
+            ],
+          },
+        ]}
+        activeFilters={filters}
+        onFilterChange={(key, value) => setFilters({ ...filters, [key]: value })}
+      />
 
       {/* Form */}
       {showForm && (
@@ -217,14 +273,14 @@ export default function WorkOrderManagement({ workOrders, assets, user }) {
 
       {/* Work Orders List */}
       <div className="space-y-3">
-        {workOrders.length === 0 ? (
+        {filteredWOs.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-slate-500">Sin órdenes de trabajo</p>
+              <p className="text-slate-500">{search || Object.values(filters).some(f => f !== 'all') ? 'Sin resultados' : 'Sin órdenes de trabajo'}</p>
             </CardContent>
           </Card>
         ) : (
-          workOrders.map((wo) => {
+          filteredWOs.map((wo) => {
             const asset = assets.find((a) => a.id === wo.asset_id);
             return (
               <motion.div key={wo.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
