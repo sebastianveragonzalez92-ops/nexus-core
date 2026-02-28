@@ -102,14 +102,14 @@ export default function Landing() {
         >
           <Button 
             onClick={handleLogin}
-            className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white h-12 px-8 text-lg"
+            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white h-12 px-8 text-lg"
           >
             Prueba gratis 14 días
             <ChevronRight className="w-5 h-5 ml-2" />
           </Button>
           <Button 
             variant="outline"
-            className="border-slate-500 text-white hover:bg-slate-800 h-12 px-8 text-lg"
+            className="border-cyan-500 text-white hover:bg-blue-900 h-12 px-8 text-lg"
             onClick={() => document.getElementById('features').scrollIntoView()}
           >
             Ver características
