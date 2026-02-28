@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Search, AlertTriangle, Package, Filter, History } from 'lucide-react';
+import { Plus, AlertTriangle, Package, History } from 'lucide-react';
 import SparePartCard from '@/components/spareparts/SparePartCard';
 import SparePartForm from '@/components/spareparts/SparePartForm';
 import StockAdjustModal from '@/components/spareparts/StockAdjustModal';
 import StockMovementHistory from '@/components/spareparts/StockMovementHistory';
+import AdvancedSearch from '@/components/AdvancedSearch';
 
 export default function SpareParts() {
   const queryClient = useQueryClient();
@@ -177,49 +176,40 @@ export default function SpareParts() {
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input
-            placeholder="Buscar por nombre o código..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-44">
-            <Filter className="w-4 h-4 mr-2 text-slate-400" />
-            <SelectValue placeholder="Categoría" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas las categorías</SelectItem>
-            <SelectItem value="electrico">Eléctrico</SelectItem>
-            <SelectItem value="mecanico">Mecánico</SelectItem>
-            <SelectItem value="hidraulico">Hidráulico</SelectItem>
-            <SelectItem value="neumatico">Neumático</SelectItem>
-            <SelectItem value="consumible">Consumible</SelectItem>
-            <SelectItem value="otro">Otro</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={stockFilter} onValueChange={setStockFilter}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Estado stock" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todo el stock</SelectItem>
-            <SelectItem value="ok">Stock OK</SelectItem>
-            <SelectItem value="low">Stock bajo</SelectItem>
-            <SelectItem value="out">Sin stock</SelectItem>
-          </SelectContent>
-        </Select>
-        {(categoryFilter !== 'all' || stockFilter !== 'all' || search) && (
-          <Button variant="ghost" size="sm" onClick={() => { setSearch(''); setCategoryFilter('all'); setStockFilter('all'); }}>
-            Limpiar filtros
-          </Button>
-        )}
-      </div>
+      {/* Advanced Search */}
+      <AdvancedSearch
+        searchPlaceholder="Buscar por nombre o código..."
+        searchValue={search}
+        onSearch={setSearch}
+        filters={[
+          {
+            key: 'category',
+            label: 'Categoría',
+            options: [
+              { value: 'electrico', label: 'Eléctrico' },
+              { value: 'mecanico', label: 'Mecánico' },
+              { value: 'hidraulico', label: 'Hidráulico' },
+              { value: 'neumatico', label: 'Neumático' },
+              { value: 'consumible', label: 'Consumible' },
+              { value: 'otro', label: 'Otro' },
+            ],
+          },
+          {
+            key: 'stock',
+            label: 'Estado Stock',
+            options: [
+              { value: 'ok', label: 'Stock OK' },
+              { value: 'low', label: 'Stock bajo' },
+              { value: 'out', label: 'Sin stock' },
+            ],
+          },
+        ]}
+        activeFilters={{ category: categoryFilter, stock: stockFilter }}
+        onFilterChange={(key, value) => {
+          if (key === 'category') setCategoryFilter(value);
+          if (key === 'stock') setStockFilter(value);
+        }}
+      />
 
       {/* Parts Grid */}
       {isLoading ? (
