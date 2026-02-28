@@ -16,6 +16,7 @@ import CourseCalendar from '@/components/courses/CourseCalendar';
 
 export default function Courses() {
   const [user, setUser] = useState(null);
+  const [subscription, setSubscription] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,9 +25,15 @@ export default function Courses() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch((error) => {
+    base44.auth.me().then((userData) => {
+      setUser(userData);
+      if (userData?.email) {
+        getUserSubscription(userData.email).then(setSubscription);
+      }
+    }).catch((error) => {
       console.error('Error al cargar usuario:', error);
     });
   }, []);
@@ -94,6 +101,11 @@ export default function Courses() {
   };
 
   const handleAdd = () => {
+    if (subscription?.plan === 'free') {
+      alert('Los cursos están disponibles solo en plan PRO. Upgradea ahora.');
+      navigate(createPageUrl('Pricing'));
+      return;
+    }
     setEditingCourse(null);
     setShowModal(true);
   };
@@ -113,13 +125,19 @@ export default function Courses() {
               <p className="text-slate-500 mt-1">Gestiona cursos, evaluaciones y certificaciones</p>
             </div>
             {user?.role === 'admin' && (
-              <Button
-                onClick={handleAdd}
-                className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+              <FeatureLimitGuard 
+                subscription={subscription}
+                feature="max_courses"
+                currentCount={courses.length}
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Nueva Capacitación
-              </Button>
+                <Button
+                  onClick={handleAdd}
+                  className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nueva Capacitación
+                </Button>
+              </FeatureLimitGuard>
             )}
           </div>
 
