@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Layers, Activity, RefreshCw, Zap, TrendingUp, BookOpen, Users, Award, Wrench, Cpu } from 'lucide-react';
+import { RefreshCw, TrendingUp, BookOpen, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -11,6 +11,7 @@ import ModulesGrid from '@/components/dashboard/ModulesGrid';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import SyncPanel from '@/components/dashboard/SyncPanel';
 import ModuleModal from '@/components/modals/ModuleModal';
+import MaintenanceMetrics from '@/components/dashboard/MaintenanceMetrics';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -180,101 +181,72 @@ export default function Dashboard() {
     ? Math.round(myEnrollments.reduce((sum, e) => sum + (e.progress_percent || 0), 0) / myEnrollments.length)
     : 0;
 
-  // Contenido específico por rol
-  const renderRoleSpecificContent = () => {
+  // Render maintenance dashboard for admin/supervisor
+  const renderMaintenanceDashboard = () => {
     if (user?.role === 'admin' || user?.role === 'supervisor') {
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <Link to={createPageUrl('Maintenance')} className="block">
-            <StatsCard
-              title="Panel Mantenimiento"
-              value="OT"
-              subtitle="Gestionar mantenimiento"
-              icon={Wrench}
-              color="blue"
-              index={0}
-            />
-          </Link>
-          <Link to={createPageUrl('Equipment')} className="block">
-            <StatsCard
-              title="Equipos"
-              value="📊"
-              subtitle="Estado operativo"
-              icon={Cpu}
-              color="purple"
-              index={1}
-            />
-          </Link>
-          <Link to={createPageUrl('SpareParts')} className="block">
-            <StatsCard
-              title="Inventario"
-              value="📦"
-              subtitle="Repuestos"
-              icon={Activity}
-              color="emerald"
-              index={2}
-            />
-          </Link>
-          {user?.role === 'admin' && (
-            <Link to={createPageUrl('Courses')} className="block">
-              <StatsCard
-                title="Capacitaciones"
-                value={courses.length}
-                subtitle="en catálogo"
-                icon={BookOpen}
-                color="amber"
-                index={3}
-              />
-            </Link>
-          )}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <MaintenanceMetrics />
+        </motion.div>
       );
     }
+    return null;
+  };
 
-    // Contenido para técnico
+    // Learning stats for technician
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <Link to={createPageUrl('MyCourses')} className="block">
-          <StatsCard
-            title="Cursos Completados"
-            value={completedCourses}
-            subtitle={`de ${myEnrollments.length} inscritos`}
-            icon={BookOpen}
-            color="indigo"
-            index={0}
-          />
-        </Link>
-        <Link to={createPageUrl('MyCourses')} className="block">
-          <StatsCard
-            title="Progreso General"
-            value={`${avgProgress}%`}
-            subtitle="promedio"
-            icon={TrendingUp}
-            color="emerald"
-            trend={avgProgress > 50 ? 12 : -5}
-            index={1}
-          />
-        </Link>
-        <Link to={createPageUrl('MyCourses')} className="block">
-          <StatsCard
-            title="En Progreso"
-            value={inProgressCourses}
-            subtitle="cursos activos"
-            icon={RefreshCw}
-            color="violet"
-            index={2}
-          />
-        </Link>
-        <Link to={createPageUrl('MyCourses')} className="block">
-          <StatsCard
-            title="Mis Certificados"
-            value="📜"
-            subtitle="Logros obtenidos"
-            icon={Award}
-            color="amber"
-            index={3}
-          />
-        </Link>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-slate-900">{completedCourses}</div>
+                <div className="text-sm text-slate-600 mt-1">Cursos Completados</div>
+                <div className="text-xs text-slate-500 mt-2">de {myEnrollments.length} inscritos</div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-slate-900">{avgProgress}%</div>
+                <div className="text-sm text-slate-600 mt-1">Progreso General</div>
+                <div className="text-xs text-slate-500 mt-2">promedio</div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-slate-900">{inProgressCourses}</div>
+                <div className="text-sm text-slate-600 mt-1">En Progreso</div>
+                <div className="text-xs text-slate-500 mt-2">cursos activos</div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-slate-900">📜</div>
+                <div className="text-sm text-slate-600 mt-1">Certificados</div>
+                <div className="text-xs text-slate-500 mt-2">logros obtenidos</div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     );
   };
@@ -295,8 +267,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Stats por rol */}
-        {renderRoleSpecificContent()}
+        {/* Maintenance metrics dashboard */}
+        {renderMaintenanceDashboard()}
 
         {/* Main Content Grid */}
         {user?.role !== 'admin' && user?.role !== 'supervisor' && (
