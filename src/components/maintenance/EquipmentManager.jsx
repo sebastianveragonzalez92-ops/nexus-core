@@ -11,8 +11,6 @@ import EquipmentForm from './EquipmentForm';
 
 const statusConfig = {
   operativo: { label: 'Operativo', color: 'bg-green-100 text-green-700' },
-  mantenimiento: { label: 'En mantención', color: 'bg-yellow-100 text-yellow-700' },
-  fuera_servicio: { label: 'Fuera de servicio', color: 'bg-red-100 text-red-700' },
   standby: { label: 'Standby', color: 'bg-slate-100 text-slate-600' },
 };
 
@@ -134,8 +132,6 @@ export default function EquipmentManager({ user }) {
   const stats = {
     total: equipment.length,
     operativo: equipment.filter(e => e.status === 'operativo').length,
-    mantenimiento: equipment.filter(e => e.status === 'mantenimiento').length,
-    fuera_servicio: equipment.filter(e => e.status === 'fuera_servicio').length,
   };
 
   const overdueCount = equipment.filter(e =>
@@ -162,8 +158,6 @@ export default function EquipmentManager({ user }) {
         {[
           { label: 'Total', value: stats.total, color: 'bg-slate-50 border-slate-200 text-slate-700' },
           { label: 'Operativos', value: stats.operativo, color: 'bg-green-50 border-green-200 text-green-700' },
-          { label: 'En mantención', value: stats.mantenimiento, color: 'bg-yellow-50 border-yellow-200 text-yellow-700' },
-          { label: 'Fuera de servicio', value: stats.fuera_servicio, color: 'bg-red-50 border-red-200 text-red-700' },
         ].map(s => (
           <div key={s.label} className={`rounded-xl border px-4 py-3 ${s.color}`}>
             <div className="text-2xl font-bold">{s.value}</div>
