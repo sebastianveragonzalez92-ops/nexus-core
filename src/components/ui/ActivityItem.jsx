@@ -40,7 +40,7 @@ export default function ActivityItem({ activity, index = 0 }) {
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="text-sm font-medium text-slate-900 line-clamp-1">
-              {activity.details || activity.action}
+              {typeof activity.details === 'string' ? activity.details : activity.action}
             </p>
             {activity.module && (
               <p className="text-xs text-slate-500 mt-0.5">
