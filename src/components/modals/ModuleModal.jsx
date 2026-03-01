@@ -184,7 +184,7 @@ export default function ModuleModal({ isOpen, onClose, onSave, module }) {
               </form>
             </div>
           </motion.div>
-        </>
+          </motion.div>
       )}
     </AnimatePresence>
   );
