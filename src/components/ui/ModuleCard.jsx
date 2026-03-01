@@ -26,11 +26,14 @@ const categoryColors = {
 };
 
 const pageMap = {
-   'Capacitación': 'Courses',
-   'Capacitaciones': 'Courses',
-   'Training': 'Courses',
-   'LMS': 'Courses',
-   'LMS - Capacitación': 'Courses',
+   'Capacitación': 'InstructorDashboard',
+   'Capacitaciones': 'InstructorDashboard',
+   'Training': 'InstructorDashboard',
+   'LMS': 'InstructorDashboard',
+   'LMS - Capacitación': 'InstructorDashboard',
+   'Aprendizaje': 'InstructorDashboard',
+   'E-Learning': 'InstructorDashboard',
+   'Cursos': 'InstructorDashboard',
    'Tutor': 'Tutor',
    'Tutor IA': 'Tutor',
    'Actividad': 'Activity',
