@@ -71,17 +71,18 @@ export default function ModuleModal({ isOpen, onClose, onSave, module }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={onClose}
-          />
+          >
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-50 max-h-[85vh]"
+            className="w-full max-w-lg max-h-[90vh] z-50"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mx-4 flex flex-col h-full">
+            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-slate-100 shrink-0">
                 <h2 className="text-xl font-semibold text-slate-900">
