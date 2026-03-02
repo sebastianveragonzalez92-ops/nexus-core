@@ -160,19 +160,31 @@ export default function EquipmentManager({ user }) {
       // Normalize headers: remove accents, special chars, lowercase
       const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f°]/g, '').toLowerCase().trim();
       const headers = lines[0].split(separator).map(h => normalize(h.replace(/^"|"$/g, '')));
+      // Find best match for each field - tries exact matches first, then partial
+      const findCol = (...terms) => {
+        for (const term of terms) {
+          const idx = headers.findIndex(h => h === term);
+          if (idx >= 0) return idx;
+        }
+        for (const term of terms) {
+          const idx = headers.findIndex(h => h.includes(term));
+          if (idx >= 0) return idx;
+        }
+        return -1;
+      };
       const colMap = {
-        nombre: headers.findIndex(h => h.includes('nombre') || h.includes('equipo') || h.includes('name')),
-        tipo_equipo: headers.findIndex(h => h.includes('tipo') || h.includes('hardware_type') || h.includes('flota')),
-        numero_interno: headers.findIndex(h => h.includes('interno') || h.includes('device') || h.includes('id')),
-        numero_serie: headers.findIndex(h => h.includes('serie') || h.includes('serial')),
-        fabricante: headers.findIndex(h => h.includes('fabricante') || h.includes('marca')),
-        modelo: headers.findIndex(h => h.includes('modelo') || h.includes('model')),
-        empresa: headers.findIndex(h => h.includes('empresa') || h.includes('company')),
-        division: headers.findIndex(h => h.includes('divis') || h.includes('flota')),
-        status: headers.findIndex(h => h.includes('estado') || h.includes('status') || h.includes('conectividad')),
-        fecha_instalacion: headers.findIndex(h => h.includes('instalac') || h.includes('fecha')),
-        fecha_proxima_mantencion: headers.findIndex(h => h.includes('mantenc') || h.includes('prox')),
-        notas: headers.findIndex(h => h.includes('nota') || h.includes('desconex') || h.includes('lastupdated')),
+        nombre:                   findCol('equipo', 'nombre', 'name'),
+        tipo_equipo:              findCol('hardware_type', 'tipo_equipo', 'tipo'),
+        numero_interno:           findCol('device', 'numero_interno', 'interno', 'id'),
+        numero_serie:             findCol('serial', 'numero_serie', 'serie'),
+        fabricante:               findCol('fabricante', 'marca'),
+        modelo:                   findCol('modelo', 'model'),
+        empresa:                  findCol('empresa', 'company'),
+        division:                 findCol('division', 'flota', 'divis'),
+        status:                   findCol('conectividad', 'estado', 'status'),
+        fecha_instalacion:        findCol('fecha_instalacion', 'instalac', 'fecha'),
+        fecha_proxima_mantencion: findCol('prox_mantencion', 'mantenc', 'prox'),
+        notas:                    findCol('lastupdateddatetime', 'hrs de desconexion', 'desconex', 'nota'),
       };
       const parseRow = (line) => {
         const cols = [];
