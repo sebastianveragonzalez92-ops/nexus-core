@@ -230,12 +230,28 @@ export default function SmartCalendar({ user }) {
 
   return (
     <div className="space-y-6">
+      <CreateTaskFromCalendarModal
+        isOpen={showCreateTask}
+        onClose={() => setShowCreateTask(false)}
+        defaultDate={createTaskDate}
+        user={user}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Calendario Inteligente</h2>
           <p className="text-sm text-slate-500">OTs, tareas y mantenciones con alertas automáticas</p>
         </div>
+
+        <div className="flex items-center gap-3">
+        <Button
+          onClick={() => { setCreateTaskDate(''); setShowCreateTask(true); }}
+          className="bg-emerald-600 hover:bg-emerald-700 rounded-xl gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Nueva Tarea
+        </Button>
 
         {/* Stats */}
         <div className="flex gap-3">
