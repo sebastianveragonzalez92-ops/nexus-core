@@ -121,6 +121,8 @@ export default function SmartCalendar({ user }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [filterType, setFilterType] = useState('all');
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [createTaskDate, setCreateTaskDate] = useState('');
 
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
