@@ -57,7 +57,7 @@ export default function CreateTaskFromCalendarModal({ isOpen, onClose, defaultDa
       queryClient.invalidateQueries({ queryKey: ['maintenanceTasks'] });
       toast.success('Tarea creada' + (sendNotification && form.assigned_to ? ' y notificación enviada' : ''));
       onClose();
-      setForm({ title: '', description: '', due_date: '', priority: 'media', assigned_to: user?.email || '', status: 'pendiente' });
+      setForm({ title: '', description: '', start_date: '', due_date: '', priority: 'media', assigned_to: user?.email || '', status: 'pendiente' });
     } catch (err) {
       toast.error('Error al crear la tarea');
     } finally {
