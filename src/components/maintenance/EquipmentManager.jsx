@@ -153,11 +153,13 @@ export default function EquipmentManager({ user }) {
       const text = await file.text();
       const lines = text.split('\n').filter(l => l.trim());
       if (lines.length < 2) { alert('Archivo vacío o sin datos'); return; }
-      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
+      // Normalize headers: remove accents, special chars, lowercase
+      const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f°]/g, '').toLowerCase().trim();
+      const headers = lines[0].split(',').map(h => normalize(h.replace(/^"|"$/g, '')));
       const colMap = {
         nombre: headers.findIndex(h => h.includes('nombre')),
         tipo_equipo: headers.findIndex(h => h.includes('tipo')),
-        numero_interno: headers.findIndex(h => h.includes('interno') || h.includes('n° interno')),
+        numero_interno: headers.findIndex(h => h.includes('interno')),
         numero_serie: headers.findIndex(h => h.includes('serie')),
         fabricante: headers.findIndex(h => h.includes('fabricante')),
         modelo: headers.findIndex(h => h.includes('modelo')),
@@ -165,7 +167,7 @@ export default function EquipmentManager({ user }) {
         division: headers.findIndex(h => h.includes('divis')),
         status: headers.findIndex(h => h.includes('estado') || h.includes('status')),
         fecha_instalacion: headers.findIndex(h => h.includes('instalac')),
-        fecha_proxima_mantencion: headers.findIndex(h => h.includes('mantenc') || h.includes('próx')),
+        fecha_proxima_mantencion: headers.findIndex(h => h.includes('mantenc') || h.includes('prox')),
         notas: headers.findIndex(h => h.includes('nota')),
       };
       const parseRow = (line) => {
