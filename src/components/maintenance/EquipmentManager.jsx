@@ -216,32 +216,7 @@ export default function EquipmentManager({ user }) {
         };
       }).filter(r => r.nombre);
       if (records.length === 0) {
-        // Fallback: if no 'nombre' column found, use first column as nombre
-        const fallbackRecords = lines.slice(1).map(line => {
-          const cols = parseRow(line);
-          if (!cols[0]) return null;
-          return {
-            nombre: cols[0],
-            tipo_equipo: cols[1] || '',
-            numero_interno: cols[2] || cols[0],
-            numero_serie: '',
-            fabricante: '',
-            modelo: '',
-            empresa: '',
-            division: '',
-            status: 'operativo',
-            fecha_instalacion: '',
-            fecha_proxima_mantencion: '',
-            notas: '',
-          };
-        }).filter(Boolean);
-        if (fallbackRecords.length === 0) {
-          alert(`No se encontraron filas válidas.\n\nEncabezados detectados: ${headers.join(', ')}`);
-          return;
-        }
-        await base44.entities.Equipment.bulkCreate(fallbackRecords);
-        queryClient.invalidateQueries({ queryKey: ['equipment'] });
-        alert(`${fallbackRecords.length} equipos importados. Revisa y completa los datos faltantes.`);
+        alert(`No se encontraron filas válidas.\n\nEncabezados detectados: ${headers.join(', ')}\n\nColMap nombre idx: ${colMap.nombre}\n\nPrimera fila de datos: ${lines[1]}`);
         return;
       }
       await base44.entities.Equipment.bulkCreate(records);
