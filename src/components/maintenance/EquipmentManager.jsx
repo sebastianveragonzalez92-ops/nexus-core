@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Cpu, Pencil, Trash2, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Cpu, Pencil, Trash2, FileText, ChevronDown, ChevronUp, Download } from 'lucide-react';
 import EquipmentForm from './EquipmentForm';
 import AdvancedSearch from '@/components/AdvancedSearch';
 
