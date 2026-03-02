@@ -202,9 +202,9 @@ export default function EquipmentManager({ user }) {
           fecha_proxima_mantencion: get(colMap.fecha_proxima_mantencion),
           notas: get(colMap.notas),
         };
-      }).filter(r => r.nombre && r.numero_interno);
+      }).filter(r => r.nombre);
       if (records.length === 0) {
-        alert('No se encontraron filas válidas. Asegúrate que el CSV tenga columnas "Nombre" y "N° Interno".');
+        alert(`No se encontraron filas válidas.\n\nEncabezados detectados: ${headers.join(', ')}\n\nAsegúrate que el CSV tenga al menos la columna "Nombre".`);
         return;
       }
       await base44.entities.Equipment.bulkCreate(records);
