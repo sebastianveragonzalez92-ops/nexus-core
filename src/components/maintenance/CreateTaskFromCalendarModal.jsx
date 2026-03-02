@@ -18,6 +18,7 @@ export default function CreateTaskFromCalendarModal({ isOpen, onClose, defaultDa
   const [form, setForm] = useState({
     title: '',
     description: '',
+    start_date: defaultDate || '',
     due_date: defaultDate || '',
     priority: 'media',
     assigned_to: user?.email || '',
@@ -27,7 +28,7 @@ export default function CreateTaskFromCalendarModal({ isOpen, onClose, defaultDa
   // Reset form when modal opens
   React.useEffect(() => {
     if (isOpen) {
-      setForm(f => ({ ...f, due_date: defaultDate || f.due_date, assigned_to: user?.email || '' }));
+      setForm(f => ({ ...f, start_date: defaultDate || f.start_date, due_date: defaultDate || f.due_date, assigned_to: user?.email || '' }));
     }
   }, [isOpen, defaultDate, user]);
 
