@@ -4,8 +4,9 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, ChevronRight, Wrench, CheckSquare, Cpu, AlertTriangle, 
-  Clock, User, Calendar, Filter, X, Zap
+  Clock, User, Calendar, Filter, X, Zap, Plus
 } from 'lucide-react';
+import CreateTaskFromCalendarModal from './CreateTaskFromCalendarModal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
