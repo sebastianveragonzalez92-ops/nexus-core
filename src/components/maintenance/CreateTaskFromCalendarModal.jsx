@@ -120,6 +120,15 @@ export default function CreateTaskFromCalendarModal({ isOpen, onClose, defaultDa
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
+                  <Label className="text-sm font-medium text-slate-700">Fecha inicio</Label>
+                  <Input
+                    type="date"
+                    value={form.start_date}
+                    onChange={e => setForm({ ...form, start_date: e.target.value })}
+                    className="mt-1 rounded-xl"
+                  />
+                </div>
+                <div>
                   <Label className="text-sm font-medium text-slate-700">Fecha vencimiento *</Label>
                   <Input
                     type="date"
@@ -129,7 +138,10 @@ export default function CreateTaskFromCalendarModal({ isOpen, onClose, defaultDa
                     required
                   />
                 </div>
-                <div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
                   <Label className="text-sm font-medium text-slate-700">Prioridad</Label>
                   <Select value={form.priority} onValueChange={v => setForm({ ...form, priority: v })}>
                     <SelectTrigger className="mt-1 rounded-xl">
