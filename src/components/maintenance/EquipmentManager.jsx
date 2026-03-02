@@ -150,12 +150,16 @@ export default function EquipmentManager({ user }) {
     if (!file) return;
     setImporting(true);
     try {
-      const text = await file.text();
-      const lines = text.split('\n').filter(l => l.trim());
+      let text = await file.text();
+      // Remove BOM if present
+      text = text.replace(/^\uFEFF/, '');
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) { alert('Archivo vacío o sin datos'); return; }
+      // Detect separator (comma or semicolon)
+      const separator = lines[0].includes(';') ? ';' : ',';
       // Normalize headers: remove accents, special chars, lowercase
       const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f°]/g, '').toLowerCase().trim();
-      const headers = lines[0].split(',').map(h => normalize(h.replace(/^"|"$/g, '')));
+      const headers = lines[0].split(separator).map(h => normalize(h.replace(/^"|"$/g, '')));
       const colMap = {
         nombre: headers.findIndex(h => h.includes('nombre')),
         tipo_equipo: headers.findIndex(h => h.includes('tipo')),
