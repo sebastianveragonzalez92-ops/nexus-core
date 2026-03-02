@@ -197,22 +197,25 @@ export default function EquipmentManager({ user }) {
       };
       const records = lines.slice(1).map(line => {
         const cols = parseRow(line);
-        const get = (idx) => idx >= 0 ? cols[idx] || '' : '';
+        if (cols.every(c => !c)) return null; // skip empty lines
+        const get = (idx) => idx >= 0 && idx < cols.length ? cols[idx] || '' : '';
+        const nombre = get(colMap.nombre) || cols[0] || '';
+        if (!nombre) return null;
         return {
-          nombre: get(colMap.nombre),
+          nombre,
           tipo_equipo: get(colMap.tipo_equipo),
-          numero_interno: get(colMap.numero_interno),
+          numero_interno: get(colMap.numero_interno) || nombre,
           numero_serie: get(colMap.numero_serie),
           fabricante: get(colMap.fabricante),
           modelo: get(colMap.modelo),
           empresa: get(colMap.empresa),
           division: get(colMap.division),
-          status: get(colMap.status) || 'operativo',
+          status: 'operativo',
           fecha_instalacion: get(colMap.fecha_instalacion),
           fecha_proxima_mantencion: get(colMap.fecha_proxima_mantencion),
           notas: get(colMap.notas),
         };
-      }).filter(r => r.nombre);
+      }).filter(Boolean);
       if (records.length === 0) {
         alert(`No se encontraron filas válidas.\n\nEncabezados: ${headers.join(', ')}`);
         return;
