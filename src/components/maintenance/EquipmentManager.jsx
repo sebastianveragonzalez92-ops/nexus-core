@@ -96,6 +96,8 @@ function EquipmentRow({ eq, reports, onEdit, onDelete }) {
 export default function EquipmentManager({ user }) {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [importing, setImporting] = useState(false);
+  const importRef = useRef(null);
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({ status: 'all', tipo: 'all' });
   const queryClient = useQueryClient();
