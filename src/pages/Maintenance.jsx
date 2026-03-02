@@ -97,6 +97,12 @@ export default function Maintenance() {
               <MaintenanceDashboard user={user} />
             </TabsContent>
 
+            {canManageTemplates && (
+              <TabsContent value="calendario">
+                <SmartCalendar user={user} />
+              </TabsContent>
+            )}
+
             <TabsContent value="preventivo" className="space-y-8">
               <WorkOrderManagement
                 workOrders={workOrders.filter(wo => wo.type === 'preventivo')}
