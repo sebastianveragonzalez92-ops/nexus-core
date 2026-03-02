@@ -199,13 +199,6 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
         </CardContent>
       </Card>
 
-      {/* 9. Firma */}
-      <Card>
-        <CardHeader><CardTitle className="text-base text-blue-600">Firma Digital del Responsable</CardTitle></CardHeader>
-        <CardContent>
-          <SignaturePad onSave={v => set('signature_url', v)} />
-        </CardContent>
-      </Card>
 
       {/* Acciones */}
       <div className="flex gap-3 justify-end pt-2">
