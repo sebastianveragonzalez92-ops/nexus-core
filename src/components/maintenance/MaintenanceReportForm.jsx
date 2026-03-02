@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Send, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import SignaturePad from './SignaturePad';
 import GPSLocation from './GPSLocation';
 import ComponentChecklist from './ComponentChecklist';
 import LabeledPhotoCapture from './LabeledPhotoCapture';
