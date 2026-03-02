@@ -242,14 +242,20 @@ export default function EquipmentManager({ user }) {
           <h2 className="text-lg font-semibold text-slate-900">Equipos</h2>
           <p className="text-sm text-slate-500">{stats.total} equipos registrados{overdueCount > 0 ? ` · ⚠️ ${overdueCount} con mantención vencida` : ''}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button variant="outline" onClick={exportToExcel} className="gap-2">
-            <Download className="w-4 h-4" /> Exportar Excel
+            <Download className="w-4 h-4" /> Exportar
           </Button>
           {canManage && (
-            <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-              <Plus className="w-4 h-4" /> Agregar equipo
-            </Button>
+            <>
+              <input ref={importRef} type="file" accept=".csv" className="hidden" onChange={handleImport} />
+              <Button variant="outline" onClick={() => importRef.current?.click()} disabled={importing} className="gap-2">
+                <Upload className="w-4 h-4" /> {importing ? 'Importando…' : 'Importar CSV'}
+              </Button>
+              <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+                <Plus className="w-4 h-4" /> Crear equipo
+              </Button>
+            </>
           )}
         </div>
       </div>
