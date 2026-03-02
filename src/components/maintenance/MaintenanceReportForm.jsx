@@ -54,15 +54,10 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
 
   const { mutate: saveReport, isPending } = useMutation({
     mutationFn: async (status) => {
-      let signatureUrl = form.signature_url;
-      if (signatureUrl && signatureUrl.startsWith('data:')) {
-        const blob = await (await fetch(signatureUrl)).blob();
-        const file = new File([blob], 'firma.png', { type: 'image/png' });
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        signatureUrl = file_url;
-      }
+      const user = await base44.auth.me();
+      const autoSignature = `${user?.full_name || user?.email || 'Responsable'} — ${new Date().toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' })}`;
       const title = `${form.tipo_equipo || form.type} - ${form.numero_interno_equipo || ''} - ${form.report_date}`.trim();
-      return base44.entities.MaintenanceReport.create({ ...form, title, signature_url: signatureUrl, status });
+      return base44.entities.MaintenanceReport.create({ ...form, title, signature_url: autoSignature, status });
     },
     onSuccess: (_, status) => {
       queryClient.invalidateQueries({ queryKey: ['maintenanceReports'] });
