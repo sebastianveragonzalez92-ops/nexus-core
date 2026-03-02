@@ -145,6 +145,67 @@ export default function EquipmentManager({ user }) {
     e.fecha_proxima_mantencion && new Date(e.fecha_proxima_mantencion + 'T00:00:00') < new Date()
   ).length;
 
+  const handleImport = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImporting(true);
+    try {
+      const text = await file.text();
+      const lines = text.split('\n').filter(l => l.trim());
+      if (lines.length < 2) { alert('Archivo vacío o sin datos'); return; }
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
+      const colMap = {
+        nombre: headers.findIndex(h => h.includes('nombre')),
+        tipo_equipo: headers.findIndex(h => h.includes('tipo')),
+        numero_interno: headers.findIndex(h => h.includes('interno') || h.includes('n° interno')),
+        numero_serie: headers.findIndex(h => h.includes('serie')),
+        fabricante: headers.findIndex(h => h.includes('fabricante')),
+        modelo: headers.findIndex(h => h.includes('modelo')),
+        empresa: headers.findIndex(h => h.includes('empresa')),
+        division: headers.findIndex(h => h.includes('divis')),
+        status: headers.findIndex(h => h.includes('estado') || h.includes('status')),
+        fecha_instalacion: headers.findIndex(h => h.includes('instalac')),
+        fecha_proxima_mantencion: headers.findIndex(h => h.includes('mantenc') || h.includes('próx')),
+        notas: headers.findIndex(h => h.includes('nota')),
+      };
+      const parseRow = (line) => {
+        const cols = [];
+        let cur = '', inQ = false;
+        for (const ch of line) {
+          if (ch === '"') inQ = !inQ;
+          else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+          else cur += ch;
+        }
+        cols.push(cur);
+        return cols.map(c => c.replace(/^"|"$/g, '').trim());
+      };
+      const records = lines.slice(1).map(line => {
+        const cols = parseRow(line);
+        const get = (idx) => idx >= 0 ? cols[idx] || '' : '';
+        return {
+          nombre: get(colMap.nombre),
+          tipo_equipo: get(colMap.tipo_equipo),
+          numero_interno: get(colMap.numero_interno),
+          numero_serie: get(colMap.numero_serie),
+          fabricante: get(colMap.fabricante),
+          modelo: get(colMap.modelo),
+          empresa: get(colMap.empresa),
+          division: get(colMap.division),
+          status: get(colMap.status) || 'operativo',
+          fecha_instalacion: get(colMap.fecha_instalacion),
+          fecha_proxima_mantencion: get(colMap.fecha_proxima_mantencion),
+          notas: get(colMap.notas),
+        };
+      }).filter(r => r.nombre);
+      await base44.entities.Equipment.bulkCreate(records);
+      queryClient.invalidateQueries({ queryKey: ['equipment'] });
+      alert(`${records.length} equipos importados correctamente`);
+    } finally {
+      setImporting(false);
+      e.target.value = '';
+    }
+  };
+
   const exportToExcel = () => {
     const headers = ['Nombre', 'Tipo Equipo', 'N° Interno', 'N° Serie', 'Fabricante', 'Modelo', 'Empresa', 'División', 'Estado', 'Fecha Instalación', 'Próx. Mantención', 'Notas'];
     const rows = filtered.map(e => [
