@@ -214,7 +214,7 @@ export default function EquipmentManager({ user }) {
         };
       }).filter(r => r.nombre);
       if (records.length === 0) {
-        alert(`No se encontraron filas válidas.\n\nEncabezados detectados: ${headers.join(', ')}\n\nColMap nombre idx: ${colMap.nombre}\n\nPrimera fila de datos: ${lines[1]}`);
+        alert(`No se encontraron filas válidas.\n\nEncabezados: ${headers.join(', ')}`);
         return;
       }
       await base44.entities.Equipment.bulkCreate(records);
