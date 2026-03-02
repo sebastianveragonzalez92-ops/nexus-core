@@ -14,6 +14,7 @@ import ReportTemplateManager from '@/components/maintenance/ReportTemplateManage
 import TaskManager from '@/components/maintenance/TaskManager';
 import EquipmentManager from '@/components/maintenance/EquipmentManager';
 import ConsolidatedReports from '@/components/maintenance/ConsolidatedReports';
+import SmartCalendar from '@/components/maintenance/SmartCalendar';
 
 export default function Maintenance() {
   const [user, setUser] = useState(null);
