@@ -29,7 +29,7 @@ const defaultForm = {
   componentes_pre: {},
   componentes_post: {},
   photo_entries: [],
-  signature_url: null,
+  signature_url: 'auto',
   location: null,
   observations: '',
   status: 'borrador'
