@@ -142,6 +142,34 @@ export default function EquipmentManager({ user }) {
     e.fecha_proxima_mantencion && new Date(e.fecha_proxima_mantencion + 'T00:00:00') < new Date()
   ).length;
 
+  const exportToExcel = () => {
+    const headers = ['Nombre', 'Tipo Equipo', 'N° Interno', 'N° Serie', 'Fabricante', 'Modelo', 'Empresa', 'División', 'Estado', 'Fecha Instalación', 'Próx. Mantención', 'Notas'];
+    const rows = filtered.map(e => [
+      e.nombre || '',
+      e.tipo_equipo || '',
+      e.numero_interno || '',
+      e.numero_serie || '',
+      e.fabricante || '',
+      e.modelo || '',
+      e.empresa || '',
+      e.division || '',
+      e.status || '',
+      e.fecha_instalacion || '',
+      e.fecha_proxima_mantencion || '',
+      e.notas || '',
+    ]);
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `equipos_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-5">
       {/* Header */}
