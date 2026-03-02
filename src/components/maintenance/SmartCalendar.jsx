@@ -226,7 +226,7 @@ export default function SmartCalendar({ user }) {
   const monthEvents = filteredEvents.filter(e => e.date && isSameMonth(new Date(e.date), currentMonth));
   const alertEvents = monthEvents.filter(e => e.aiAlert);
 
-  const weekDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const weekDays = ['Lun', 'Mar', 'Mi\u00e9', 'Jue', 'Vie', 'S\u00e1b', 'Dom'];
 
   return (
     <div className="space-y-6">
