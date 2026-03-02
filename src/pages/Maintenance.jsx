@@ -71,6 +71,7 @@ export default function Maintenance() {
               <TabsList className="inline-flex h-auto p-1 gap-1 bg-slate-100 rounded-xl">
                 {[
                   { value: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+                  ...(canManageTemplates ? [{ value: 'calendario', label: 'Calendario', icon: CalendarDays }] : []),
                   { value: 'preventivo', label: 'Preventivos', icon: ClipboardList },
                   { value: 'correctivo', label: 'Correctivos', icon: Wrench },
                   { value: 'history', label: 'Historial', icon: History },
