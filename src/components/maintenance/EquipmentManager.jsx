@@ -161,18 +161,18 @@ export default function EquipmentManager({ user }) {
       const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f°]/g, '').toLowerCase().trim();
       const headers = lines[0].split(separator).map(h => normalize(h.replace(/^"|"$/g, '')));
       const colMap = {
-        nombre: headers.findIndex(h => h.includes('nombre')),
-        tipo_equipo: headers.findIndex(h => h.includes('tipo')),
-        numero_interno: headers.findIndex(h => h.includes('interno')),
-        numero_serie: headers.findIndex(h => h.includes('serie')),
-        fabricante: headers.findIndex(h => h.includes('fabricante')),
-        modelo: headers.findIndex(h => h.includes('modelo')),
-        empresa: headers.findIndex(h => h.includes('empresa')),
-        division: headers.findIndex(h => h.includes('divis')),
-        status: headers.findIndex(h => h.includes('estado') || h.includes('status')),
-        fecha_instalacion: headers.findIndex(h => h.includes('instalac')),
+        nombre: headers.findIndex(h => h.includes('nombre') || h.includes('equipo') || h.includes('name')),
+        tipo_equipo: headers.findIndex(h => h.includes('tipo') || h.includes('hardware_type') || h.includes('flota')),
+        numero_interno: headers.findIndex(h => h.includes('interno') || h.includes('device') || h.includes('id')),
+        numero_serie: headers.findIndex(h => h.includes('serie') || h.includes('serial')),
+        fabricante: headers.findIndex(h => h.includes('fabricante') || h.includes('marca')),
+        modelo: headers.findIndex(h => h.includes('modelo') || h.includes('model')),
+        empresa: headers.findIndex(h => h.includes('empresa') || h.includes('company')),
+        division: headers.findIndex(h => h.includes('divis') || h.includes('flota')),
+        status: headers.findIndex(h => h.includes('estado') || h.includes('status') || h.includes('conectividad')),
+        fecha_instalacion: headers.findIndex(h => h.includes('instalac') || h.includes('fecha')),
         fecha_proxima_mantencion: headers.findIndex(h => h.includes('mantenc') || h.includes('prox')),
-        notas: headers.findIndex(h => h.includes('nota')),
+        notas: headers.findIndex(h => h.includes('nota') || h.includes('desconex') || h.includes('lastupdated')),
       };
       const parseRow = (line) => {
         const cols = [];
