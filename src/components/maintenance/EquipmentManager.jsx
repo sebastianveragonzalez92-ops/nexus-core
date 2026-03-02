@@ -178,11 +178,16 @@ export default function EquipmentManager({ user }) {
           <h2 className="text-lg font-semibold text-slate-900">Equipos</h2>
           <p className="text-sm text-slate-500">{stats.total} equipos registrados{overdueCount > 0 ? ` · ⚠️ ${overdueCount} con mantención vencida` : ''}</p>
         </div>
-        {canManage && (
-          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
-            <Plus className="w-4 h-4" /> Agregar equipo
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={exportToExcel} className="gap-2">
+            <Download className="w-4 h-4" /> Exportar Excel
           </Button>
-        )}
+          {canManage && (
+            <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+              <Plus className="w-4 h-4" /> Agregar equipo
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Stats */}
