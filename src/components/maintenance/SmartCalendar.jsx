@@ -318,10 +318,12 @@ export default function SmartCalendar({ user }) {
               return (
                 <div
                   key={idx}
+                  onClick={() => { if (inMonth) { setCreateTaskDate(format(day, 'yyyy-MM-dd')); setShowCreateTask(true); } }}
                   className={cn(
                     "min-h-[80px] p-1 border-b border-r border-slate-100 relative",
                     !inMonth && "bg-slate-50/60",
-                    today && "bg-indigo-50/40"
+                    today && "bg-indigo-50/40",
+                    inMonth && "cursor-pointer hover:bg-slate-50 transition-colors"
                   )}
                 >
                   <div className="flex items-center justify-between mb-1">
