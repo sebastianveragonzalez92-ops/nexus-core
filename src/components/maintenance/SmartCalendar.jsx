@@ -264,6 +264,7 @@ export default function SmartCalendar({ user }) {
             <p className="text-xs text-amber-500">Alertas IA</p>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Filters */}
