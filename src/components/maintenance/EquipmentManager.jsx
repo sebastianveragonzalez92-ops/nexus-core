@@ -179,7 +179,7 @@ export default function EquipmentManager({ user }) {
         let cur = '', inQ = false;
         for (const ch of line) {
           if (ch === '"') inQ = !inQ;
-          else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+          else if (ch === separator && !inQ) { cols.push(cur); cur = ''; }
           else cur += ch;
         }
         cols.push(cur);
