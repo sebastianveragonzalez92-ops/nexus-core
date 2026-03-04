@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Cpu, Pencil, Trash2, FileText, ChevronDown, ChevronUp, Download, Upload } from 'lucide-react';
-import { useRef } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Cpu, Pencil, Trash2, FileText, ChevronDown, ChevronUp, Download, Upload, Calendar, Clock, User, Filter } from 'lucide-react';
 import EquipmentForm from './EquipmentForm';
 import AdvancedSearch from '@/components/AdvancedSearch';
 
