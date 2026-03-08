@@ -199,32 +199,62 @@ export default function Landing() {
       </section>
 
       {/* Pricing Preview */}
-       <section id="pricing" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-gradient-to-b from-blue-950/50 to-slate-950 rounded-2xl">
+      <section id="pricing" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <h2 className="text-4xl font-bold text-center mb-4">Planes simples y transparentes</h2>
-        <p className="text-center text-slate-400 mb-12">Sin sorpresas, sin contratos largos</p>
+        <p className="text-center text-slate-400 mb-16">Sin sorpresas. Cancela cuando quieras.</p>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { name: 'Gratuito', price: '$0', users: '5', maintenance: '10/mes', color: 'border-slate-200' },
-            { name: 'PRO', price: '$149', users: '50', maintenance: 'Ilimitado', color: 'border-cyan-500 shadow-lg shadow-cyan-500/30 scale-105' },
-            { name: 'Enterprise', price: '$399', users: 'Ilimitado', maintenance: 'Ilimitado', color: 'border-blue-500' }
-          ].map((plan, idx) => (
-            <div key={idx} className={`border-2 rounded-xl p-6 bg-blue-900/40 backdrop-blur ${plan.color.includes('shadow') ? 'border-cyan-400' : 'border-cyan-600/30'}`}>
-              <h3 className="text-xl font-bold mb-2 text-slate-100">{plan.name}</h3>
-              <div className="text-3xl font-bold mb-4 text-cyan-400">{plan.price}<span className="text-lg text-slate-400">/mes</span></div>
-              <div className="space-y-2 text-sm text-slate-300 mb-6">
-                <p>👥 {plan.users} usuarios</p>
-                <p>🔧 {plan.maintenance} registros</p>
-              </div>
-              <Button 
-                style={{ background: 'linear-gradient(to right, rgb(6, 182, 212), rgb(37, 99, 235))', color: 'white' }} 
-                className="w-full hover:opacity-90"
-                onClick={handleLogin}
-              >
-                Comenzar
-              </Button>
+        <div className="grid md:grid-cols-3 gap-8 items-center">
+          {/* Básico */}
+          <div className="border border-cyan-600/30 rounded-2xl p-7 bg-blue-900/30 backdrop-blur flex flex-col gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-slate-100">Básico</h3>
+              <p className="text-sm text-slate-400 mt-1">Para empezar a digitalizar tu operación</p>
             </div>
-          ))}
+            <div className="text-4xl font-bold text-white">$49 <span className="text-lg text-slate-400 font-normal">/mes</span></div>
+            <ul className="space-y-2 text-sm text-slate-300 flex-1">
+              {['10 usuarios', '50 registros/mes', 'Gestión de equipos', 'Checklists básicos', 'Órdenes de trabajo', 'Soporte por email'].map(f => (
+                <li key={f} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
+            <Button variant="outline" className="border-cyan-600 text-cyan-300 hover:bg-blue-900 w-full" onClick={handleLogin}>Empezar con Básico</Button>
+          </div>
+
+          {/* Pro - destacado */}
+          <div className="relative border-2 border-cyan-400 rounded-2xl p-7 bg-gradient-to-b from-blue-800/60 to-blue-900/60 backdrop-blur flex flex-col gap-4 shadow-2xl shadow-cyan-500/20 scale-105">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-full">MÁS POPULAR</div>
+            <div>
+              <h3 className="text-lg font-bold text-white">Pro</h3>
+              <p className="text-sm text-slate-300 mt-1">Para operaciones en crecimiento</p>
+            </div>
+            <div className="text-4xl font-bold text-cyan-300">$149 <span className="text-lg text-slate-400 font-normal">/mes</span></div>
+            <ul className="space-y-2 text-sm text-slate-200 flex-1">
+              {['50 usuarios', 'Registros ilimitados', 'Todo lo del plan Básico', 'Reportes avanzados + KPIs', 'Módulo de capacitación', 'Integración Google Sheets', 'Soporte prioritario'].map(f => (
+                <li key={f} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
+            <Button style={{ background: 'linear-gradient(to right, rgb(6,182,212), rgb(37,99,235))', color: 'white' }} className="w-full hover:opacity-90" onClick={handleLogin}>Elegir Pro</Button>
+          </div>
+
+          {/* Empresa */}
+          <div className="border border-purple-500/50 rounded-2xl p-7 bg-purple-900/20 backdrop-blur flex flex-col gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-slate-100">Empresa</h3>
+              <p className="text-sm text-slate-400 mt-1">Operaciones industriales complejas</p>
+            </div>
+            <div className="text-4xl font-bold text-white">$399 <span className="text-lg text-slate-400 font-normal">/mes</span></div>
+            <ul className="space-y-2 text-sm text-slate-300 flex-1">
+              {['Usuarios ilimitados', 'Todo lo del plan Pro', 'IA y mantenimiento predictivo', 'Cursos ilimitados + certificaciones', 'Onboarding personalizado', 'Gestor de cuenta dedicado', 'Soporte premium 24/7'].map(f => (
+                <li key={f} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />{f}
+                </li>
+              ))}
+            </ul>
+            <Button variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-900/40 w-full" onClick={handleLogin}>Contactar ventas</Button>
+          </div>
         </div>
       </section>
 
