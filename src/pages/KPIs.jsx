@@ -3,12 +3,13 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
-import { TrendingUp, BarChart3, Target, Settings, Download, FileText, PlusCircle } from 'lucide-react';
+import { TrendingUp, BarChart3, Target, Settings, Download, FileText, PlusCircle, Layers } from 'lucide-react';
 import KPIDashboard from '@/components/kpis/KPIDashboard';
 import KPIManagement from '@/components/kpis/KPIManagement';
 import KPIReports from '@/components/kpis/KPIReports';
 import KPITracking from '@/components/kpis/KPITracking';
 import KPIExport from '@/components/kpis/KPIExport';
+import PowerBIIntegration from '@/components/kpis/PowerBIIntegration';
 
 export default function KPIs() {
   const [user, setUser] = useState(null);
@@ -65,6 +66,7 @@ export default function KPIs() {
                   ...(canManageKPIs ? [
                     { value: 'kpis', label: 'Gestionar KPIs', icon: Target },
                     { value: 'configuracion', label: 'Configuración', icon: Settings },
+                    { value: 'powerbi', label: 'Power BI', icon: Layers },
                   ] : []),
                 ].map(({ value, label, icon: Icon }) => (
                   <TabsTrigger
@@ -105,6 +107,15 @@ export default function KPIs() {
                     queryClient.invalidateQueries({ queryKey: ['kpiValues'] });
                   }}
                 />
+              </TabsContent>
+            )}
+
+            {/* Power BI Tab */}
+            {canManageKPIs && (
+              <TabsContent value="powerbi" className="space-y-6">
+                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                  <PowerBIIntegration user={user} />
+                </div>
               </TabsContent>
             )}
 
