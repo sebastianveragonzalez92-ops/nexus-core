@@ -9,65 +9,77 @@ export default function Pricing() {
 
   const plans = [
     {
-      id: 'free',
-      name: 'Gratuito',
-      price: 0,
-      billingPeriod: 'forever',
-      description: 'Perfecto para comenzar',
+      id: 'basic',
+      name: 'Básico',
+      badge: null,
+      price: selectedBilling === 'monthly' ? 49 : 470,
+      billingPeriod: selectedBilling === 'monthly' ? '/mes' : '/año (-20%)',
+      description: 'Para equipos pequeños que quieren empezar a digitalizar su mantenimiento.',
       color: 'border-slate-200',
-      highlights: true,
-      features: {
-        users: '5',
-        maintenance: '10/mes',
-        courses: '0',
-        reports: false,
-        integrations: false,
-        support: 'Community'
-      }
+      featured: false,
+      features: [
+        { label: 'Hasta 10 usuarios', included: true },
+        { label: '50 registros de mantenimiento/mes', included: true },
+        { label: 'Gestión de equipos', included: true },
+        { label: 'Checklists básicos', included: true },
+        { label: 'Órdenes de trabajo', included: true },
+        { label: 'Reportes básicos', included: false },
+        { label: 'KPIs y análisis avanzado', included: false },
+        { label: 'Módulo de capacitación', included: false },
+        { label: 'Integración Google Sheets', included: false },
+        { label: 'IA y mantenimiento predictivo', included: false },
+        { label: 'Soporte por email', included: true },
+        { label: 'Soporte prioritario 24/7', included: false },
+      ]
     },
     {
       id: 'pro',
       name: 'Pro',
-      price: selectedBilling === 'monthly' ? 149 : 1490,
-      billingPeriod: selectedBilling === 'monthly' ? '/mes' : '/año (20% desc)',
-      description: 'Para PyMEs en crecimiento',
-      color: 'border-indigo-500 shadow-lg scale-105',
-      highlights: true,
-      features: {
-        users: '50',
-        maintenance: 'Ilimitado',
-        courses: '5',
-        reports: true,
-        integrations: false,
-        support: 'Email'
-      }
+      badge: 'Más popular',
+      price: selectedBilling === 'monthly' ? 149 : 1430,
+      billingPeriod: selectedBilling === 'monthly' ? '/mes' : '/año (-20%)',
+      description: 'Para empresas en crecimiento que necesitan control total de sus operaciones.',
+      color: 'border-indigo-500 shadow-xl shadow-indigo-500/20 scale-105',
+      featured: true,
+      features: [
+        { label: 'Hasta 50 usuarios', included: true },
+        { label: 'Registros ilimitados', included: true },
+        { label: 'Gestión de equipos + inventario', included: true },
+        { label: 'Checklists avanzados con IA', included: true },
+        { label: 'Órdenes de trabajo + aprobaciones', included: true },
+        { label: 'Reportes avanzados y exportación', included: true },
+        { label: 'KPIs y análisis avanzado', included: true },
+        { label: 'Módulo de capacitación (10 cursos)', included: true },
+        { label: 'Integración Google Sheets', included: true },
+        { label: 'IA y mantenimiento predictivo', included: false },
+        { label: 'Soporte prioritario por email', included: true },
+        { label: 'Soporte 24/7 dedicado', included: false },
+      ]
     },
     {
       id: 'enterprise',
-      name: 'Enterprise',
-      price: selectedBilling === 'monthly' ? 399 : 3990,
-      billingPeriod: selectedBilling === 'monthly' ? '/mes' : '/año (20% desc)',
-      description: 'Para corporativos',
+      name: 'Empresa',
+      badge: 'Soporte premium',
+      price: selectedBilling === 'monthly' ? 399 : 3830,
+      billingPeriod: selectedBilling === 'monthly' ? '/mes' : '/año (-20%)',
+      description: 'Para operaciones industriales complejas que exigen máxima confiabilidad.',
       color: 'border-purple-500',
-      highlights: true,
-      features: {
-        users: 'Ilimitado',
-        maintenance: 'Ilimitado',
-        courses: '50+',
-        reports: true,
-        integrations: true,
-        support: 'Prioritario 24/7'
-      }
+      featured: false,
+      features: [
+        { label: 'Usuarios ilimitados', included: true },
+        { label: 'Registros ilimitados', included: true },
+        { label: 'Todo lo del plan Pro', included: true },
+        { label: 'Checklists avanzados con IA', included: true },
+        { label: 'Órdenes de trabajo + aprobaciones', included: true },
+        { label: 'Reportes avanzados y exportación', included: true },
+        { label: 'KPIs y análisis avanzado', included: true },
+        { label: 'Cursos ilimitados + certificaciones', included: true },
+        { label: 'Integración Google Sheets/Drive', included: true },
+        { label: 'IA y mantenimiento predictivo', included: true },
+        { label: 'Soporte prioritario por email', included: true },
+        { label: 'Soporte premium 24/7 + onboarding', included: true },
+      ]
     }
-  ];
-
-  const allFeatures = [
-    { key: 'users', label: 'Usuarios', icon: 'users' },
-    { key: 'maintenance', label: 'Registros mantenimiento', icon: 'wrench' },
-    { key: 'courses', label: 'Cursos disponibles', icon: 'book' },
-    { key: 'reports', label: 'Reportes avanzados', icon: 'chart' },
-    { key: 'integrations', label: 'Integraciones (Sheets, Drive)', icon: 'link' },
-    { key: 'support', label: 'Soporte', icon: 'help' }
   ];
 
   const handleSelectPlan = async (planId) => {
