@@ -285,6 +285,7 @@ export default function Landing() {
             { icon: ClipboardList, title: 'Checklists inteligentes', desc: 'Plantillas personalizables con validación de IA, fotos y firma digital desde el celular.' },
             { icon: Zap, title: 'Órdenes de trabajo digitales', desc: 'Crea, asigna y aprueba OTs con flujo completo, notificaciones y trazabilidad total.' },
             { icon: Shield, title: 'Seguridad y roles', desc: 'Permisos por rol (admin, supervisor, técnico), auditoría de actividad y datos en la nube.' },
+            { icon: BarChart3, title: 'Integración con Power BI', desc: 'Conecta Nexus como fuente de datos en Power BI y embebe reportes personalizados directamente en tu dashboard operativo.' },
           ].map((f, i) => {
             const Icon = f.icon;
             return (
