@@ -413,7 +413,7 @@ export default function Landing() {
           </div>
 
           {/* Minería Premium */}
-          <div className="border border-yellow-500/50 rounded-2xl p-6 bg-gradient-to-b from-yellow-900/20 to-orange-900/10 backdrop-blur flex flex-col gap-4">
+          <div className="relative border border-yellow-500/50 rounded-2xl p-6 bg-gradient-to-b from-yellow-900/20 to-orange-900/10 backdrop-blur flex flex-col gap-4">
             <div className="absolute -top-3.5 right-6">
               <span className="bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">🏔️ MINERÍA</span>
             </div>
