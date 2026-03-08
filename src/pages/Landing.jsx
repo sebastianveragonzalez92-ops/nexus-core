@@ -10,6 +10,23 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+function FAQItem({ question, answer }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/5">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-6 py-4 text-left gap-4 hover:bg-white/5 transition">
+        <span className="font-medium text-slate-100">{question}</span>
+        <ChevronRight className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${open ? 'rotate-90' : ''}`} />
+      </button>
+      {open && (
+        <div className="px-6 pb-5 text-sm text-slate-400 leading-relaxed border-t border-white/5 pt-4">
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
