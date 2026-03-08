@@ -139,18 +139,21 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-3 gap-8 mb-12 items-start">
           {plans.map((plan) => (
-            <div key={plan.id} className={`transform transition-all duration-300 ${plan.color.includes('scale') ? plan.color : ''}`}>
-              <Card className={`border-2 h-full flex flex-col ${plan.color}`}>
-                <CardHeader>
+            <div key={plan.id} className={`transition-all duration-300 ${plan.featured ? 'scale-105' : ''}`}>
+              <Card className={`border-2 h-full flex flex-col relative ${plan.color}`}>
+                {plan.badge && (
+                  <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold text-white ${plan.featured ? 'bg-indigo-600' : 'bg-purple-600'}`}>
+                    {plan.badge}
+                  </div>
+                )}
+                <CardHeader className="pt-6">
                   <CardTitle className="text-xl">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardDescription className="text-sm">{plan.description}</CardDescription>
                   <div className="mt-4">
-                    <span className="text-3xl font-bold text-slate-900">
-                      ${plan.price}
-                    </span>
-                    <span className="text-sm text-slate-600 ml-2">{plan.billingPeriod}</span>
+                    <span className="text-4xl font-bold text-slate-900">${plan.price.toLocaleString()}</span>
+                    <span className="text-sm text-slate-500 ml-2">{plan.billingPeriod}</span>
                   </div>
                 </CardHeader>
 
@@ -158,35 +161,29 @@ export default function Pricing() {
                   <Button
                     onClick={() => handleSelectPlan(plan.id)}
                     className={`w-full mb-6 ${
-                      plan.id === 'pro'
+                      plan.featured
                         ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        : plan.id === 'enterprise'
+                        ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                        : 'bg-slate-800 hover:bg-slate-900 text-white'
                     }`}
                   >
-                    {plan.id === 'free' ? 'Comenzar gratis' : 'Elegir plan'}
+                    {plan.id === 'basic' ? 'Empezar con Básico' : plan.id === 'pro' ? 'Elegir Pro' : 'Contactar ventas'}
                   </Button>
 
-                  <div className="space-y-3 flex-1">
-                    {allFeatures.map((feature) => {
-                      const value = plan.features[feature.key];
-                      const included = value !== false && value !== '0' && value !== null;
-                      
-                      return (
-                        <div key={feature.key} className="flex items-center gap-2">
-                          {included ? (
-                            <Check className="w-4 h-4 text-green-600" />
-                          ) : (
-                            <X className="w-4 h-4 text-slate-300" />
-                          )}
-                          <span className={`text-sm ${included ? 'text-slate-700' : 'text-slate-400'}`}>
-                            {feature.label}
-                            {included && typeof value === 'string' && value !== 'true' && (
-                              <span className="font-medium ml-1">({value})</span>
-                            )}
-                          </span>
-                        </div>
-                      );
-                    })}
+                  <div className="space-y-2.5 flex-1">
+                    {plan.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        {feature.included ? (
+                          <Check className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                        ) : (
+                          <X className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />
+                        )}
+                        <span className={`text-sm leading-snug ${feature.included ? 'text-slate-700' : 'text-slate-400'}`}>
+                          {feature.label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -197,13 +194,13 @@ export default function Pricing() {
         {/* Additional Info */}
         <Card className="bg-indigo-50 border-indigo-200">
           <CardHeader>
-            <CardTitle>¿Necesitas más?</CardTitle>
+            <CardTitle>¿Necesitas ayuda para elegir?</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-slate-700">
-            <p>✅ <strong>Usuario adicional:</strong> $20/mes por usuario extra</p>
-            <p>✅ <strong>Trial de 14 días:</strong> Plan PRO sin costo para nuevos usuarios</p>
-            <p>✅ <strong>Descuento anual:</strong> 20% si pagas 12 meses adelantado</p>
-            <p className="mt-4">¿Preguntas? <a href="mailto:support@modulax.com" className="text-indigo-600 font-medium">Contacta a nuestro equipo</a></p>
+            <p>✅ <strong>Trial de 14 días:</strong> Prueba el plan Pro sin costo para nuevos usuarios</p>
+            <p>✅ <strong>Descuento anual:</strong> 20% de descuento pagando 12 meses adelantado</p>
+            <p>✅ <strong>Plan Empresa:</strong> Incluye onboarding personalizado y gestor de cuenta dedicado</p>
+            <p className="mt-4">¿Preguntas? <a href="mailto:ventas@nexus.com" className="text-indigo-600 font-medium">Habla con nuestro equipo</a></p>
           </CardContent>
         </Card>
       </div>
