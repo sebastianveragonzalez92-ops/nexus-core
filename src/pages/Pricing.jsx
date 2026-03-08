@@ -83,8 +83,8 @@ export default function Pricing() {
   ];
 
   const handleSelectPlan = async (planId) => {
-    if (planId === 'free') {
-      alert('¡Plan gratuito activado! Comienza ahora.');
+    if (planId === 'basic') {
+      await base44.auth.redirectToLogin('/Trial');
       return;
     }
     
