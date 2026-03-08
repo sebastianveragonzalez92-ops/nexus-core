@@ -424,7 +424,7 @@ export default function Landing() {
             </div>
             <div className="text-3xl font-bold text-yellow-300">$599 <span className="text-base text-slate-400 font-normal">/mes</span></div>
             <ul className="space-y-2 text-sm text-slate-300 flex-1">
-              {['Todo lo del plan Empresa', 'Integración con sensores (SCADA, IoT)', 'Conectores SAP / ERP nativos', 'Dashboards ejecutivos por faena', 'Informes regulatorios automáticos', 'Análisis de vida útil de componentes', 'SLA garantizado 99.9% uptime'].map(f => (
+              {['Todo lo del plan Empresa', 'Integración Power BI (embed + API)', 'Integración con sensores (SCADA, IoT)', 'Conectores SAP / ERP nativos', 'Dashboards ejecutivos por faena', 'Informes regulatorios automáticos', 'SLA garantizado 99.9% uptime'].map(f => (
                 <li key={f} className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0" />{f}</li>
               ))}
             </ul>
