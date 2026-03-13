@@ -6,7 +6,7 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3
+  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3, FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -32,6 +32,7 @@ const getNavGroups = (userRole) => {
     { name: 'Equipos', page: 'Equipment', icon: Cpu },
     { name: 'Repuestos', page: 'SpareParts', icon: Activity },
     { name: 'Checklists', page: 'Checklists', icon: ClipboardList },
+    { name: 'Documentos', page: 'EquipmentDocuments', icon: FileText },
   ];
   
   if (isAdmin || isSupervisor) {
