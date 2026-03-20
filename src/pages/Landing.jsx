@@ -44,8 +44,8 @@ export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [billingAnnual, setBillingAnnual] = useState(false);
 
-  const handleLogin = async () => {
-    await base44.auth.redirectToLogin('/Dashboard');
+  const handleLogin = () => {
+    window.location.href = createPageUrl('Dashboard');
   };
 
   const scrollTo = (id) => {
