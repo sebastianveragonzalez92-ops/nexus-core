@@ -157,7 +157,7 @@ export default function XAPIViewer({ contentUrl, courseId, enrollment, onProgres
       </Card>
 
       {/* Debug: Statements recibidos (solo para desarrollo) */}
-      {statements.length > 0 && process.env.NODE_ENV === 'development' && (
+      {statements.length > 0 && import.meta.env.DEV && (
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">xAPI Statements ({statements.length})</CardTitle>

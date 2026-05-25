@@ -17,16 +17,6 @@ import { CheckCircle2, AlertCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ChecklistExecutor({ template, user }) {
-  if (!template || !user) {
-    return (
-      <Card>
-        <CardContent className="pt-6 text-center py-8">
-          <p className="text-slate-500">Cargando checklist...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   const [responses, setResponses] = useState({});
   const [shift, setShift] = useState('');
   const [observations, setObservations] = useState('');
@@ -128,6 +118,16 @@ export default function ChecklistExecutor({ template, user }) {
       [itemId]: value,
     }));
   };
+
+  if (!template || !user) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-center py-8">
+          <p className="text-slate-500">Cargando checklist...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const requiredCount = (template.items || []).filter(i => i.required).length;
   const completedCount = (template.items || []).filter(i => responses[i.id] !== undefined).length;
