@@ -1,0 +1,117 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario que abri\u00f3 el ticket"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Asunto del ticket"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del problema"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "feature",
+        "billing",
+        "account",
+        "other"
+      ],
+      "default": "other",
+      "description": "Categor\u00eda del ticket"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta",
+        "urgente"
+      ],
+      "default": "media",
+      "description": "Prioridad"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "abierto",
+        "en_progreso",
+        "resuelto",
+        "cerrado"
+      ],
+      "default": "abierto",
+      "description": "Estado del ticket"
+    },
+    "ubicacion": {
+      "type": "string",
+      "description": "Ubicaci\u00f3n relacionada al ticket"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "incidente",
+        "solicitud",
+        "consulta",
+        "cambio",
+        "otro"
+      ],
+      "description": "Tipo de ticket"
+    },
+    "solucion": {
+      "type": "string",
+      "description": "Soluci\u00f3n aplicada"
+    },
+    "fecha_inicio": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha y hora de inicio"
+    },
+    "fecha_fin": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha y hora de fin"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email del agente asignado"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "author_email": {
+            "type": "string"
+          },
+          "author_name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Conversaci\u00f3n del ticket"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Notas de resoluci\u00f3n"
+    }
+  },
+  "required": [
+    "user_email",
+    "subject",
+    "description",
+    "category"
+  ]
+}

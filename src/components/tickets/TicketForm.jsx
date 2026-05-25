@@ -35,6 +35,11 @@ export default function TicketForm({ ticket, user, onSubmit, onCancel, isLoading
     category: ticket?.category || '',
     priority: ticket?.priority || 'media',
     status: ticket?.status || 'abierto',
+    ubicacion: ticket?.ubicacion || '',
+    tipo: ticket?.tipo || '',
+    solucion: ticket?.solucion || '',
+    fecha_inicio: ticket?.fecha_inicio || new Date().toISOString().slice(0, 16),
+    fecha_fin: ticket?.fecha_fin || '',
     assigned_to: ticket?.assigned_to || '',
     resolution_notes: ticket?.resolution_notes || '',
   });
@@ -193,6 +198,76 @@ export default function TicketForm({ ticket, user, onSubmit, onCancel, isLoading
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-3">
+                <Label className="text-right text-sm text-slate-600">Ubicación</Label>
+                <div className="col-span-2">
+                  <Input
+                    value={form.ubicacion}
+                    onChange={e => set('ubicacion', e.target.value)}
+                    placeholder="Ubicación relacionada"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-3">
+                <Label className="text-right text-sm text-slate-600">Tipo</Label>
+                <div className="col-span-2">
+                  <Select value={form.tipo} onValueChange={v => set('tipo', v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="-- Seleccione --" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="incidente">Incidente</SelectItem>
+                      <SelectItem value="solicitud">Solicitud</SelectItem>
+                      <SelectItem value="consulta">Consulta</SelectItem>
+                      <SelectItem value="cambio">Cambio</SelectItem>
+                      <SelectItem value="otro">Otro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-3">
+                <Label className="text-right text-sm text-slate-600">Solución</Label>
+                <div className="col-span-2">
+                  <Select value={form.solucion} onValueChange={v => set('solucion', v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="-- Seleccione --" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="resuelto_remotamente">Resuelto remotamente</SelectItem>
+                      <SelectItem value="visita_tecnica">Visita técnica</SelectItem>
+                      <SelectItem value="reemplazo">Reemplazo de equipo</SelectItem>
+                      <SelectItem value="configuracion">Configuración</SelectItem>
+                      <SelectItem value="capacitacion">Capacitación</SelectItem>
+                      <SelectItem value="sin_solucion">Sin solución</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-3">
+                <Label className="text-right text-sm text-slate-600">Inicio</Label>
+                <div className="col-span-2">
+                  <Input
+                    type="datetime-local"
+                    value={form.fecha_inicio}
+                    onChange={e => set('fecha_inicio', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 items-center gap-3">
+                <Label className="text-right text-sm text-slate-600">Fin</Label>
+                <div className="col-span-2">
+                  <Input
+                    type="datetime-local"
+                    value={form.fecha_fin}
+                    onChange={e => set('fecha_fin', e.target.value)}
+                  />
                 </div>
               </div>
 
