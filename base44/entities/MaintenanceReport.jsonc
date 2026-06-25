@@ -49,6 +49,9 @@
         "antena_qc1000": {
           "type": "string"
         },
+        "antena_qc1000_beacon": {
+          "type": "string"
+        },
         "pantalla_qd1400": {
           "type": "string"
         }
@@ -65,6 +68,9 @@
           "type": "string"
         },
         "gps1": {
+          "type": "string"
+        },
+        "gps2": {
           "type": "string"
         }
       }

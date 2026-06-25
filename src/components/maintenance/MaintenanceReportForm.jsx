@@ -24,8 +24,8 @@ const defaultForm = {
   hora_inicio: '',
   hora_fin: '',
   responsable: '',
-  cas_series: { antena_qc1000: '', pantalla_qd1400: '' },
-  fms_series: { core_lp: '', pantalla: '', gps1: '' },
+  cas_series: { antena_qc1000: '', antena_qc1000_beacon: '', pantalla_qd1400: '' },
+  fms_series: { core_lp: '', pantalla: '', gps1: '', gps2: '' },
   componentes_pre: {},
   componentes_post: {},
   photo_entries: [],
@@ -134,6 +134,10 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
             <Input placeholder="N° de serie" value={form.cas_series.antena_qc1000} onChange={e => setNested('cas_series', 'antena_qc1000', e.target.value)} />
           </div>
           <div className="space-y-1.5">
+            <Label>Antena QC1000 Beacon</Label>
+            <Input placeholder="N° de serie" value={form.cas_series.antena_qc1000_beacon} onChange={e => setNested('cas_series', 'antena_qc1000_beacon', e.target.value)} />
+          </div>
+          <div className="space-y-1.5">
             <Label>Pantalla QD1400/QD200</Label>
             <Input placeholder="N° de serie" value={form.cas_series.pantalla_qd1400} onChange={e => setNested('cas_series', 'pantalla_qd1400', e.target.value)} />
           </div>
@@ -155,6 +159,10 @@ export default function MaintenanceReportForm({ assets = [], onClose, reportType
           <div className="space-y-1.5">
             <Label>GPS 1</Label>
             <Input placeholder="N° de serie" value={form.fms_series.gps1} onChange={e => setNested('fms_series', 'gps1', e.target.value)} />
+          </div>
+          <div className="space-y-1.5">
+            <Label>GPS 2</Label>
+            <Input placeholder="N° de serie" value={form.fms_series.gps2} onChange={e => setNested('fms_series', 'gps2', e.target.value)} />
           </div>
         </CardContent>
       </Card>

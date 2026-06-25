@@ -220,30 +220,32 @@ export default function ReportPDFExport({ report }) {
     resetRowIndex();
     infoRow('Empresa', report.empresa);
     infoRow('División', report.division);
-    infoRow('Tipo de mantención', report.type);
+    infoRow('Tipo de mantención', report.type === 'preventivo' ? 'Preventivo' : report.type === 'correctivo' ? 'Correctivo' : report.type);
     infoRow('Tipo de equipo', report.tipo_equipo);
     infoRow('N° interno equipo', report.numero_interno_equipo);
     infoRow('Fecha mantención', report.report_date);
     infoRow('Fecha próxima mantención', report.fecha_proxima_mantencion);
-    infoRow('Hora inicio', report.hora_inicio);
-    infoRow('Hora fin', report.hora_fin);
+    infoRow('Hora inicio actividad', report.hora_inicio);
+    infoRow('Hora finalización actividad', report.hora_fin);
     infoRow('Responsable', report.responsable);
     y += 4;
 
-    if (report.cas_series?.antena_qc1000 || report.cas_series?.pantalla_qd1400) {
+    if (report.cas_series?.antena_qc1000 || report.cas_series?.antena_qc1000_beacon || report.cas_series?.pantalla_qd1400) {
       sectionTitle('CAS Números de Series');
       resetRowIndex();
       infoRow('Antena QC1000', report.cas_series?.antena_qc1000);
+      infoRow('Antena QC1000 Beacon', report.cas_series?.antena_qc1000_beacon);
       infoRow('Pantalla QD1400/QD200', report.cas_series?.pantalla_qd1400);
       y += 4;
     }
 
-    if (report.fms_series?.core_lp || report.fms_series?.pantalla || report.fms_series?.gps1) {
+    if (report.fms_series?.core_lp || report.fms_series?.pantalla || report.fms_series?.gps1 || report.fms_series?.gps2) {
       sectionTitle('FMS Números de Series');
       resetRowIndex();
       infoRow('Core LP', report.fms_series?.core_lp);
       infoRow('Pantalla', report.fms_series?.pantalla);
       infoRow('GPS 1', report.fms_series?.gps1);
+      infoRow('GPS 2', report.fms_series?.gps2);
       y += 4;
     }
 
