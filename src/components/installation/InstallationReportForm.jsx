@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, Upload, Trash2, Camera, ImagePlus, X, CheckCircle2, Loader2 } from 'lucide-react';
+import { ChevronLeft, Trash2, Camera, ImagePlus, X, CheckCircle2, Loader2, Copy, ChevronDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const DEFAULT_COMPONENTES_FMS = [
@@ -74,9 +74,46 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
   });
 
   const [uploadingFrontal, setUploadingFrontal] = useState(false);
-  const [uploadQueue, setUploadQueue] = useState([]); // [{name, status: 'uploading'|'done'|'error'}]
+  const [uploadQueue, setUploadQueue] = useState([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const fotoInputRef = useRef(null);
+  const [pastReports, setPastReports] = useState([]);
+  const [suggestions, setSuggestions] = useState({ cliente: [], empresa: [], division: [], validado_por: [] });
+  const [activeDropdown, setActiveDropdown] = useState(null); // field name with open dropdown
+
+  useEffect(() => {
+    if (!isEdit) {
+      base44.entities.InstallationReport.list('-created_date', 50).then(reports => {
+        setPastReports(reports);
+        const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+        setSuggestions({
+          cliente: uniq(reports.map(r => r.cliente)),
+          empresa: uniq(reports.map(r => r.empresa)),
+          division: uniq(reports.map(r => r.division)),
+          validado_por: uniq(reports.map(r => r.validado_por)),
+        });
+      }).catch(() => {});
+    }
+  }, [isEdit]);
+
+  const copyFromLast = () => {
+    const last = pastReports[0];
+    if (!last) return;
+    setForm(prev => ({
+      ...prev,
+      cliente: last.cliente || prev.cliente,
+      empresa: last.empresa || prev.empresa,
+      division: last.division || prev.division,
+      validado_por: last.validado_por || prev.validado_por,
+      objetivo: last.objetivo || prev.objetivo,
+      aprobacion_cliente_nombre: last.aprobacion_cliente_nombre || prev.aprobacion_cliente_nombre,
+      aprobacion_cliente_cargo: last.aprobacion_cliente_cargo || prev.aprobacion_cliente_cargo,
+      aprobacion_cliente_compania: last.aprobacion_cliente_compania || prev.aprobacion_cliente_compania,
+      aprobacion_proveedor_nombre: last.aprobacion_proveedor_nombre || prev.aprobacion_proveedor_nombre,
+      aprobacion_proveedor_cargo: last.aprobacion_proveedor_cargo || prev.aprobacion_proveedor_cargo,
+      aprobacion_proveedor_compania: last.aprobacion_proveedor_compania || prev.aprobacion_proveedor_compania,
+    }));
+  };
 
   const set = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -158,7 +195,13 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {/* Info General */}
-        <Section title="Información General">
+        <Section title="Información General" action={!isEdit && pastReports.length > 0 && (
+          <button type="button" onClick={copyFromLast}
+            className="flex items-center gap-1.5 text-xs text-teal-600 hover:text-teal-700 font-medium border border-teal-200 bg-teal-50 hover:bg-teal-100 px-2.5 py-1 rounded-lg transition-colors">
+            <Copy className="w-3.5 h-3.5" />
+            Copiar del último informe
+          </button>
+        )}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Tipo de Informe">
               <Select value={form.tipo} onValueChange={v => set('tipo', v)}>
@@ -186,16 +229,24 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
               <Input value={form.realizado_por} onChange={e => set('realizado_por', e.target.value)} placeholder="Nombre del técnico" />
             </Field>
             <Field label="Validado por">
-              <Input value={form.validado_por} onChange={e => set('validado_por', e.target.value)} placeholder="Nombre del validador" />
+              <AutoInput field="validado_por" value={form.validado_por} onChange={v => set('validado_por', v)}
+                suggestions={suggestions.validado_por} placeholder="Nombre del validador"
+                activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
             </Field>
             <Field label="Cliente">
-              <Input value={form.cliente} onChange={e => set('cliente', e.target.value)} placeholder="Nombre del cliente" />
+              <AutoInput field="cliente" value={form.cliente} onChange={v => set('cliente', v)}
+                suggestions={suggestions.cliente} placeholder="Nombre del cliente"
+                activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
             </Field>
             <Field label="Empresa / Faena">
-              <Input value={form.empresa} onChange={e => set('empresa', e.target.value)} placeholder="ej: Codelco División Ministro Hales" />
+              <AutoInput field="empresa" value={form.empresa} onChange={v => set('empresa', v)}
+                suggestions={suggestions.empresa} placeholder="ej: Codelco División Ministro Hales"
+                activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
             </Field>
             <Field label="División">
-              <Input value={form.division} onChange={e => set('division', e.target.value)} placeholder="División" />
+              <AutoInput field="division" value={form.division} onChange={v => set('division', v)}
+                suggestions={suggestions.division} placeholder="División"
+                activeDropdown={activeDropdown} setActiveDropdown={setActiveDropdown} />
             </Field>
           </div>
           <Field label="Objetivo">
@@ -419,13 +470,51 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
   );
 }
 
-function Section({ title, children }) {
+function Section({ title, action, children }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-      <div className="bg-slate-50 border-b border-slate-200 px-5 py-3">
+      <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-700">{title}</h2>
+        {action && <div>{action}</div>}
       </div>
       <div className="p-5 space-y-4">{children}</div>
+    </div>
+  );
+}
+
+function AutoInput({ field, value, onChange, suggestions, placeholder, activeDropdown, setActiveDropdown }) {
+  const filtered = suggestions.filter(s => s && s.toLowerCase().includes(value.toLowerCase()) && s !== value);
+  const isOpen = activeDropdown === field && filtered.length > 0;
+  return (
+    <div className="relative">
+      <div className="flex">
+        <Input
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          onFocus={() => setActiveDropdown(field)}
+          onBlur={() => setTimeout(() => setActiveDropdown(null), 150)}
+          placeholder={placeholder}
+          className="flex-1"
+        />
+        {suggestions.length > 0 && (
+          <button type="button" tabIndex={-1}
+            onMouseDown={e => { e.preventDefault(); setActiveDropdown(activeDropdown === field ? null : field); }}
+            className="ml-1 px-2 rounded-md border border-input bg-background hover:bg-accent text-slate-400">
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+      {isOpen && (
+        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
+          {filtered.map((s, i) => (
+            <button key={i} type="button"
+              onMouseDown={e => { e.preventDefault(); onChange(s); setActiveDropdown(null); }}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-teal-50 hover:text-teal-700 truncate border-b border-slate-50 last:border-0">
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
