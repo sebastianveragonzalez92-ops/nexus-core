@@ -5,6 +5,43 @@ import jsPDF from 'jspdf';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+const LOGO_URL = 'https://media.base44.com/images/public/696eb833e2d4849e4ac7b478/6f22c9b3e_Imagen1.svg';
+
+let cachedLogo = null;
+
+// Load the Hexagon SVG logo, rasterize to PNG base64 via canvas
+async function getLogoBase64() {
+  if (cachedLogo) return cachedLogo;
+  try {
+    const res = await fetch(LOGO_URL);
+    const svgText = await res.text();
+    const blob = new Blob([svgText], { type: 'image/svg+xml' });
+    const blobUrl = URL.createObjectURL(blob);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = blobUrl;
+    });
+    const targetW = 320;
+    const ratio = (img.naturalHeight || 1) / (img.naturalWidth || 1) || 0.4;
+    const targetH = Math.round(targetW * ratio);
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+    URL.revokeObjectURL(blobUrl);
+    cachedLogo = canvas.toDataURL('image/png');
+    return cachedLogo;
+  } catch {
+    return null;
+  }
+}
+
 // Convert image URL to base64
 async function urlToBase64(url) {
   try {
@@ -21,23 +58,34 @@ async function urlToBase64(url) {
 }
 
 // Draw page header with Hexagon branding
-function drawHeader(doc, pageNum) {
+function drawHeader(doc, pageNum, logo) {
   // Top border line (teal/cyan)
   doc.setDrawColor(0, 174, 239);
   doc.setLineWidth(1.5);
   doc.line(0, 0, 210, 0);
 
-  // HEXAGON text logo
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(30, 30, 30);
-  doc.text('HEXAGON', 20, 12);
-
-  // Diamond icon approximation (small squares)
-  doc.setFillColor(30, 30, 30);
-  doc.rect(10, 6, 4, 4, 'F');
-  doc.setFillColor(255, 255, 255);
-  doc.rect(11, 7, 2, 2, 'F');
+  // Hexagon logo image
+  if (logo) {
+    try {
+      const logoH = 10;
+      const logoW = Math.round(logoH * (320 / 128));
+      doc.addImage(logo, 'PNG', 10, 4, logoW, logoH);
+    } catch {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      doc.text('HEXAGON', 20, 12);
+    }
+  } else {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(30, 30, 30);
+    doc.text('HEXAGON', 20, 12);
+    doc.setFillColor(30, 30, 30);
+    doc.rect(10, 6, 4, 4, 'F');
+    doc.setFillColor(255, 255, 255);
+    doc.rect(11, 7, 2, 2, 'F');
+  }
 
   // Bottom of header separator
   doc.setDrawColor(220, 220, 220);
@@ -100,6 +148,9 @@ export default function InstallationReportPDF({ report }) {
     const contentW = pageW - margin * 2;
     let page = 1;
 
+    // Pre-load Hexagon logo (used on cover and every header)
+    const logo = await getLogoBase64();
+
     // ── PAGE 1: COVER ──────────────────────────────────────────────────────
     // Left white section with logo and title
     doc.setFillColor(255, 255, 255);
@@ -111,15 +162,28 @@ export default function InstallationReportPDF({ report }) {
     doc.setFillColor(173, 216, 230);
     doc.triangle(pageW * 0.87, pageH * 0.40, pageW, pageH * 0.40, pageW, pageH * 0.55, 'F');
 
-    // Hexagon logo text on cover
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(13);
-    doc.setTextColor(30, 30, 30);
-    doc.text('HEXAGON', 28, 22);
-    doc.setFillColor(30, 30, 30);
-    doc.rect(18, 15, 5, 5, 'F');
-    doc.setFillColor(255, 255, 255);
-    doc.rect(19.5, 16.5, 2, 2, 'F');
+    // Hexagon logo on cover
+    if (logo) {
+      try {
+        const coverLogoH = 14;
+        const coverLogoW = Math.round(coverLogoH * (320 / 128));
+        doc.addImage(logo, 'PNG', 28, 10, coverLogoW, coverLogoH);
+      } catch {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(30, 30, 30);
+        doc.text('HEXAGON', 28, 22);
+      }
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(30, 30, 30);
+      doc.text('HEXAGON', 28, 22);
+      doc.setFillColor(30, 30, 30);
+      doc.rect(18, 15, 5, 5, 'F');
+      doc.setFillColor(255, 255, 255);
+      doc.rect(19.5, 16.5, 2, 2, 'F');
+    }
 
     // Main title
     doc.setFontSize(28);
@@ -170,7 +234,7 @@ export default function InstallationReportPDF({ report }) {
     // ── PAGE 2: TABLA COMPONENTES FMS ─────────────────────────────────────
     doc.addPage();
     page++;
-    drawHeader(doc, page);
+    drawHeader(doc, page, logo);
 
     let y = 26;
     y = drawSectionTitle(doc, y, '1', 'ESPECIFICACION DE COMPONENTES DEL SISTEMA FMS');
@@ -182,7 +246,7 @@ export default function InstallationReportPDF({ report }) {
       y = drawTableRow(doc, y, c.descripcion, c.cantidad, col1, col2, margin, i % 2 === 0);
       if (y > pageH - 30) {
         doc.addPage(); page++;
-        drawHeader(doc, page);
+        drawHeader(doc, page, logo);
         y = 26;
         y = drawTableHeader(doc, y, col1, col2, margin);
       }
@@ -197,7 +261,7 @@ export default function InstallationReportPDF({ report }) {
     // ── PAGE 3: TABLA COMPONENTES CAS ─────────────────────────────────────
     doc.addPage();
     page++;
-    drawHeader(doc, page);
+    drawHeader(doc, page, logo);
 
     y = 26;
     y = drawSectionTitle(doc, y, '2', 'ESPECIFICACION DE COMPONENTES DEL SISTEMA CAS');
@@ -208,7 +272,7 @@ export default function InstallationReportPDF({ report }) {
       y = drawTableRow(doc, y, c.descripcion, c.cantidad, col1, col2, margin, i % 2 === 0);
       if (y > pageH - 30) {
         doc.addPage(); page++;
-        drawHeader(doc, page);
+        drawHeader(doc, page, logo);
         y = 26;
         y = drawTableHeader(doc, y, col1, col2, margin);
       }
@@ -224,7 +288,7 @@ export default function InstallationReportPDF({ report }) {
     if (report.tipo === 'postinstalacion') {
       doc.addPage();
       page++;
-      drawHeader(doc, page);
+      drawHeader(doc, page, logo);
       y = 26;
       y = drawSectionTitle(doc, y, '3', 'NUMEROS DE SERIE — COMPONENTES INSTALADOS');
       y += 4;
@@ -248,7 +312,7 @@ export default function InstallationReportPDF({ report }) {
     if (report.conexion_electrica) {
       doc.addPage();
       page++;
-      drawHeader(doc, page);
+      drawHeader(doc, page, logo);
       y = 26;
       y = drawSectionTitle(doc, y, report.tipo === 'postinstalacion' ? '4' : '3', 'CONEXION ELECTRICA DEL SISTEMA');
       y += 6;
@@ -266,7 +330,7 @@ export default function InstallationReportPDF({ report }) {
       if (!report.conexion_electrica) {
         doc.addPage();
         page++;
-        drawHeader(doc, page);
+        drawHeader(doc, page, logo);
         y = 26;
       } else {
         y += 10;
@@ -289,7 +353,7 @@ export default function InstallationReportPDF({ report }) {
     if (report.fotos && report.fotos.length > 0) {
       doc.addPage();
       page++;
-      drawHeader(doc, page);
+      drawHeader(doc, page, logo);
       y = 26;
 
       const secNum = report.tipo === 'postinstalacion' ? '5' : '4';
@@ -314,7 +378,7 @@ export default function InstallationReportPDF({ report }) {
         if (y + imgH + 16 > pageH - 20) {
           doc.addPage();
           page++;
-          drawHeader(doc, page);
+          drawHeader(doc, page, logo);
           y = 26;
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(10);
@@ -343,7 +407,7 @@ export default function InstallationReportPDF({ report }) {
     // ── APROBACION ────────────────────────────────────────────────────────
     doc.addPage();
     page++;
-    drawHeader(doc, page);
+    drawHeader(doc, page, logo);
 
     y = 26;
     doc.setFont('helvetica', 'bold');
@@ -380,7 +444,7 @@ export default function InstallationReportPDF({ report }) {
       const a = approvers[i] || {};
       if (y > pageH - 50) {
         doc.addPage(); page++;
-        drawHeader(doc, page);
+        drawHeader(doc, page, logo);
         y = 26;
       }
 
@@ -414,7 +478,7 @@ export default function InstallationReportPDF({ report }) {
     // ── LAST PAGE: Company info ────────────────────────────────────────────
     doc.addPage();
     page++;
-    drawHeader(doc, page);
+    drawHeader(doc, page, logo);
     y = 30;
 
     doc.setFont('helvetica', 'normal');
