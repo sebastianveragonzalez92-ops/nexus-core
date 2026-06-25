@@ -85,10 +85,10 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
   };
 
   const handleFotoUpload = async (file) => {
-    if (!newFotoLabel.trim()) { alert('Ingresa una etiqueta para la foto'); return; }
     setUploadingFoto(true);
+    const label = newFotoLabel.trim() || `Foto ${form.fotos.length + 1}`;
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    set('fotos', [...form.fotos, { label: newFotoLabel.trim(), url: file_url, descripcion: '' }]);
+    set('fotos', [...form.fotos, { label, url: file_url, descripcion: '' }]);
     setNewFotoLabel('');
     setUploadingFoto(false);
   };
@@ -256,7 +256,7 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
               type="button"
               variant="outline"
               className="gap-2"
-              disabled={uploadingFoto || !newFotoLabel.trim()}
+              disabled={uploadingFoto}
               onClick={() => fotoInputRef.current?.click()}
             >
               <Upload className="w-4 h-4" />
