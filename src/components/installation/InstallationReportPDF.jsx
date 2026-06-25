@@ -6,13 +6,10 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 const LOGO_URL = 'https://media.base44.com/images/public/696eb833e2d4849e4ac7b478/6f22c9b3e_Imagen1.svg';
-const TEAL = [0, 174, 239];
-const DARK = [30, 40, 50];
-const GRAY = [100, 110, 120];
-const LIGHT_GRAY = [240, 242, 245];
 
 let cachedLogo = null;
 
+// Load the Hexagon SVG logo, rasterize to PNG base64 via canvas
 async function getLogoBase64() {
   if (cachedLogo) return cachedLogo;
   try {
@@ -22,12 +19,17 @@ async function getLogoBase64() {
     const blobUrl = URL.createObjectURL(blob);
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; img.src = blobUrl; });
-    const targetW = 480;
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = blobUrl;
+    });
+    const targetW = 320;
     const ratio = (img.naturalHeight || 1) / (img.naturalWidth || 1) || 0.4;
     const targetH = Math.round(targetW * ratio);
     const canvas = document.createElement('canvas');
-    canvas.width = targetW; canvas.height = targetH;
+    canvas.width = targetW;
+    canvas.height = targetH;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -35,9 +37,12 @@ async function getLogoBase64() {
     URL.revokeObjectURL(blobUrl);
     cachedLogo = canvas.toDataURL('image/png');
     return cachedLogo;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
+// Convert image URL to base64
 async function urlToBase64(url) {
   try {
     const response = await fetch(url);
@@ -47,102 +52,91 @@ async function urlToBase64(url) {
       reader.onloadend = () => resolve(reader.result);
       reader.readAsDataURL(blob);
     });
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
-// Header: logo left, page number right, teal top bar + gray separator
-function drawHeader(doc, pageNum, logo, pageW) {
-  // Top teal bar
-  doc.setFillColor(...TEAL);
-  doc.rect(0, 0, pageW, 1.5, 'F');
+// Draw page header with Hexagon branding
+function drawHeader(doc, pageNum, logo) {
+  // Top border line (teal/cyan)
+  doc.setDrawColor(0, 174, 239);
+  doc.setLineWidth(1.5);
+  doc.line(0, 0, 210, 0);
 
-  // Logo
+  // Hexagon logo image
   if (logo) {
     try {
-      const logoH = 9;
-      const logoW = Math.round(logoH * (480 / 192));
-      doc.addImage(logo, 'PNG', 12, 3.5, logoW, logoH);
+      const logoH = 10;
+      const logoW = Math.round(logoH * (320 / 128));
+      doc.addImage(logo, 'PNG', 10, 4, logoW, logoH);
     } catch {
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
-      doc.setTextColor(...DARK); doc.text('HEXAGON', 12, 11);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      doc.text('HEXAGON', 20, 12);
     }
+  } else {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(30, 30, 30);
+    doc.text('HEXAGON', 20, 12);
+    doc.setFillColor(30, 30, 30);
+    doc.rect(10, 6, 4, 4, 'F');
+    doc.setFillColor(255, 255, 255);
+    doc.rect(11, 7, 2, 2, 'F');
   }
 
-  // Page number right
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
-  doc.setTextColor(...GRAY);
-  doc.text(`${pageNum}`, pageW - 12, 10, { align: 'right' });
+  // Bottom of header separator
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.3);
+  doc.line(10, 17, 200, 17);
 
-  // Separator line
-  doc.setDrawColor(210, 215, 220); doc.setLineWidth(0.3);
-  doc.line(12, 15, pageW - 12, 15);
+  // Page number
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(150, 150, 150);
+  doc.text(`Page | ${pageNum}`, 175, 12);
 }
 
-// Footer: thin teal bar at bottom + document reference
-function drawFooter(doc, report, pageW, pageH) {
-  doc.setFillColor(...TEAL);
-  doc.rect(0, pageH - 1.5, pageW, 1.5, 'F');
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(7);
-  doc.setTextColor(...GRAY);
-  const ref = `${report.tipo === 'preinstalacion' ? 'PRE' : 'POST'}-${report.equipo_numero || '—'}  |  ${report.empresa || ''}  |  ${report.fecha ? format(new Date(report.fecha), 'dd/MM/yyyy', { locale: es }) : ''}`;
-  doc.text(ref, pageW / 2, pageH - 4, { align: 'center' });
-}
-
-function drawSectionTitle(doc, y, num, title, pageW) {
-  // Colored left accent bar
-  doc.setFillColor(...TEAL);
-  doc.rect(12, y - 1, 3, 8, 'F');
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-  doc.setTextColor(...DARK);
-  doc.text(`${num}.  ${title}`, 18, y + 5.5);
-  return y + 14;
-}
-
+// Draw teal table header row
 function drawTableHeader(doc, y, col1Width, col2Width, startX) {
-  doc.setFillColor(...TEAL);
+  doc.setFillColor(58, 150, 160);
   doc.rect(startX, y, col1Width + col2Width, 8, 'F');
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
   doc.setTextColor(255, 255, 255);
-  doc.text('DESCRIPCIÓN', startX + 4, y + 5.5);
-  doc.text('CANT.', startX + col1Width + 4, y + 5.5);
+  doc.text('DESCRIPCION', startX + 3, y + 5.5);
+  doc.text('CANTIDAD', startX + col1Width + 3, y + 5.5);
   return y + 8;
 }
 
+// Draw a single table row
 function drawTableRow(doc, y, desc, cant, col1Width, col2Width, startX, isAlt) {
-  const rowH = 8;
   if (isAlt) {
-    doc.setFillColor(...LIGHT_GRAY);
-    doc.rect(startX, y, col1Width + col2Width, rowH, 'F');
+    doc.setFillColor(248, 248, 248);
+    doc.rect(startX, y, col1Width + col2Width, 8, 'F');
   }
-  doc.setDrawColor(210, 215, 220); doc.setLineWidth(0.2);
-  doc.rect(startX, y, col1Width, rowH);
-  doc.rect(startX + col1Width, y, col2Width, rowH);
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-  doc.setTextColor(...DARK);
-  const lines = doc.splitTextToSize(desc, col1Width - 8);
-  doc.text(lines, startX + 4, y + 5.5);
-  doc.text(cant || '—', startX + col1Width + 4, y + 5.5);
-  return y + (lines.length > 1 ? lines.length * 5 + 3 : rowH);
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.2);
+  doc.rect(startX, y, col1Width, 8);
+  doc.rect(startX + col1Width, y, col2Width, 8);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(40, 40, 40);
+  const lines = doc.splitTextToSize(desc, col1Width - 6);
+  doc.text(lines, startX + 3, y + 5.5);
+  doc.text(cant || '—', startX + col1Width + 3, y + 5.5);
+  return y + (lines.length > 1 ? lines.length * 5 + 2 : 8);
 }
 
-function drawInfoBlock(doc, y, margin, contentW, rows) {
-  const rowH = 9;
-  rows.forEach(([label, value], i) => {
-    if (i % 2 === 0) {
-      doc.setFillColor(...LIGHT_GRAY);
-      doc.rect(margin, y, contentW, rowH, 'F');
-    }
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
-    doc.setTextColor(...GRAY);
-    doc.text(label, margin + 4, y + 6);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(...DARK);
-    doc.text(String(value || '—'), margin + 55, y + 6);
-    doc.setDrawColor(210, 215, 220); doc.setLineWidth(0.15);
-    doc.line(margin, y + rowH, margin + contentW, y + rowH);
-    y += rowH;
-  });
-  return y;
+// Section title
+function drawSectionTitle(doc, y, num, title) {
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(30, 30, 30);
+  doc.text(`${num}.  ${title}`, 105, y, { align: 'center' });
+  return y + 10;
 }
 
 export default function InstallationReportPDF({ report }) {
@@ -154,193 +148,150 @@ export default function InstallationReportPDF({ report }) {
     const contentW = pageW - margin * 2;
     let page = 1;
 
+    // Pre-load Hexagon logo (used on cover and every header)
     const logo = await getLogoBase64();
 
     // ── PAGE 1: COVER ──────────────────────────────────────────────────────
-    // Background
-    doc.setFillColor(248, 250, 252);
-    doc.rect(0, 0, pageW, pageH, 'F');
+    // Left white section with logo and title
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageW * 0.87, pageH * 0.52, 'F');
 
-    // Top teal header band
-    doc.setFillColor(...TEAL);
-    doc.rect(0, 0, pageW, 38, 'F');
+    // Teal diagonal accent (right side)
+    doc.setFillColor(0, 174, 239);
+    doc.triangle(pageW * 0.87, pageH * 0.30, pageW, pageH * 0.30, pageW, pageH * 0.52, 'F');
+    doc.setFillColor(173, 216, 230);
+    doc.triangle(pageW * 0.87, pageH * 0.40, pageW, pageH * 0.40, pageW, pageH * 0.55, 'F');
 
-    // Logo on cover (white version: place on teal bg)
+    // Hexagon logo on cover
     if (logo) {
       try {
-        const coverLogoH = 16;
-        const coverLogoW = Math.round(coverLogoH * (480 / 192));
-        doc.addImage(logo, 'PNG', margin, 11, coverLogoW, coverLogoH);
-      } catch {}
+        const coverLogoH = 14;
+        const coverLogoW = Math.round(coverLogoH * (320 / 128));
+        doc.addImage(logo, 'PNG', 28, 10, coverLogoW, coverLogoH);
+      } catch {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(30, 30, 30);
+        doc.text('HEXAGON', 28, 22);
+      }
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(30, 30, 30);
+      doc.text('HEXAGON', 28, 22);
+      doc.setFillColor(30, 30, 30);
+      doc.rect(18, 15, 5, 5, 'F');
+      doc.setFillColor(255, 255, 255);
+      doc.rect(19.5, 16.5, 2, 2, 'F');
     }
 
-    // Document type badge top-right
-    doc.setFillColor(255, 255, 255, 30);
-    const badgeLabel = report.tipo === 'preinstalacion' ? 'PRE-INSTALACIÓN' : 'POST-INSTALACIÓN';
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
-    doc.setTextColor(255, 255, 255);
-    doc.text(badgeLabel, pageW - margin, 22, { align: 'right' });
+    // Main title
+    doc.setFontSize(28);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(20, 20, 20);
+    const titleText = report.tipo === 'preinstalacion' ? 'PREINSTALACION SISTEMA FMS' : 'POSTINSTALACION SISTEMA FMS';
+    const titleLines = doc.splitTextToSize(titleText, pageW * 0.78);
+    doc.text(titleLines, margin, pageH * 0.28);
 
-    // Main title area (white card)
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(margin, 48, contentW, 72, 3, 3, 'F');
-    doc.setDrawColor(...TEAL); doc.setLineWidth(0.6);
-    doc.line(margin + 6, 48, margin + 6, 120);
+    // Subtitle lines
+    const subtitleY = pageH * 0.28 + titleLines.length * 14 + 8;
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 30);
+    const empresa = report.empresa || report.division || '';
+    doc.text(empresa, margin, subtitleY);
 
-    const titleText = report.tipo === 'preinstalacion'
-      ? 'INFORME DE\nPREINSTALACIÓN\nSISTEMA FMS'
-      : 'INFORME DE\nPOSTINSTALACIÓN\nSISTEMA FMS';
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
-    doc.setTextColor(...DARK);
-    titleText.split('\n').forEach((line, i) => {
-      doc.text(line, margin + 14, 62 + i * 11);
-    });
-
-    // Equipo info inside card
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 130, 200);
     const equipoLine = [report.equipo_marca, report.equipo_modelo].filter(Boolean).join(' ') || report.equipo_numero || '';
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
-    doc.setTextColor(...GRAY);
-    doc.text(equipoLine, margin + 14, 106);
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
-    doc.setTextColor(...TEAL);
-    doc.text(report.equipo_numero || '', margin + 14, 114);
+    doc.text(equipoLine, margin, subtitleY + 8);
 
-    // Metadata grid below card
-    const metaY = 128;
-    const metaRows = [
-      ['Empresa', report.empresa || '—'],
-      ['División', report.division || '—'],
-      ['Realizado por', report.realizado_por || '—'],
-      ['Fecha', report.fecha ? format(new Date(report.fecha), "dd 'de' MMMM 'de' yyyy", { locale: es }) : '—'],
-    ];
-    const colW = contentW / 2;
-    metaRows.forEach(([label, value], i) => {
-      const col = i % 2;
-      const row = Math.floor(i / 2);
-      const x = margin + col * colW;
-      const y = metaY + row * 18;
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-      doc.setTextColor(...TEAL);
-      doc.text(label.toUpperCase(), x, y);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-      doc.setTextColor(...DARK);
-      doc.text(value, x, y + 6);
-    });
+    // Bottom blue band
+    doc.setFillColor(0, 174, 239);
+    doc.rect(0, pageH * 0.52, pageW, 4, 'F');
 
-    // Thin divider
-    doc.setDrawColor(210, 215, 220); doc.setLineWidth(0.3);
-    doc.line(margin, metaY + 40, margin + contentW, metaY + 40);
-
-    // Front photo
-    const photoY = metaY + 44;
-    const photoH = pageH - photoY - 18;
+    // Front photo in bottom half
     if (report.foto_frontal_url) {
       const imgData = await urlToBase64(report.foto_frontal_url);
       if (imgData) {
-        doc.setDrawColor(210, 215, 220); doc.setLineWidth(0.3);
-        doc.rect(margin, photoY, contentW, photoH);
-        doc.addImage(imgData, 'JPEG', margin, photoY, contentW, photoH, '', 'FAST');
+        doc.addImage(imgData, 'JPEG', 0, pageH * 0.524, pageW, pageH * 0.476);
+      } else {
+        doc.setFillColor(220, 220, 220);
+        doc.rect(0, pageH * 0.524, pageW, pageH * 0.476, 'F');
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Foto frontal del equipo', pageW / 2, pageH * 0.76, { align: 'center' });
       }
+    } else {
+      doc.setFillColor(210, 210, 210);
+      doc.rect(0, pageH * 0.524, pageW, pageH * 0.476, 'F');
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text('Sin foto frontal', pageW / 2, pageH * 0.76, { align: 'center' });
     }
 
-    // Cover footer
-    doc.setFillColor(...TEAL);
-    doc.rect(0, pageH - 10, pageW, 10, 'F');
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5);
-    doc.setTextColor(255, 255, 255);
-    doc.text('www.hexagonmining.com', pageW / 2, pageH - 3.5, { align: 'center' });
+    // ── PAGE 2: TABLA COMPONENTES FMS ─────────────────────────────────────
+    doc.addPage();
+    page++;
+    drawHeader(doc, page, logo);
 
-    // ── PAGE 2: INFO GENERAL ───────────────────────────────────────────────
-    doc.addPage(); page++;
-    drawHeader(doc, page, logo, pageW);
-    drawFooter(doc, report, pageW, pageH);
+    let y = 26;
+    y = drawSectionTitle(doc, y, '1', 'ESPECIFICACION DE COMPONENTES DEL SISTEMA FMS');
+    y += 4;
 
-    let y = 22;
-    y = drawSectionTitle(doc, y, '0', 'INFORMACIÓN GENERAL', pageW);
-
-    const infoRows = [
-      ['Cliente', report.cliente],
-      ['Empresa', report.empresa],
-      ['División', report.division],
-      ['Equipo Marca', report.equipo_marca],
-      ['Equipo Modelo', report.equipo_modelo],
-      ['N° Interno', report.equipo_numero],
-      ['Fecha', report.fecha ? format(new Date(report.fecha), 'dd/MM/yyyy', { locale: es }) : ''],
-      ['Realizado por', report.realizado_por],
-      ['Validado por', report.validado_por],
-    ].filter(([, v]) => v);
-    y = drawInfoBlock(doc, y, margin, contentW, infoRows);
-
-    if (report.objetivo) {
-      y += 10;
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
-      doc.setTextColor(...GRAY);
-      doc.text('OBJETIVO', margin, y);
-      y += 5;
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
-      doc.setTextColor(...DARK);
-      const objLines = doc.splitTextToSize(report.objetivo, contentW);
-      doc.text(objLines, margin, y);
-    }
-
-    // ── PAGE 3: TABLA COMPONENTES FMS ─────────────────────────────────────
-    doc.addPage(); page++;
-    drawHeader(doc, page, logo, pageW);
-    drawFooter(doc, report, pageW, pageH);
-
-    y = 22;
-    y = drawSectionTitle(doc, y, '1', 'ESPECIFICACIÓN DE COMPONENTES — SISTEMA FMS', pageW);
-
-    const col1 = 138, col2 = 42;
+    const col1 = 140, col2 = 40;
     y = drawTableHeader(doc, y, col1, col2, margin);
     (report.componentes_fms || []).forEach((c, i) => {
       y = drawTableRow(doc, y, c.descripcion, c.cantidad, col1, col2, margin, i % 2 === 0);
       if (y > pageH - 30) {
         doc.addPage(); page++;
-        drawHeader(doc, page, logo, pageW);
-        drawFooter(doc, report, pageW, pageH);
-        y = 22;
+        drawHeader(doc, page, logo);
+        y = 26;
         y = drawTableHeader(doc, y, col1, col2, margin);
       }
     });
 
-    y += 6;
-    doc.setFont('helvetica', 'italic'); doc.setFontSize(8);
-    doc.setTextColor(...GRAY);
-    doc.text('Tabla 1 — Componentes Sistema FMS.', 105, y, { align: 'center' });
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Tabla de componentes FMS.', 105, y, { align: 'center' });
 
-    // ── PAGE 4: TABLA COMPONENTES CAS ─────────────────────────────────────
-    doc.addPage(); page++;
-    drawHeader(doc, page, logo, pageW);
-    drawFooter(doc, report, pageW, pageH);
+    // ── PAGE 3: TABLA COMPONENTES CAS ─────────────────────────────────────
+    doc.addPage();
+    page++;
+    drawHeader(doc, page, logo);
 
-    y = 22;
-    y = drawSectionTitle(doc, y, '2', 'ESPECIFICACIÓN DE COMPONENTES — SISTEMA CAS', pageW);
+    y = 26;
+    y = drawSectionTitle(doc, y, '2', 'ESPECIFICACION DE COMPONENTES DEL SISTEMA CAS');
+    y += 4;
 
     y = drawTableHeader(doc, y, col1, col2, margin);
     (report.componentes_cas || []).forEach((c, i) => {
       y = drawTableRow(doc, y, c.descripcion, c.cantidad, col1, col2, margin, i % 2 === 0);
       if (y > pageH - 30) {
         doc.addPage(); page++;
-        drawHeader(doc, page, logo, pageW);
-        drawFooter(doc, report, pageW, pageH);
-        y = 22;
+        drawHeader(doc, page, logo);
+        y = 26;
         y = drawTableHeader(doc, y, col1, col2, margin);
       }
     });
 
-    y += 6;
-    doc.setFont('helvetica', 'italic'); doc.setFontSize(8);
-    doc.setTextColor(...GRAY);
-    doc.text('Tabla 2 — Componentes Sistema CAS.', 105, y, { align: 'center' });
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Tabla de componentes CAS.', 105, y, { align: 'center' });
 
-    // ── PAGE 5: NUMEROS DE SERIE (post only) ──────────────────────────────
+    // ── PAGE 4+: SERIES (post only) + INFO GENERAL ────────────────────────
     if (report.tipo === 'postinstalacion') {
-      doc.addPage(); page++;
-      drawHeader(doc, page, logo, pageW);
-      drawFooter(doc, report, pageW, pageH);
-      y = 22;
-      y = drawSectionTitle(doc, y, '3', 'NÚMEROS DE SERIE — COMPONENTES INSTALADOS', pageW);
+      doc.addPage();
+      page++;
+      drawHeader(doc, page, logo);
+      y = 26;
+      y = drawSectionTitle(doc, y, '3', 'NUMEROS DE SERIE — COMPONENTES INSTALADOS');
+      y += 4;
 
       const seriesData = [
         ['Módulo CORE', report.series_core],
@@ -359,15 +310,16 @@ export default function InstallationReportPDF({ report }) {
 
     // ── CONEXION ELECTRICA ─────────────────────────────────────────────────
     if (report.conexion_electrica) {
-      doc.addPage(); page++;
-      drawHeader(doc, page, logo, pageW);
-      drawFooter(doc, report, pageW, pageH);
-      y = 22;
-      const secN = report.tipo === 'postinstalacion' ? '4' : '3';
-      y = drawSectionTitle(doc, y, secN, 'CONEXIÓN ELÉCTRICA DEL SISTEMA', pageW);
+      doc.addPage();
+      page++;
+      drawHeader(doc, page, logo);
+      y = 26;
+      y = drawSectionTitle(doc, y, report.tipo === 'postinstalacion' ? '4' : '3', 'CONEXION ELECTRICA DEL SISTEMA');
+      y += 6;
 
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
-      doc.setTextColor(...DARK);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(50, 50, 50);
       const elecLines = doc.splitTextToSize(report.conexion_electrica, contentW);
       doc.text(elecLines, margin, y);
       y += elecLines.length * 5 + 6;
@@ -376,168 +328,165 @@ export default function InstallationReportPDF({ report }) {
     // ── OBSERVACIONES ──────────────────────────────────────────────────────
     if (report.observaciones) {
       if (!report.conexion_electrica) {
-        doc.addPage(); page++;
-        drawHeader(doc, page, logo, pageW);
-        drawFooter(doc, report, pageW, pageH);
-        y = 22;
+        doc.addPage();
+        page++;
+        drawHeader(doc, page, logo);
+        y = 26;
       } else {
         y += 10;
       }
-      const obsSecN = report.tipo === 'postinstalacion'
-        ? (report.conexion_electrica ? '5' : '4')
-        : (report.conexion_electrica ? '4' : '3');
-      y = drawSectionTitle(doc, y, obsSecN, 'OBSERVACIONES GENERALES', pageW);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
-      doc.setTextColor(...DARK);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      doc.text('OBSERVACIONES GENERALES', margin, y);
+      y += 6;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
       const obsLines = doc.splitTextToSize(report.observaciones, contentW);
       doc.text(obsLines, margin, y);
     }
 
     // ── REGISTRO FOTOGRAFICO ──────────────────────────────────────────────
     if (report.fotos && report.fotos.length > 0) {
-      doc.addPage(); page++;
-      drawHeader(doc, page, logo, pageW);
-      drawFooter(doc, report, pageW, pageH);
-      y = 22;
+      doc.addPage();
+      page++;
+      drawHeader(doc, page, logo);
+      y = 26;
 
-      const photoSecN = report.tipo === 'postinstalacion' ? '6' : '5';
-      y = drawSectionTitle(doc, y, photoSecN, 'INSTALACIÓN Y UBICACIÓN DE COMPONENTES', pageW);
-
-      // 2-column photo grid
-      const photoW = (contentW - 6) / 2;
-      const photoH = 60;
-      const captionH = 10;
-      const cellH = photoH + captionH + 4;
+      const secNum = report.tipo === 'postinstalacion' ? '5' : '4';
+      y = drawSectionTitle(doc, y, secNum, 'INSTALACION Y UBICACION DE COMPONENTES');
+      y += 4;
 
       for (let i = 0; i < report.fotos.length; i++) {
-        const col = i % 2;
-        if (col === 0 && i > 0) y += cellH;
-
-        if (y + cellH > pageH - 20) {
-          doc.addPage(); page++;
-          drawHeader(doc, page, logo, pageW);
-          drawFooter(doc, report, pageW, pageH);
-          y = 22;
-        }
-
         const foto = report.fotos[i];
-        const x = margin + col * (photoW + 6);
+
+        // Section subtitle
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(30, 30, 30);
+        doc.text(`${secNum}.${i + 1}  ${foto.label.toUpperCase()}`, margin, y);
+        y += 5;
 
         const imgData = await urlToBase64(foto.url);
+        const imgH = 70;
+        const imgW = contentW * 0.7;
+        const imgX = margin + (contentW - imgW) / 2;
 
-        // Photo frame
-        doc.setFillColor(...LIGHT_GRAY);
-        doc.rect(x, y, photoW, photoH, 'F');
-        if (imgData) {
-          doc.addImage(imgData, 'JPEG', x, y, photoW, photoH, '', 'FAST');
+        if (y + imgH + 16 > pageH - 20) {
+          doc.addPage();
+          page++;
+          drawHeader(doc, page, logo);
+          y = 26;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+          doc.setTextColor(30, 30, 30);
+          doc.text(`${secNum}.${i + 1}  ${foto.label.toUpperCase()}`, margin, y);
+          y += 5;
         }
 
-        // Label bar
-        doc.setFillColor(...TEAL);
-        doc.rect(x, y + photoH, photoW, 8, 'F');
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-        doc.setTextColor(255, 255, 255);
-        const labelText = doc.splitTextToSize(`${i + 1}. ${foto.label}`, photoW - 6);
-        doc.text(labelText[0], x + 3, y + photoH + 5.5);
+        if (imgData) {
+          doc.addImage(imgData, 'JPEG', imgX, y, imgW, imgH);
+        } else {
+          doc.setFillColor(220, 220, 220);
+          doc.rect(imgX, y, imgW, imgH, 'F');
+        }
+        y += imgH + 4;
+
+        // Caption
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(60, 60, 60);
+        doc.text(`Imagen N°${i + 1} ${foto.label}.`, 105, y, { align: 'center' });
+        y += 12;
       }
     }
 
     // ── APROBACION ────────────────────────────────────────────────────────
-    doc.addPage(); page++;
-    drawHeader(doc, page, logo, pageW);
-    drawFooter(doc, report, pageW, pageH);
+    doc.addPage();
+    page++;
+    drawHeader(doc, page, logo);
 
-    y = 22;
-    // Section header with background
-    doc.setFillColor(...TEAL);
-    doc.rect(margin, y, contentW, 14, 'F');
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(14);
-    doc.setTextColor(255, 255, 255);
-    doc.text('APROBACIÓN', margin + 6, y + 10);
-    y += 20;
+    y = 26;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(20, 20, 20);
+    doc.text('APROBACION', margin, y + 4);
+    y += 14;
 
-    const introText = 'El documento contiene las posiciones de montaje para cada componente del sistema. Además, indica las conexiones eléctricas requeridas para el buen funcionamiento del sistema. Este documento debe ser leído y firmado por el personal designado y devuelto a Hexagon Mining antes de que pueda comenzar cualquier actividad de instalación.';
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-    doc.setTextColor(...GRAY);
+    doc.setDrawColor(60, 60, 60);
+    doc.setLineWidth(0.4);
+    doc.line(margin, y, margin + contentW, y);
+    y += 8;
+
+    const introText = 'El documento contiene las posiciones de montaje, para cada componente del sistema. Además, indica las conexiones eléctricas requeridas para el buen funcionamiento del sistema. El documento se ha preparado para la organización, por lo que tienen aviso previo de la instalación propuesta y la oportunidad de acordar o proponer alternativas preferidas. Este documento debe ser leído y firmado por el personal designado y devuelto a Hexagon Mining, antes de que pueda comenzar cualquier actividad de instalación.';
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
     const introLines = doc.splitTextToSize(introText, contentW);
     doc.text(introLines, margin, y);
-    y += introLines.length * 4.5 + 12;
+    y += introLines.length * 4.5 + 10;
 
+    // Approval blocks
     const approvers = [];
     if (report.aprobacion_cliente_nombre) {
-      approvers.push({ label: 'CLIENTE', nombre: report.aprobacion_cliente_nombre, cargo: report.aprobacion_cliente_cargo, compania: report.aprobacion_cliente_compania });
+      approvers.push({ nombre: report.aprobacion_cliente_nombre, cargo: report.aprobacion_cliente_cargo, compania: report.aprobacion_cliente_compania });
     }
     if (report.aprobacion_proveedor_nombre) {
-      approvers.push({ label: 'PROVEEDOR / HEXAGON', nombre: report.aprobacion_proveedor_nombre, cargo: report.aprobacion_proveedor_cargo, compania: report.aprobacion_proveedor_compania });
-    }
-    if (approvers.length === 0) {
-      approvers.push({ label: 'CLIENTE', nombre: '', cargo: '', compania: '' });
-      approvers.push({ label: 'PROVEEDOR / HEXAGON', nombre: '', cargo: '', compania: '' });
+      approvers.push({ nombre: report.aprobacion_proveedor_nombre, cargo: report.aprobacion_proveedor_cargo, compania: report.aprobacion_proveedor_compania });
     }
 
-    const blockW = (contentW - 8) / 2;
-    approvers.forEach((a, i) => {
-      if (y > pageH - 80) {
+    // Always draw 2 approval blocks minimum
+    const totalBlocks = Math.max(approvers.length, 2);
+    for (let i = 0; i < totalBlocks; i++) {
+      const a = approvers[i] || {};
+      if (y > pageH - 50) {
         doc.addPage(); page++;
-        drawHeader(doc, page, logo, pageW);
-        drawFooter(doc, report, pageW, pageH);
-        y = 22;
+        drawHeader(doc, page, logo);
+        y = 26;
       }
-      const bx = margin + i * (blockW + 8);
 
-      // Block header
-      doc.setFillColor(...LIGHT_GRAY);
-      doc.rect(bx, y, blockW, 8, 'F');
-      doc.setFillColor(...TEAL);
-      doc.rect(bx, y, 3, 8, 'F');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
-      doc.setTextColor(...DARK);
-      doc.text(a.label, bx + 6, y + 5.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(40, 40, 40);
 
-      let by = y + 12;
-      const field = (label, value, lineLine = false) => {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5);
-        doc.setTextColor(...GRAY);
-        doc.text(label, bx, by);
-        by += 4;
+      const dotLine = (label, value) => {
+        doc.text(`${label}: `, margin, y);
+        const lw = doc.getTextWidth(`${label}: `);
         if (value) {
-          doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-          doc.setTextColor(...DARK);
-          doc.text(value, bx, by);
+          doc.setFont('helvetica', 'bold');
+          doc.text(value, margin + lw, y);
+          doc.setFont('helvetica', 'normal');
         } else {
-          doc.setDrawColor(180, 185, 190); doc.setLineWidth(0.3);
-          doc.line(bx, by + 0.5, bx + blockW, by + 0.5);
+          doc.setDrawColor(120, 120, 120);
+          doc.setLineWidth(0.3);
+          doc.line(margin + lw, y + 0.5, margin + contentW, y + 0.5);
         }
-        by += 8;
+        y += 6;
       };
 
-      field('NOMBRE', a.nombre);
-      field('CARGO', a.cargo);
-      field('COMPAÑÍA', a.compania);
-      field('FECHA', report.fecha ? format(new Date(report.fecha), 'dd/MM/yyyy', { locale: es }) : '');
-      by += 4;
-      field('FIRMA', '');
-      by += 10;
-    });
+      dotLine('Nombre', a.nombre);
+      dotLine('Firma', '');
+      dotLine('Nombre de Compañía', a.compania);
+      dotLine('Fecha', report.fecha ? format(new Date(report.fecha), 'dd/MM/yyyy', { locale: es }) : '');
+      dotLine('Cargo', a.cargo);
+      y += 6;
+    }
 
     // ── LAST PAGE: Company info ────────────────────────────────────────────
-    doc.addPage(); page++;
-    drawHeader(doc, page, logo, pageW);
-    drawFooter(doc, report, pageW, pageH);
+    doc.addPage();
+    page++;
+    drawHeader(doc, page, logo);
     y = 30;
 
-    doc.setFillColor(...LIGHT_GRAY);
-    doc.roundedRect(margin, y, contentW, 40, 2, 2, 'F');
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-    doc.setTextColor(...DARK);
-    const companyText = 'Hexagon Mining es la única empresa que resuelve los desafíos de minería superficial y subterránea mediante la integración de tecnologías de diseño, planificación y operaciones para minas más seguras y productivas. Con sede en Tucson, Arizona, y más de 30 oficinas en cinco continentes.';
-    const compLines = doc.splitTextToSize(companyText, contentW - 10);
-    doc.text(compLines, margin + 5, y + 8);
-    y += 50;
-
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
-    doc.setTextColor(...TEAL);
-    doc.text('www.hexagonmining.com', margin, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    const companyText = 'Hexagon Mining es la única empresa que resuelve los desafíos de minería superficial y subterránea mediante la integración de tecnologías de diseño, planificación y operaciones para minas más seguras y productivas. Con sede en Tucson, Arizona, y más de 30 oficinas en cinco continentes.\n\nPara más información, visite: www.hexagonmining.com';
+    const compLines = doc.splitTextToSize(companyText, contentW);
+    doc.text(compLines, margin, y);
 
     // Save
     const tipoLabel = report.tipo === 'preinstalacion' ? 'Preinstalacion' : 'Postinstalacion';
