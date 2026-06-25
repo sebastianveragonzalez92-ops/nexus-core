@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Eye, Pencil, AlertCircle, ClipboardList, ClipboardCheck } from 'lucide-react';
+import { Search, Eye, Pencil, AlertCircle, ClipboardList, ClipboardCheck, FileDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import InstallationReportPDF from './InstallationReportPDF';
 
 const ESTADO_STYLES = {
   borrador: { bg: 'bg-slate-100 text-slate-600', label: 'Borrador' },
@@ -137,6 +138,7 @@ export default function InstallationReportList({ reports, isLoading, onView, onE
                         <Button variant="ghost" size="icon" onClick={() => onEdit(report)} className="h-7 w-7 hover:bg-slate-100">
                           <Pencil className="w-3.5 h-3.5 text-slate-400" />
                         </Button>
+                        <InstallationReportPDF report={report} />
                       </div>
                     </td>
                   </tr>
