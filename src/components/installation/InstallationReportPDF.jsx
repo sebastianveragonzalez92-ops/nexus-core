@@ -297,7 +297,7 @@ export default function InstallationReportPDF({ report }) {
         ['Módulo CORE', report.series_core],
         ['Display 9"', report.series_display],
         ['GPS', report.series_gps],
-        ['QD200', report.series_qd200],
+        ['QD1400/QD200', report.series_qd200],
         ['QC1000', report.series_qc1000],
         ['LTE SAR', report.series_lte_sar],
       ].filter(([, v]) => v);
