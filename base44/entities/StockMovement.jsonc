@@ -1,0 +1,64 @@
+{
+  "name": "StockMovement",
+  "type": "object",
+  "properties": {
+    "spare_part_id": {
+      "type": "string",
+      "description": "ID del repuesto"
+    },
+    "spare_part_code": {
+      "type": "string",
+      "description": "C\u00f3digo del repuesto (snapshot)"
+    },
+    "spare_part_name": {
+      "type": "string",
+      "description": "Nombre del repuesto (snapshot)"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "entrada",
+        "salida",
+        "ajuste"
+      ],
+      "description": "Tipo de movimiento"
+    },
+    "cantidad": {
+      "type": "number",
+      "description": "Cantidad del movimiento (siempre positiva)"
+    },
+    "stock_anterior": {
+      "type": "number",
+      "description": "Stock antes del movimiento"
+    },
+    "stock_posterior": {
+      "type": "number",
+      "description": "Stock despu\u00e9s del movimiento"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario que realiz\u00f3 la acci\u00f3n"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nombre del usuario"
+    },
+    "work_order_id": {
+      "type": "string",
+      "description": "ID de OT asociada (si aplica)"
+    },
+    "work_order_number": {
+      "type": "string",
+      "description": "N\u00famero de OT (si aplica)"
+    },
+    "notas": {
+      "type": "string",
+      "description": "Notas del movimiento"
+    }
+  },
+  "required": [
+    "spare_part_id",
+    "tipo",
+    "cantidad"
+  ]
+}

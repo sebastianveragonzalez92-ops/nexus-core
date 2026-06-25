@@ -6,7 +6,7 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3, FileText, Ticket
+  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3, FileText, Ticket, ClipboardCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -34,6 +34,7 @@ const getNavGroups = (userRole) => {
     { name: 'Checklists', page: 'Checklists', icon: ClipboardList },
     { name: 'Documentos', page: 'EquipmentDocuments', icon: FileText },
     { name: 'Tickets', page: 'Tickets', icon: Ticket },
+    { name: 'Informes Instalación', page: 'InstallationReports', icon: FileText },
   ];
   
   if (isAdmin || isSupervisor) {

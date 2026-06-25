@@ -1,0 +1,84 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario/empresa"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "free",
+        "pro",
+        "enterprise"
+      ],
+      "default": "free",
+      "description": "Plan activo"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "cancelled",
+        "expired"
+      ],
+      "default": "trial",
+      "description": "Estado de la suscripci\u00f3n"
+    },
+    "max_users": {
+      "type": "number",
+      "description": "Cantidad m\u00e1xima de usuarios permitidos"
+    },
+    "max_maintenance_records": {
+      "type": "number",
+      "description": "Registros de mantenimiento por mes"
+    },
+    "max_courses": {
+      "type": "number",
+      "description": "Cantidad m\u00e1xima de cursos"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "ID del cliente en Stripe"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "ID de la suscripci\u00f3n en Stripe"
+    },
+    "price_monthly": {
+      "type": "number",
+      "description": "Precio mensual en USD"
+    },
+    "trial_ends_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de fin del trial"
+    },
+    "starts_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de inicio de la suscripci\u00f3n"
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de fin de la suscripci\u00f3n"
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "annual"
+      ],
+      "default": "monthly",
+      "description": "Ciclo de facturaci\u00f3n"
+    }
+  },
+  "required": [
+    "user_email",
+    "plan",
+    "status"
+  ]
+}

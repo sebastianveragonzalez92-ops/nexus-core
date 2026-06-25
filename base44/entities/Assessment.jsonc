@@ -1,0 +1,51 @@
+{
+  "name": "Assessment",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso asociado"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo de la evaluaci\u00f3n"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "quiz",
+        "exam",
+        "practical",
+        "diagnostic"
+      ],
+      "default": "quiz"
+    },
+    "time_limit_minutes": {
+      "type": "number",
+      "description": "Tiempo l\u00edmite en minutos"
+    },
+    "max_attempts": {
+      "type": "number",
+      "default": 3
+    },
+    "randomize_questions": {
+      "type": "boolean",
+      "default": true
+    },
+    "passing_score": {
+      "type": "number",
+      "default": 70
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Banco de preguntas"
+    }
+  },
+  "required": [
+    "course_id",
+    "title"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "WorkOrderPart",
+  "type": "object",
+  "properties": {
+    "work_order_id": {
+      "type": "string",
+      "description": "ID de la Orden de Trabajo"
+    },
+    "spare_part_id": {
+      "type": "string",
+      "description": "ID del repuesto"
+    },
+    "spare_part_code": {
+      "type": "string",
+      "description": "C\u00f3digo del repuesto (snapshot)"
+    },
+    "spare_part_name": {
+      "type": "string",
+      "description": "Nombre del repuesto (snapshot)"
+    },
+    "cantidad": {
+      "type": "number",
+      "default": 1,
+      "description": "Cantidad utilizada"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unidad de medida"
+    },
+    "precio_unitario": {
+      "type": "number",
+      "description": "Precio unitario al momento del uso"
+    },
+    "notas": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "work_order_id",
+    "spare_part_id",
+    "cantidad"
+  ]
+}

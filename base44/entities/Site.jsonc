@@ -1,0 +1,59 @@
+{
+  "name": "Site",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo del sitio/faena"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nombre del sitio"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "mina",
+        "planta",
+        "puerto",
+        "oficina",
+        "taller"
+      ],
+      "default": "planta"
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "object"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "maintenance"
+      ],
+      "default": "active"
+    },
+    "manager": {
+      "type": "string",
+      "description": "Email del gerente"
+    }
+  },
+  "required": [
+    "code",
+    "name"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Badge",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "badge_type": {
+      "type": "string",
+      "enum": [
+        "first_course",
+        "course_master",
+        "perfect_score",
+        "speed_learner",
+        "consistent_learner",
+        "top_performer",
+        "helpful_peer",
+        "scenario_expert",
+        "quiz_champion"
+      ],
+      "description": "Tipo de insignia"
+    },
+    "badge_name": {
+      "type": "string",
+      "description": "Nombre de la insignia"
+    },
+    "badge_description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del logro"
+    },
+    "earned_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha en que se obtuvo"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icono de la insignia"
+    },
+    "color": {
+      "type": "string",
+      "description": "Color de la insignia"
+    }
+  },
+  "required": [
+    "user_email",
+    "badge_type",
+    "badge_name"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "ReportTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre de la plantilla"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Nombre de la empresa (ej: HEXAGON)"
+    },
+    "company_logo_url": {
+      "type": "string",
+      "description": "URL del logo de la empresa"
+    },
+    "division": {
+      "type": "string",
+      "description": "Divisi\u00f3n (ej: Divisi\u00f3n Codelco Norte)"
+    },
+    "document_code": {
+      "type": "string",
+      "description": "C\u00f3digo del documento (ej: GOS-CN-INF-09 Rev.0)"
+    },
+    "report_title": {
+      "type": "string",
+      "description": "T\u00edtulo principal del informe (ej: MineProtect CAS10 FMS - Mantenci\u00f3n Equipos Pesados)"
+    },
+    "header_color": {
+      "type": "string",
+      "description": "Color del encabezado en hex (ej: #2563eb)"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si es la plantilla por defecto"
+    }
+  },
+  "required": [
+    "name",
+    "report_title"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "supervisor",
+        "tecnico",
+        "inspector",
+        "especialista",
+        "capacitador",
+        "operador"
+      ],
+      "default": "tecnico",
+      "description": "Rol del usuario en la plataforma"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "suspended"
+      ],
+      "default": "active",
+      "description": "Estado del usuario (activo, inactivo o suspendido)"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Permisos espec\u00edficos del usuario",
+      "default": []
+    },
+    "group_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs de grupos a los que pertenece",
+      "default": []
+    },
+    "department": {
+      "type": "string",
+      "description": "Departamento del usuario"
+    },
+    "team": {
+      "type": "string",
+      "description": "Equipo del usuario"
+    },
+    "deactivated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de desactivaci\u00f3n temporal"
+    },
+    "deactivation_reason": {
+      "type": "string",
+      "description": "Raz\u00f3n de la desactivaci\u00f3n"
+    },
+    "last_login": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u00daltimo acceso registrado"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Datos adicionales del usuario"
+    }
+  },
+  "required": []
+}

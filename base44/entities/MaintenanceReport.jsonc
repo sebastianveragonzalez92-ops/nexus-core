@@ -1,0 +1,134 @@
+{
+  "name": "MaintenanceReport",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventivo",
+        "correctivo"
+      ],
+      "default": "preventivo"
+    },
+    "title": {
+      "type": "string"
+    },
+    "empresa": {
+      "type": "string"
+    },
+    "division": {
+      "type": "string"
+    },
+    "tipo_equipo": {
+      "type": "string"
+    },
+    "numero_interno_equipo": {
+      "type": "string"
+    },
+    "report_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "fecha_proxima_mantencion": {
+      "type": "string",
+      "format": "date"
+    },
+    "hora_inicio": {
+      "type": "string"
+    },
+    "hora_fin": {
+      "type": "string"
+    },
+    "responsable": {
+      "type": "string"
+    },
+    "cas_series": {
+      "type": "object",
+      "description": "N\u00fameros de serie CAS",
+      "properties": {
+        "antena_qc1000": {
+          "type": "string"
+        },
+        "pantalla_qd1400": {
+          "type": "string"
+        }
+      }
+    },
+    "fms_series": {
+      "type": "object",
+      "description": "N\u00fameros de serie FMS",
+      "properties": {
+        "core_lp": {
+          "type": "string"
+        },
+        "pantalla": {
+          "type": "string"
+        },
+        "gps1": {
+          "type": "string"
+        }
+      }
+    },
+    "componentes_pre": {
+      "type": "object",
+      "description": "Componentes operativos pre-mantenci\u00f3n"
+    },
+    "componentes_post": {
+      "type": "object",
+      "description": "Componentes operativos post-mantenci\u00f3n"
+    },
+    "photo_entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Fotos con etiqueta de componente"
+    },
+    "signature_url": {
+      "type": "string"
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        },
+        "accuracy": {
+          "type": "number"
+        }
+      }
+    },
+    "observations": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "borrador",
+        "enviado",
+        "aprobado"
+      ],
+      "default": "borrador"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si el informe est\u00e1 archivado"
+    }
+  },
+  "required": [
+    "type",
+    "report_date"
+  ]
+}

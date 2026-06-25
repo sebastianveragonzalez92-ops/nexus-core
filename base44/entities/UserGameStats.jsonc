@@ -1,0 +1,53 @@
+{
+  "name": "UserGameStats",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "total_points": {
+      "type": "number",
+      "default": 0,
+      "description": "Puntos totales acumulados"
+    },
+    "level": {
+      "type": "number",
+      "default": 1,
+      "description": "Nivel del usuario"
+    },
+    "courses_completed": {
+      "type": "number",
+      "default": 0,
+      "description": "Cursos completados"
+    },
+    "lessons_completed": {
+      "type": "number",
+      "default": 0,
+      "description": "Lecciones completadas"
+    },
+    "quizzes_passed": {
+      "type": "number",
+      "default": 0,
+      "description": "Quizzes aprobados"
+    },
+    "perfect_scores": {
+      "type": "number",
+      "default": 0,
+      "description": "Puntajes perfectos (100%)"
+    },
+    "streak_days": {
+      "type": "number",
+      "default": 0,
+      "description": "D\u00edas consecutivos de actividad"
+    },
+    "last_activity_date": {
+      "type": "string",
+      "format": "date",
+      "description": "\u00daltima fecha de actividad"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

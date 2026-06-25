@@ -1,0 +1,47 @@
+{
+  "name": "Certificate",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario certificado"
+    },
+    "certificate_number": {
+      "type": "string",
+      "description": "N\u00famero \u00fanico de certificado"
+    },
+    "issued_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "revoked"
+      ],
+      "default": "active"
+    },
+    "pdf_url": {
+      "type": "string",
+      "description": "URL del PDF del certificado"
+    },
+    "score": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "course_id",
+    "user_email",
+    "issued_date"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "KPIValue",
+  "type": "object",
+  "properties": {
+    "kpi_id": {
+      "type": "string",
+      "description": "ID del KPI"
+    },
+    "period": {
+      "type": "string",
+      "format": "date",
+      "description": "Per\u00edodo de medici\u00f3n"
+    },
+    "value": {
+      "type": "number",
+      "description": "Valor medido"
+    },
+    "site_id": {
+      "type": "string",
+      "description": "ID del sitio (opcional)"
+    },
+    "area_id": {
+      "type": "string",
+      "description": "ID del \u00e1rea (opcional)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "warning",
+        "critical"
+      ],
+      "default": "ok"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "kpi_id",
+    "period",
+    "value"
+  ]
+}

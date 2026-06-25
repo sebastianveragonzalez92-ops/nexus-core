@@ -1,0 +1,82 @@
+{
+  "name": "ChecklistAlert",
+  "type": "object",
+  "properties": {
+    "configuration_id": {
+      "type": "string",
+      "description": "ID de la AlertConfiguration"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "ai_risk",
+        "low_execution_frequency",
+        "failure_rate_change"
+      ],
+      "description": "Tipo de alerta"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "ID del template relacionado"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Nombre del template (snapshot)"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ],
+      "default": "warning",
+      "description": "Nivel de severidad"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo de la alerta"
+    },
+    "message": {
+      "type": "string",
+      "description": "Mensaje detallado"
+    },
+    "data": {
+      "type": "object",
+      "description": "Datos adicionales (m\u00e9tricas, valores)"
+    },
+    "triggered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Cu\u00e1ndo se dispar\u00f3 la alerta"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si ha sido le\u00edda"
+    },
+    "read_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Cu\u00e1ndo se marc\u00f3 como le\u00edda"
+    },
+    "dismissed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si ha sido descartada"
+    },
+    "notified_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails de usuarios notificados"
+    }
+  },
+  "required": [
+    "alert_type",
+    "template_id",
+    "title",
+    "message"
+  ]
+}

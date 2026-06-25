@@ -1,0 +1,151 @@
+{
+  "name": "CertificateTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre de la plantilla"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n de la plantilla"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si es la plantilla por defecto"
+    },
+    "background_image_url": {
+      "type": "string",
+      "description": "URL de la imagen de fondo"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "URL del logo personalizado"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string",
+              "default": "#6366f1"
+            },
+            "secondary": {
+              "type": "string",
+              "default": "#8b5cf6"
+            },
+            "text": {
+              "type": "string",
+              "default": "#1e293b"
+            },
+            "accent": {
+              "type": "string",
+              "default": "#f59e0b"
+            }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "default": "serif"
+            },
+            "body": {
+              "type": "string",
+              "default": "sans-serif"
+            }
+          }
+        },
+        "layout": {
+          "type": "object",
+          "properties": {
+            "userName": {
+              "type": "object",
+              "properties": {
+                "fontSize": {
+                  "type": "string",
+                  "default": "48px"
+                },
+                "textAlign": {
+                  "type": "string",
+                  "default": "center"
+                },
+                "marginTop": {
+                  "type": "string",
+                  "default": "80px"
+                }
+              }
+            },
+            "courseTitle": {
+              "type": "object",
+              "properties": {
+                "fontSize": {
+                  "type": "string",
+                  "default": "32px"
+                },
+                "textAlign": {
+                  "type": "string",
+                  "default": "center"
+                },
+                "marginTop": {
+                  "type": "string",
+                  "default": "40px"
+                }
+              }
+            },
+            "certificateNumber": {
+              "type": "object",
+              "properties": {
+                "position": {
+                  "type": "string",
+                  "default": "bottom-right"
+                },
+                "fontSize": {
+                  "type": "string",
+                  "default": "14px"
+                }
+              }
+            },
+            "date": {
+              "type": "object",
+              "properties": {
+                "position": {
+                  "type": "string",
+                  "default": "bottom-left"
+                },
+                "fontSize": {
+                  "type": "string",
+                  "default": "14px"
+                }
+              }
+            }
+          }
+        },
+        "border": {
+          "type": "object",
+          "properties": {
+            "style": {
+              "type": "string",
+              "default": "solid"
+            },
+            "width": {
+              "type": "string",
+              "default": "4px"
+            },
+            "color": {
+              "type": "string",
+              "default": "#6366f1"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

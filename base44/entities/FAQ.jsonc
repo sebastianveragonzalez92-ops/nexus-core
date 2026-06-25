@@ -1,0 +1,41 @@
+{
+  "name": "FAQ",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "billing",
+        "technical",
+        "training",
+        "maintenance"
+      ],
+      "default": "general",
+      "description": "Categor\u00eda de la pregunta"
+    },
+    "question": {
+      "type": "string",
+      "description": "Pregunta frecuente"
+    },
+    "answer": {
+      "type": "string",
+      "description": "Respuesta detallada"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Orden de visualizaci\u00f3n"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si est\u00e1 activa"
+    }
+  },
+  "required": [
+    "question",
+    "answer",
+    "category"
+  ]
+}

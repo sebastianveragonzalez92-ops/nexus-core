@@ -1,0 +1,75 @@
+{
+  "name": "AlertConfiguration",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "ID del template de checklist (si aplica)"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "ai_risk",
+        "low_execution_frequency",
+        "failure_rate_change"
+      ],
+      "description": "Tipo de alerta"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si la alerta est\u00e1 activa"
+    },
+    "risk_threshold": {
+      "type": "string",
+      "enum": [
+        "alto",
+        "cr\u00edtico"
+      ],
+      "description": "Umbral de riesgo (para ai_risk)"
+    },
+    "min_execution_frequency": {
+      "type": "number",
+      "description": "M\u00ednimo de ejecuciones en el per\u00edodo (para low_execution_frequency)"
+    },
+    "frequency_period_days": {
+      "type": "number",
+      "default": 7,
+      "description": "Per\u00edodo en d\u00edas para evaluar frecuencia"
+    },
+    "failure_rate_increase_threshold": {
+      "type": "number",
+      "default": 20,
+      "description": "Aumento % en tasa de fallos para disparar alerta (para failure_rate_change)"
+    },
+    "notify_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "admin",
+        "supervisor"
+      ],
+      "description": "Roles a notificar"
+    },
+    "notify_email": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enviar notificaci\u00f3n por email"
+    },
+    "notify_inapp": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enviar notificaci\u00f3n en-app"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email del admin que cre\u00f3 la configuraci\u00f3n"
+    }
+  },
+  "required": [
+    "alert_type",
+    "enabled"
+  ]
+}

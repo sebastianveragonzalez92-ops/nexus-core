@@ -1,0 +1,38 @@
+{
+  "name": "LessonProgress",
+  "type": "object",
+  "properties": {
+    "lesson_id": {
+      "type": "string",
+      "description": "ID de la lecci\u00f3n"
+    },
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si la lecci\u00f3n fue completada"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de completaci\u00f3n"
+    },
+    "time_spent_minutes": {
+      "type": "number",
+      "default": 0,
+      "description": "Tiempo dedicado en minutos"
+    }
+  },
+  "required": [
+    "lesson_id",
+    "course_id",
+    "user_email"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "name": "EquipmentDocument",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "ID del equipo al que pertenece el documento"
+    },
+    "equipment_name": {
+      "type": "string",
+      "description": "Nombre del equipo (snapshot)"
+    },
+    "equipment_code": {
+      "type": "string",
+      "description": "C\u00f3digo del equipo (snapshot)"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo del documento"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del documento"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "manual_tecnico",
+        "plano",
+        "garantia",
+        "certificado_seguridad",
+        "hoja_datos",
+        "protocolo_mantenimiento",
+        "otro"
+      ],
+      "default": "manual_tecnico",
+      "description": "Categor\u00eda del documento"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL del archivo subido"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Nombre original del archivo"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "Tipo MIME del archivo"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "Tama\u00f1o del archivo en bytes"
+    },
+    "version": {
+      "type": "string",
+      "description": "Versi\u00f3n del documento"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de vencimiento (para garant\u00edas y certificados)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Etiquetas para b\u00fasqueda",
+      "default": []
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Email del usuario que subi\u00f3 el documento"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si el documento est\u00e1 activo"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "title",
+    "category",
+    "file_url"
+  ]
+}

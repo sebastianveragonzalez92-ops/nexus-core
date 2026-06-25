@@ -1,0 +1,65 @@
+{
+  "name": "Equipment",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "description": "Nombre del equipo"
+    },
+    "tipo_equipo": {
+      "type": "string",
+      "description": "Tipo de equipo (ej: Cami\u00f3n, Excavadora, Sensor CAS)"
+    },
+    "numero_interno": {
+      "type": "string",
+      "description": "N\u00famero interno del equipo"
+    },
+    "numero_serie": {
+      "type": "string",
+      "description": "N\u00famero de serie"
+    },
+    "fabricante": {
+      "type": "string",
+      "description": "Fabricante del equipo"
+    },
+    "modelo": {
+      "type": "string",
+      "description": "Modelo del equipo"
+    },
+    "empresa": {
+      "type": "string",
+      "description": "Empresa/faena donde opera"
+    },
+    "division": {
+      "type": "string",
+      "description": "Divisi\u00f3n"
+    },
+    "fecha_instalacion": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de instalaci\u00f3n"
+    },
+    "fecha_proxima_mantencion": {
+      "type": "string",
+      "format": "date",
+      "description": "Pr\u00f3xima mantenci\u00f3n programada"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "operativo",
+        "standby"
+      ],
+      "default": "operativo"
+    },
+    "notas": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "nombre",
+    "tipo_equipo",
+    "numero_interno"
+  ]
+}

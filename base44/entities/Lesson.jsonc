@@ -1,0 +1,184 @@
+{
+  "name": "Lesson",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "module_name": {
+      "type": "string",
+      "description": "Nombre del m\u00f3dulo al que pertenece"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo de la lecci\u00f3n"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n breve de la lecci\u00f3n"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Orden dentro del m\u00f3dulo"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "video",
+        "pdf",
+        "quiz",
+        "scenario",
+        "mixed"
+      ],
+      "default": "text",
+      "description": "Tipo de contenido"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "Contenido de texto enriquecido (HTML)"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL del video (YouTube, Vimeo, etc)"
+    },
+    "video_duration_minutes": {
+      "type": "number",
+      "description": "Duraci\u00f3n del video en minutos"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL del documento PDF u otro"
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "situation": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "feedback": {
+                  "type": "string"
+                },
+                "is_correct": {
+                  "type": "boolean"
+                },
+                "points": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Escenarios de aprendizaje interactivos"
+    },
+    "micro_steps": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "question": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "correct": {
+                    "type": "number"
+                  },
+                  "explanation": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Lectura por micro-pasos con preguntas intercaladas"
+    },
+    "checklist": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Lista de verificaci\u00f3n interactiva"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si la lecci\u00f3n est\u00e1 publicada"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Recursos adicionales"
+    }
+  },
+  "required": [
+    "course_id",
+    "title"
+  ]
+}

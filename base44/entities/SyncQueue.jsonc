@@ -1,0 +1,48 @@
+{
+  "name": "SyncQueue",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update",
+        "delete"
+      ],
+      "description": "Tipo de acci\u00f3n pendiente"
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Tipo de entidad afectada"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID de la entidad"
+    },
+    "data": {
+      "type": "object",
+      "description": "Datos de la operaci\u00f3n"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "syncing",
+        "completed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "retry_count": {
+      "type": "number",
+      "default": 0
+    },
+    "error_message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "entity_type"
+  ]
+}

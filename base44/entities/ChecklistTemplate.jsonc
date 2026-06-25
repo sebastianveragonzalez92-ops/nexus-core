@@ -1,0 +1,114 @@
+{
+  "name": "ChecklistTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre del template (ej: EPP Inicio de Turno)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del template"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "epp",
+        "inicio_turno",
+        "cierre_turno",
+        "inspecci\u00f3n",
+        "otro"
+      ],
+      "default": "epp",
+      "description": "Categor\u00eda del checklist"
+    },
+    "applicable_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Roles a los que aplica este template",
+      "default": [
+        "tecnico",
+        "supervisor"
+      ]
+    },
+    "applicable_teams": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipos espec\u00edficos a los que aplica (opcional)"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "checkbox",
+              "text",
+              "photo",
+              "number",
+              "select"
+            ],
+            "default": "checkbox"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Para type: select"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Items din\u00e1micos del checklist"
+    },
+    "requires_signature": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si requiere firma al completar"
+    },
+    "alert_on_failure": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enviar alerta si algo no cumple"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email del usuario que cre\u00f3 el template"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "items"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "QuizAttempt",
+  "type": "object",
+  "properties": {
+    "quiz_id": {
+      "type": "string",
+      "description": "ID del quiz"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Respuestas del usuario"
+    },
+    "score": {
+      "type": "number",
+      "description": "Puntaje obtenido"
+    },
+    "passed": {
+      "type": "boolean",
+      "description": "Si aprob\u00f3 o no"
+    },
+    "time_taken_minutes": {
+      "type": "number",
+      "description": "Tiempo tomado en minutos"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "quiz_id",
+    "user_email",
+    "answers",
+    "score"
+  ]
+}

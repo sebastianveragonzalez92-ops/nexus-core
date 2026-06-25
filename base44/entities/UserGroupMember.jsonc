@@ -1,0 +1,44 @@
+{
+  "name": "UserGroupMember",
+  "type": "object",
+  "properties": {
+    "group_id": {
+      "type": "string",
+      "description": "ID del grupo"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nombre del usuario (snapshot)"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "supervisor",
+        "tecnico",
+        "inspector",
+        "especialista",
+        "capacitador",
+        "operador"
+      ],
+      "description": "Rol heredado del grupo"
+    },
+    "added_by": {
+      "type": "string",
+      "description": "Email del usuario que agreg\u00f3 al miembro"
+    },
+    "added_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha de adici\u00f3n al grupo"
+    }
+  },
+  "required": [
+    "group_id",
+    "user_email"
+  ]
+}

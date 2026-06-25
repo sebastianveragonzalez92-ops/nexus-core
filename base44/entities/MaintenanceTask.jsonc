@@ -1,0 +1,65 @@
+{
+  "name": "MaintenanceTask",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo de la tarea"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n detallada"
+    },
+    "report_id": {
+      "type": "string",
+      "description": "ID del informe de mantenimiento asociado (opcional)"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email del usuario asignado"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de inicio de la tarea"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de vencimiento"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta",
+        "urgente"
+      ],
+      "default": "media"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "en_progreso",
+        "completada",
+        "cancelada"
+      ],
+      "default": "pendiente"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "Porcentaje de progreso (0-100)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "title",
+    "due_date"
+  ]
+}

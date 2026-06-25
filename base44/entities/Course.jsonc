@@ -1,0 +1,106 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo del curso"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del curso"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "video",
+        "scorm",
+        "xapi",
+        "microlearning",
+        "evaluation"
+      ],
+      "default": "video",
+      "description": "Tipo de contenido"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "operacion",
+        "mantenimiento",
+        "seguridad",
+        "calidad",
+        "tecnico"
+      ],
+      "description": "Categor\u00eda del curso"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Duraci\u00f3n estimada en minutos"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "passing_score": {
+      "type": "number",
+      "default": 70,
+      "description": "Puntaje m\u00ednimo para aprobar (%)"
+    },
+    "requires_certification": {
+      "type": "boolean",
+      "default": false
+    },
+    "certification_validity_days": {
+      "type": "number",
+      "description": "D\u00edas de validez de la certificaci\u00f3n"
+    },
+    "content_url": {
+      "type": "string",
+      "description": "URL del contenido (video, SCORM, etc.)"
+    },
+    "offline_available": {
+      "type": "boolean",
+      "default": false
+    },
+    "target_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Roles a los que aplica"
+    },
+    "external_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "article",
+              "video",
+              "document",
+              "link"
+            ]
+          }
+        }
+      },
+      "description": "Recursos externos adicionales"
+    }
+  },
+  "required": [
+    "title",
+    "category"
+  ]
+}

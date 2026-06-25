@@ -1,0 +1,82 @@
+{
+  "name": "ActivityLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario que realiz\u00f3 la acci\u00f3n"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nombre del usuario"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "login",
+        "logout",
+        "user_created",
+        "user_updated",
+        "user_deactivated",
+        "user_reactivated",
+        "group_created",
+        "group_updated",
+        "group_deleted",
+        "user_added_to_group",
+        "user_removed_from_group",
+        "role_changed",
+        "permissions_changed",
+        "data_accessed",
+        "report_generated",
+        "settings_changed",
+        "other"
+      ],
+      "description": "Tipo de acci\u00f3n"
+    },
+    "target_email": {
+      "type": "string",
+      "description": "Email del usuario afectado (si aplica)"
+    },
+    "target_name": {
+      "type": "string",
+      "description": "Nombre del objetivo afectado"
+    },
+    "module": {
+      "type": "string",
+      "description": "M\u00f3dulo relacionado"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n de la acci\u00f3n"
+    },
+    "details": {
+      "type": "object",
+      "description": "Detalles espec\u00edficos de la acci\u00f3n"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "Direcci\u00f3n IP del cliente"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "User Agent del navegador"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "default": "success",
+      "description": "Estado de la acci\u00f3n"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Mensaje de error si aplica"
+    }
+  },
+  "required": [
+    "user_email",
+    "action"
+  ]
+}

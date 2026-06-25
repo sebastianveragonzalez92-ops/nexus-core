@@ -1,0 +1,99 @@
+{
+  "name": "MaintenanceRecord",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "ID del equipo (Equipment entity)"
+    },
+    "equipment_numero_interno": {
+      "type": "string",
+      "description": "N\u00famero interno del equipo (para b\u00fasqueda r\u00e1pida)"
+    },
+    "report_id": {
+      "type": "string",
+      "description": "ID del informe de mantenci\u00f3n vinculado (opcional)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventivo",
+        "correctivo",
+        "predictivo",
+        "mejora"
+      ],
+      "default": "preventivo",
+      "description": "Tipo de mantenci\u00f3n"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de la intervenci\u00f3n"
+    },
+    "hora_inicio": {
+      "type": "string",
+      "description": "Hora de inicio"
+    },
+    "hora_fin": {
+      "type": "string",
+      "description": "Hora de t\u00e9rmino"
+    },
+    "tecnico": {
+      "type": "string",
+      "description": "Nombre o email del t\u00e9cnico responsable"
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "Descripci\u00f3n del trabajo realizado"
+    },
+    "repuestos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "number"
+          },
+          "codigo": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Repuestos utilizados"
+    },
+    "horas_trabajadas": {
+      "type": "number",
+      "description": "Horas totales de trabajo"
+    },
+    "costo": {
+      "type": "number",
+      "description": "Costo total de la intervenci\u00f3n"
+    },
+    "resultado": {
+      "type": "string",
+      "enum": [
+        "exitoso",
+        "parcial",
+        "fallido"
+      ],
+      "default": "exitoso"
+    },
+    "observaciones": {
+      "type": "string",
+      "description": "Observaciones adicionales"
+    },
+    "proxima_mantencion": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha recomendada para la pr\u00f3xima mantenci\u00f3n"
+    }
+  },
+  "required": [
+    "type",
+    "fecha",
+    "descripcion"
+  ]
+}

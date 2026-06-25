@@ -1,0 +1,65 @@
+{
+  "name": "KPI",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo \u00fanico del KPI"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nombre del KPI"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "capacitacion",
+        "mantenimiento",
+        "seguridad",
+        "calidad",
+        "produccion"
+      ],
+      "description": "Categor\u00eda del KPI"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unidad de medida (%, hrs, qty, etc.)"
+    },
+    "calculation_formula": {
+      "type": "string",
+      "description": "F\u00f3rmula de c\u00e1lculo"
+    },
+    "target_value": {
+      "type": "number",
+      "description": "Valor objetivo"
+    },
+    "threshold_warning": {
+      "type": "number",
+      "description": "Umbral de advertencia"
+    },
+    "threshold_critical": {
+      "type": "number",
+      "description": "Umbral cr\u00edtico"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "yearly"
+      ],
+      "default": "monthly"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "name",
+    "category",
+    "unit"
+  ]
+}

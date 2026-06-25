@@ -1,0 +1,46 @@
+{
+  "name": "Area",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo del \u00e1rea"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nombre del \u00e1rea"
+    },
+    "site_id": {
+      "type": "string",
+      "description": "ID del sitio al que pertenece"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "produccion",
+        "mantenimiento",
+        "calidad",
+        "logistica",
+        "administracion"
+      ],
+      "default": "produccion"
+    },
+    "supervisor": {
+      "type": "string",
+      "description": "Email del supervisor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "code",
+    "name",
+    "site_id"
+  ]
+}

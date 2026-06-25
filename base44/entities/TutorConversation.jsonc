@@ -1,0 +1,57 @@
+{
+  "name": "TutorConversation",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "faq",
+        "sop",
+        "diagnostic",
+        "general"
+      ],
+      "default": "general",
+      "description": "Tipo de consulta"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "ID del activo relacionado (para diagn\u00f3stico)"
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "rating": {
+      "type": "number",
+      "description": "Calificaci\u00f3n 1-5"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

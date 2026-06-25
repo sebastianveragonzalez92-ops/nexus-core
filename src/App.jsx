@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import EquipmentDocuments from './pages/EquipmentDocuments';
 import Tickets from './pages/Tickets';
+import InstallationReports from './pages/InstallationReports';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -73,6 +74,14 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="Tickets">
             <Tickets />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/InstallationReports"
+        element={
+          <LayoutWrapper currentPageName="InstallationReports">
+            <InstallationReports />
           </LayoutWrapper>
         }
       />

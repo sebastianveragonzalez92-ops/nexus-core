@@ -1,0 +1,49 @@
+{
+  "name": "Module",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre del m\u00f3dulo"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del m\u00f3dulo"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Nombre del icono de Lucide"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "maintenance"
+      ],
+      "default": "active"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "core",
+        "analytics",
+        "communication",
+        "productivity",
+        "integration"
+      ],
+      "default": "core"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "config": {
+      "type": "object",
+      "description": "Configuraci\u00f3n personalizada del m\u00f3dulo"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

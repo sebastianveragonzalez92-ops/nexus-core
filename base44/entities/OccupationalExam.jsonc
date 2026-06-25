@@ -1,0 +1,58 @@
+{
+  "name": "OccupationalExam",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "exam_type": {
+      "type": "string",
+      "enum": [
+        "altura",
+        "espacios_confinados",
+        "psicosensotecnico",
+        "general",
+        "otro"
+      ],
+      "description": "Tipo de examen ocupacional"
+    },
+    "exam_name": {
+      "type": "string",
+      "description": "Nombre del examen"
+    },
+    "exam_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha del examen"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de vencimiento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "vigente",
+        "proximo_vencer",
+        "vencido"
+      ],
+      "default": "vigente"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL del documento del examen"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notas adicionales"
+    }
+  },
+  "required": [
+    "user_email",
+    "exam_type",
+    "exam_name",
+    "expiry_date"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario destinatario"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "new_course",
+        "course_update",
+        "forum_reply",
+        "quiz_deadline",
+        "direct_message",
+        "general",
+        "work_order_assigned",
+        "work_order_approval_needed",
+        "work_order_approved",
+        "work_order_rejected",
+        "maintenance_reminder",
+        "maintenance_overdue"
+      ],
+      "description": "Tipo de notificaci\u00f3n"
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    },
+    "action_url": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Datos adicionales relacionados"
+    }
+  },
+  "required": [
+    "user_email",
+    "type",
+    "title",
+    "message"
+  ]
+}

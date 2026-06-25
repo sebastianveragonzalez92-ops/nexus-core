@@ -1,0 +1,86 @@
+{
+  "name": "SOP",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo del SOP"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo del procedimiento"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n breve"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "operacion",
+        "mantenimiento",
+        "seguridad",
+        "calidad",
+        "emergencia"
+      ],
+      "description": "Categor\u00eda del SOP"
+    },
+    "version": {
+      "type": "string",
+      "description": "Versi\u00f3n del documento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "obsolete"
+      ],
+      "default": "active"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step_number": {
+            "type": "number"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "safety_note": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "asset_type": {
+      "type": "string",
+      "description": "Tipo de equipo al que aplica"
+    },
+    "required_ppe": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "EPP requerido"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL del documento PDF/Word"
+    },
+    "last_review_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "code",
+    "title",
+    "category"
+  ]
+}

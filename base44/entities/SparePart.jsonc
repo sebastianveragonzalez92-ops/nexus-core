@@ -1,0 +1,87 @@
+{
+  "name": "SparePart",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo \u00fanico del repuesto"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nombre del repuesto"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n detallada"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "electrico",
+        "mecanico",
+        "hidraulico",
+        "neumatico",
+        "consumible",
+        "otro"
+      ],
+      "default": "mecanico",
+      "description": "Categor\u00eda del repuesto"
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "unidad",
+        "par",
+        "juego",
+        "litro",
+        "kg",
+        "metro"
+      ],
+      "default": "unidad",
+      "description": "Unidad de medida"
+    },
+    "stock_actual": {
+      "type": "number",
+      "default": 0,
+      "description": "Stock actual disponible"
+    },
+    "stock_minimo": {
+      "type": "number",
+      "default": 1,
+      "description": "Stock m\u00ednimo antes de alerta"
+    },
+    "stock_maximo": {
+      "type": "number",
+      "description": "Stock m\u00e1ximo recomendado"
+    },
+    "ubicacion": {
+      "type": "string",
+      "description": "Ubicaci\u00f3n f\u00edsica (bodega, estante, etc.)"
+    },
+    "proveedor": {
+      "type": "string",
+      "description": "Nombre del proveedor"
+    },
+    "precio_unitario": {
+      "type": "number",
+      "description": "Precio unitario (CLP)"
+    },
+    "compatible_con": {
+      "type": "string",
+      "description": "Equipos o modelos compatibles"
+    },
+    "imagen_url": {
+      "type": "string",
+      "description": "URL de imagen del repuesto"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si el repuesto est\u00e1 activo en inventario"
+    }
+  },
+  "required": [
+    "name",
+    "code"
+  ]
+}

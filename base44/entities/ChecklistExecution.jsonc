@@ -1,0 +1,123 @@
+{
+  "name": "ChecklistExecution",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "ID del ChecklistTemplate"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Nombre del template (snapshot)"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario que ejecut\u00f3 el checklist"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nombre del usuario"
+    },
+    "team": {
+      "type": "string",
+      "description": "Equipo del usuario"
+    },
+    "shift": {
+      "type": "string",
+      "enum": [
+        "ma\u00f1ana",
+        "tarde",
+        "noche"
+      ],
+      "description": "Turno del d\u00eda"
+    },
+    "execution_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Fecha/hora de ejecuci\u00f3n"
+    },
+    "responses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "string"
+          },
+          "item_name": {
+            "type": "string"
+          },
+          "response": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "photo_url": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Respuestas de cada item"
+    },
+    "all_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si todos los items requeridos fueron completados"
+    },
+    "compliance_rate": {
+      "type": "number",
+      "description": "Porcentaje de cumplimiento (0-100)"
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Items que no cumplieron"
+    },
+    "signature_url": {
+      "type": "string",
+      "description": "URL de la firma digital"
+    },
+    "observations": {
+      "type": "string",
+      "description": "Observaciones generales"
+    },
+    "supervisor_review": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si fue revisado por supervisor"
+    },
+    "supervisor_email": {
+      "type": "string",
+      "description": "Email del supervisor que revis\u00f3"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "approved",
+        "rejected"
+      ],
+      "default": "draft"
+    }
+  },
+  "required": [
+    "template_id",
+    "user_email",
+    "execution_date",
+    "responses"
+  ]
+}

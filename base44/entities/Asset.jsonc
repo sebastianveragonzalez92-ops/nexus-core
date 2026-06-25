@@ -1,0 +1,81 @@
+{
+  "name": "Asset",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "C\u00f3digo \u00fanico del activo"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nombre del equipo/activo"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "equipo",
+        "componente",
+        "sistema",
+        "herramienta"
+      ],
+      "default": "equipo"
+    },
+    "site_id": {
+      "type": "string",
+      "description": "ID del sitio/faena"
+    },
+    "area_id": {
+      "type": "string",
+      "description": "ID del \u00e1rea"
+    },
+    "parent_asset_id": {
+      "type": "string",
+      "description": "ID del activo padre (jerarqu\u00eda)"
+    },
+    "criticality": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta",
+        "critica"
+      ],
+      "default": "media"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "operativo",
+        "standby"
+      ],
+      "default": "operativo"
+    },
+    "manufacturer": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "serial_number": {
+      "type": "string"
+    },
+    "install_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "specifications": {
+      "type": "object",
+      "description": "Especificaciones t\u00e9cnicas"
+    },
+    "manuals_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "code",
+    "name"
+  ]
+}

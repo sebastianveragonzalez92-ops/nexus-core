@@ -1,0 +1,193 @@
+{
+  "name": "InstallationReport",
+  "type": "object",
+  "properties": {
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "preinstalacion",
+        "postinstalacion"
+      ],
+      "description": "Tipo de informe"
+    },
+    "estado": {
+      "type": "string",
+      "enum": [
+        "borrador",
+        "enviado",
+        "aprobado"
+      ],
+      "default": "borrador",
+      "description": "Estado del informe"
+    },
+    "fecha": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha del informe"
+    },
+    "realizado_por": {
+      "type": "string",
+      "description": "Nombre del t\u00e9cnico responsable"
+    },
+    "validado_por": {
+      "type": "string",
+      "description": "Nombre del validador"
+    },
+    "cliente": {
+      "type": "string",
+      "description": "Nombre del cliente"
+    },
+    "empresa": {
+      "type": "string",
+      "description": "Empresa/Divisi\u00f3n"
+    },
+    "division": {
+      "type": "string",
+      "description": "Divisi\u00f3n o faena"
+    },
+    "objetivo": {
+      "type": "string",
+      "description": "Objetivo del informe"
+    },
+    "equipo_marca": {
+      "type": "string",
+      "description": "Marca del equipo (ej: Caterpillar)"
+    },
+    "equipo_modelo": {
+      "type": "string",
+      "description": "Modelo del equipo (ej: 798AC)"
+    },
+    "equipo_numero": {
+      "type": "string",
+      "description": "N\u00famero interno del equipo (ej: C340)"
+    },
+    "foto_frontal_url": {
+      "type": "string",
+      "description": "Foto frontal del equipo"
+    },
+    "series_core": {
+      "type": "string",
+      "description": "N\u00b0 serie CORE"
+    },
+    "series_display": {
+      "type": "string",
+      "description": "N\u00b0 serie Display 9\""
+    },
+    "series_gps": {
+      "type": "string",
+      "description": "N\u00b0 serie GPS"
+    },
+    "series_qd200": {
+      "type": "string",
+      "description": "N\u00b0 serie QD200"
+    },
+    "series_qc1000": {
+      "type": "string",
+      "description": "N\u00b0 serie QC1000"
+    },
+    "series_lte_sar": {
+      "type": "string",
+      "description": "N\u00b0 serie LTE SAR"
+    },
+    "hardware_instalado": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de hardware instalado",
+      "default": []
+    },
+    "componentes_fms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "descripcion": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "instalado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Componentes FMS",
+      "default": []
+    },
+    "componentes_cas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "descripcion": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "instalado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Componentes CAS",
+      "default": []
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Registro fotogr\u00e1fico",
+      "default": []
+    },
+    "conexion_electrica": {
+      "type": "string",
+      "description": "Descripci\u00f3n de la conexi\u00f3n el\u00e9ctrica"
+    },
+    "observaciones": {
+      "type": "string",
+      "description": "Observaciones generales"
+    },
+    "aprobacion_cliente_nombre": {
+      "type": "string"
+    },
+    "aprobacion_cliente_cargo": {
+      "type": "string"
+    },
+    "aprobacion_cliente_compania": {
+      "type": "string"
+    },
+    "aprobacion_proveedor_nombre": {
+      "type": "string"
+    },
+    "aprobacion_proveedor_cargo": {
+      "type": "string"
+    },
+    "aprobacion_proveedor_compania": {
+      "type": "string"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email del usuario que cre\u00f3 el informe"
+    }
+  },
+  "required": [
+    "tipo",
+    "fecha",
+    "equipo_numero"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Quiz",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo del quiz"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del quiz"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "quiz",
+        "final_exam"
+      ],
+      "default": "quiz",
+      "description": "Tipo: quiz (evaluaci\u00f3n r\u00e1pida) o final_exam (evaluaci\u00f3n final)"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer": {
+            "type": "number"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Preguntas del quiz"
+    },
+    "passing_score": {
+      "type": "number",
+      "default": 70,
+      "description": "Puntaje m\u00ednimo para aprobar"
+    },
+    "time_limit_minutes": {
+      "type": "number",
+      "description": "Tiempo l\u00edmite en minutos"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Orden en el curso"
+    }
+  },
+  "required": [
+    "course_id",
+    "title",
+    "questions"
+  ]
+}

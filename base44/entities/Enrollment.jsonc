@@ -1,0 +1,54 @@
+{
+  "name": "Enrollment",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario inscrito"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "enrolled",
+        "in_progress",
+        "completed",
+        "failed",
+        "expired"
+      ],
+      "default": "enrolled"
+    },
+    "progress_percent": {
+      "type": "number",
+      "default": 0,
+      "description": "Porcentaje de avance"
+    },
+    "score": {
+      "type": "number",
+      "description": "Puntaje obtenido"
+    },
+    "attempts": {
+      "type": "number",
+      "default": 0
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_spent_minutes": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "course_id",
+    "user_email"
+  ]
+}

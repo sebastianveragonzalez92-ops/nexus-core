@@ -1,0 +1,41 @@
+{
+  "name": "DiscussionPost",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID del curso"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Nombre del usuario"
+    },
+    "content": {
+      "type": "string",
+      "description": "Contenido del post"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "ID del post padre (para respuestas)"
+    },
+    "likes": {
+      "type": "number",
+      "default": 0,
+      "description": "N\u00famero de likes"
+    },
+    "is_instructor": {
+      "type": "boolean",
+      "default": false,
+      "description": "Es del instructor"
+    }
+  },
+  "required": [
+    "course_id",
+    "user_email",
+    "content"
+  ]
+}

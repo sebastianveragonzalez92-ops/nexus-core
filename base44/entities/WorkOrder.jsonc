@@ -1,0 +1,109 @@
+{
+  "name": "WorkOrder",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "string",
+      "description": "N\u00famero de OT"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "ID del activo"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventivo",
+        "correctivo",
+        "predictivo",
+        "mejora"
+      ],
+      "default": "preventivo"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta",
+        "urgente"
+      ],
+      "default": "media"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "asignada",
+        "en_progreso",
+        "en_aprobacion",
+        "completada",
+        "cancelada"
+      ],
+      "default": "pendiente"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del trabajo"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email del t\u00e9cnico asignado"
+    },
+    "supervisor": {
+      "type": "string",
+      "description": "Email del supervisor"
+    },
+    "planned_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "planned_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actual_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actual_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "estimated_hours": {
+      "type": "number"
+    },
+    "actual_hours": {
+      "type": "number"
+    },
+    "cost": {
+      "type": "number"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "videos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "signature_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "approval_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "asset_id",
+    "type",
+    "description"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "UserGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre del grupo"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n del grupo"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "supervisor",
+        "tecnico",
+        "inspector",
+        "especialista",
+        "capacitador",
+        "operador"
+      ],
+      "description": "Rol asignado autom\u00e1ticamente a miembros"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Permisos del grupo",
+      "default": []
+    },
+    "department": {
+      "type": "string",
+      "description": "Departamento del grupo"
+    },
+    "member_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Cantidad de miembros"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si el grupo est\u00e1 activo"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email del usuario que cre\u00f3 el grupo"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
