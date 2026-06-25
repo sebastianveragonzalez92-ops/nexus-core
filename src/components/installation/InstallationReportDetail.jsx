@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Pencil, Trash2, CheckCircle2, Circle, ClipboardList, ClipboardCheck, Calendar, User, Building2, Camera } from 'lucide-react';
+import InstallationReportPDF from './InstallationReportPDF';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -44,6 +45,7 @@ export default function InstallationReportDetail({ report, onBack, onEdit, onDel
           </div>
         </div>
         <div className="flex gap-2 shrink-0">
+          <InstallationReportPDF report={report} />
           <Button size="sm" onClick={onEdit} className="gap-1.5 text-xs bg-teal-600 hover:bg-teal-700">
             <Pencil className="w-3.5 h-3.5" />
             Editar
