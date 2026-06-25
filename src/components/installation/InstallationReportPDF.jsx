@@ -294,8 +294,9 @@ export default function InstallationReportPDF({ report }) {
       y += 4;
 
       const seriesData = [
-        ['Módulo CORE', report.series_core],
-        ['Display 9"', report.series_display],
+        ['CORE LP', report.series_core],
+        ['CORE HP (Palas/Perforadoras)', report.series_core_hp],
+        ['SMARTSCREEN 9" / 12"', report.series_display],
         ['GPS', report.series_gps],
         ['QD1400/QD200', report.series_qd200],
         ['QC1000', report.series_qc1000],
@@ -347,6 +348,42 @@ export default function InstallationReportPDF({ report }) {
       doc.setTextColor(60, 60, 60);
       const obsLines = doc.splitTextToSize(report.observaciones, contentW);
       doc.text(obsLines, margin, y);
+    }
+
+    // ── INSTALACION ADICIONAL PALAS ───────────────────────────────────────
+    const palas = report.instalacion_palas;
+    const palasItems = [
+      ['segunda_smart_antenna', 'Instalar la segunda Smart Antenna (beacon) en el boom/body de la pala.'],
+      ['segundo_junction_harness', 'Conectar el segundo Junction Harness (QM1110).'],
+      ['ethernet_switch_qx1120', 'Instalar el Ethernet Switch (QX1120) para combinar ambas antenas en la misma red.'],
+      ['ethernet_harness_qm1113', 'Conectar el cable Ethernet Harness (QM1113) entre ambos Junction Harness y el switch.'],
+      ['adaptador_qm1114', 'Usar el adaptador QM1114 (M8 a M12) para conectar la segunda antena al switch.'],
+    ];
+    const palasAplicados = palas ? palasItems.filter(([k]) => palas[k]) : [];
+    if (palasAplicados.length > 0) {
+      doc.addPage(); page++;
+      drawHeader(doc, page, logo);
+      y = 26;
+      const palasSecN = report.tipo === 'postinstalacion' ? '4' : '3';
+      y = drawSectionTitle(doc, y, palasSecN, 'INSTALACION ADICIONAL PARA PALAS');
+      y += 2;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+      doc.setTextColor(80, 80, 80);
+      doc.text('Los siguientes ítems fueron instalados en este equipo tipo Pala:', margin, y);
+      y += 8;
+      palasAplicados.forEach(([, label], i) => {
+        doc.setFillColor(248, 248, 248);
+        doc.rect(margin, y - 3.5, contentW, 8, 'F');
+        doc.setDrawColor(200, 200, 200); doc.setLineWidth(0.2);
+        doc.rect(margin, y - 3.5, contentW, 8);
+        doc.setFillColor(58, 150, 160);
+        doc.circle(margin + 4, y + 0.5, 1.5, 'F');
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+        doc.setTextColor(40, 40, 40);
+        const llines = doc.splitTextToSize(label, contentW - 12);
+        doc.text(llines, margin + 9, y + 0.5);
+        y += llines.length > 1 ? llines.length * 5 + 2 : 8;
+      });
     }
 
     // ── REGISTRO FOTOGRAFICO ──────────────────────────────────────────────

@@ -67,11 +67,15 @@
     },
     "series_core": {
       "type": "string",
-      "description": "N\u00b0 serie CORE"
+      "description": "N\u00b0 serie CORE LP"
+    },
+    "series_core_hp": {
+      "type": "string",
+      "description": "N\u00b0 serie CORE HP (Palas/Perforadoras)"
     },
     "series_display": {
       "type": "string",
-      "description": "N\u00b0 serie Display 9\""
+      "description": "N\u00b0 serie SMARTSCREEN 9\" o 12\""
     },
     "series_gps": {
       "type": "string",
@@ -79,7 +83,7 @@
     },
     "series_qd200": {
       "type": "string",
-      "description": "N\u00b0 serie QD200"
+      "description": "N\u00b0 serie QD1400/QD200"
     },
     "series_qc1000": {
       "type": "string",
@@ -134,6 +138,32 @@
       },
       "description": "Componentes CAS",
       "default": []
+    },
+    "instalacion_palas": {
+      "type": "object",
+      "description": "Instalaci\u00f3n adicional para Palas (si aplica)",
+      "properties": {
+        "segunda_smart_antenna": {
+          "type": "boolean",
+          "default": false
+        },
+        "segundo_junction_harness": {
+          "type": "boolean",
+          "default": false
+        },
+        "ethernet_switch_qx1120": {
+          "type": "boolean",
+          "default": false
+        },
+        "ethernet_harness_qm1113": {
+          "type": "boolean",
+          "default": false
+        },
+        "adaptador_qm1114": {
+          "type": "boolean",
+          "default": false
+        }
+      }
     },
     "fotos": {
       "type": "array",

@@ -47,11 +47,19 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
     equipo_numero: report?.equipo_numero || '',
     foto_frontal_url: report?.foto_frontal_url || '',
     series_core: report?.series_core || '',
+    series_core_hp: report?.series_core_hp || '',
     series_display: report?.series_display || '',
     series_gps: report?.series_gps || '',
     series_qd200: report?.series_qd200 || '',
     series_qc1000: report?.series_qc1000 || '',
     series_lte_sar: report?.series_lte_sar || '',
+    instalacion_palas: report?.instalacion_palas || {
+      segunda_smart_antenna: false,
+      segundo_junction_harness: false,
+      ethernet_switch_qx1120: false,
+      ethernet_harness_qm1113: false,
+      adaptador_qm1114: false,
+    },
     componentes_fms: report?.componentes_fms?.length ? report.componentes_fms : DEFAULT_COMPONENTES_FMS.map(c => ({ ...c })),
     componentes_cas: report?.componentes_cas?.length ? report.componentes_cas : DEFAULT_COMPONENTES_CAS.map(c => ({ ...c })),
     fotos: report?.fotos || [],
@@ -203,15 +211,40 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
         {isPost && (
           <Section title="Números de Serie — Componentes Instalados">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <Field label="Core"><Input value={form.series_core} onChange={e => set('series_core', e.target.value)} placeholder="N° Serie" /></Field>
-              <Field label="Display 9 pulgadas"><Input value={form.series_display} onChange={e => set('series_display', e.target.value)} placeholder="N° Serie" /></Field>
+              <Field label="Core LP"><Input value={form.series_core} onChange={e => set('series_core', e.target.value)} placeholder="N° Serie" /></Field>
+              <Field label="Core HP (Palas/Perforadoras)"><Input value={form.series_core_hp} onChange={e => set('series_core_hp', e.target.value)} placeholder="N° Serie (si aplica)" /></Field>
+              <Field label='SMARTSCREEN 9" / 12"'><Input value={form.series_display} onChange={e => set('series_display', e.target.value)} placeholder="N° Serie" /></Field>
               <Field label="GPS"><Input value={form.series_gps} onChange={e => set('series_gps', e.target.value)} placeholder="N° Serie" /></Field>
-              <Field label="QD200"><Input value={form.series_qd200} onChange={e => set('series_qd200', e.target.value)} placeholder="N° Serie" /></Field>
+              <Field label="QD1400/QD200"><Input value={form.series_qd200} onChange={e => set('series_qd200', e.target.value)} placeholder="N° Serie" /></Field>
               <Field label="QC1000"><Input value={form.series_qc1000} onChange={e => set('series_qc1000', e.target.value)} placeholder="N° Serie" /></Field>
               <Field label="LTE SAR"><Input value={form.series_lte_sar} onChange={e => set('series_lte_sar', e.target.value)} placeholder="N° Serie" /></Field>
             </div>
           </Section>
         )}
+
+        {/* Instalación adicional para Palas */}
+        <Section title="Instalación Adicional para Palas (si aplica)">
+          <p className="text-xs text-slate-500 mb-3">Marque los ítems instalados en equipos tipo Pala.</p>
+          <div className="space-y-2">
+            {[
+              { key: 'segunda_smart_antenna', label: 'Instalar la segunda Smart Antenna (beacon) en el boom/body de la pala.' },
+              { key: 'segundo_junction_harness', label: 'Conectar el segundo Junction Harness (QM1110).' },
+              { key: 'ethernet_switch_qx1120', label: 'Instalar el Ethernet Switch (QX1120) para combinar ambas antenas en la misma red.' },
+              { key: 'ethernet_harness_qm1113', label: 'Conectar el cable Ethernet Harness (QM1113) entre ambos Junction Harness y el switch.' },
+              { key: 'adaptador_qm1114', label: 'Usar el adaptador QM1114 (M8 a M12) para conectar la segunda antena al switch.' },
+            ].map(({ key, label }) => (
+              <label key={key} className="flex items-start gap-2 text-sm cursor-pointer hover:bg-slate-50 rounded px-2 py-1.5">
+                <input
+                  type="checkbox"
+                  checked={!!form.instalacion_palas?.[key]}
+                  onChange={() => set('instalacion_palas', { ...form.instalacion_palas, [key]: !form.instalacion_palas?.[key] })}
+                  className="rounded mt-0.5"
+                />
+                <span className={form.instalacion_palas?.[key] ? 'text-green-700 font-medium' : 'text-slate-600'}>{label}</span>
+              </label>
+            ))}
+          </div>
+        </Section>
 
         {/* Componentes */}
         <Section title="Componentes del Sistema">
