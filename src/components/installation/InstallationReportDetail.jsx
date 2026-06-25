@@ -85,7 +85,7 @@ export default function InstallationReportDetail({ report, onBack, onEdit, onDel
                         <th className="px-3 py-2 text-left text-xs font-semibold">Core</th>
                         <th className="px-3 py-2 text-left text-xs font-semibold">Display 9"</th>
                         <th className="px-3 py-2 text-left text-xs font-semibold">GPS</th>
-                        <th className="px-3 py-2 text-left text-xs font-semibold">QD200</th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold">QD1400/QD200</th>
                         <th className="px-3 py-2 text-left text-xs font-semibold">QC1000</th>
                       </tr>
                     </thead>
