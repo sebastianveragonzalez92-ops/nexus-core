@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -68,6 +68,7 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [uploadingFrontal, setUploadingFrontal] = useState(false);
   const [newFotoLabel, setNewFotoLabel] = useState('');
+  const fotoInputRef = useRef(null);
 
   const set = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -251,14 +252,24 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
               placeholder="Etiqueta (ej: QC1000 y GPS, Antena LTE, Cabina...)"
               className="flex-1"
             />
-            <label className="cursor-pointer">
-              <Button type="button" variant="outline" className="gap-2" disabled={uploadingFoto || !newFotoLabel.trim()}>
-                <Upload className="w-4 h-4" />
-                {uploadingFoto ? 'Subiendo...' : 'Subir Foto'}
-              </Button>
-              <input type="file" accept="image/*" className="hidden" disabled={uploadingFoto}
-                onChange={e => e.target.files?.[0] && handleFotoUpload(e.target.files[0])} />
-            </label>
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2"
+              disabled={uploadingFoto || !newFotoLabel.trim()}
+              onClick={() => fotoInputRef.current?.click()}
+            >
+              <Upload className="w-4 h-4" />
+              {uploadingFoto ? 'Subiendo...' : 'Subir Foto'}
+            </Button>
+            <input
+              ref={fotoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              disabled={uploadingFoto}
+              onChange={e => { if (e.target.files?.[0]) handleFotoUpload(e.target.files[0]); e.target.value = ''; }}
+            />
           </div>
           {form.fotos.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
