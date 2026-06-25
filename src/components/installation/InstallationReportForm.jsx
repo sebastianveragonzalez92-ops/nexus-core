@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, Upload, Trash2, Camera } from 'lucide-react';
+import { ChevronLeft, Upload, Trash2, Camera, ImagePlus, X, CheckCircle2, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const DEFAULT_COMPONENTES_FMS = [
@@ -73,9 +73,9 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
     aprobacion_proveedor_compania: report?.aprobacion_proveedor_compania || '',
   });
 
-  const [uploadingFoto, setUploadingFoto] = useState(false);
   const [uploadingFrontal, setUploadingFrontal] = useState(false);
-  const [newFotoLabel, setNewFotoLabel] = useState('');
+  const [uploadQueue, setUploadQueue] = useState([]); // [{name, status: 'uploading'|'done'|'error'}]
+  const [isDragOver, setIsDragOver] = useState(false);
   const fotoInputRef = useRef(null);
 
   const set = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
@@ -92,16 +92,45 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
     setUploadingFrontal(false);
   };
 
-  const handleFotoUpload = async (file) => {
-    setUploadingFoto(true);
-    const label = newFotoLabel.trim() || `Foto ${form.fotos.length + 1}`;
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    set('fotos', [...form.fotos, { label, url: file_url, descripcion: '' }]);
-    setNewFotoLabel('');
-    setUploadingFoto(false);
+  const handleFotosUpload = async (files) => {
+    const fileArray = Array.from(files);
+    if (!fileArray.length) return;
+    // Add all to queue
+    const queueItems = fileArray.map(f => ({ name: f.name, status: 'uploading' }));
+    setUploadQueue(prev => [...prev, ...queueItems]);
+    // Upload all in parallel
+    const startIdx = form.fotos.length;
+    const results = await Promise.allSettled(
+      fileArray.map((file, i) =>
+        base44.integrations.Core.UploadFile({ file }).then(({ file_url }) => ({
+          label: `Foto ${startIdx + i + 1}`,
+          url: file_url,
+          descripcion: '',
+          _name: file.name,
+        }))
+      )
+    );
+    const newFotos = results
+      .filter(r => r.status === 'fulfilled')
+      .map(r => r.value);
+    set('fotos', [...form.fotos, ...newFotos]);
+    setUploadQueue(prev =>
+      prev.map(q => {
+        const matched = results.find((r, i) => fileArray[i].name === q.name);
+        return matched ? { ...q, status: matched.status === 'fulfilled' ? 'done' : 'error' } : q;
+      })
+    );
+    setTimeout(() => setUploadQueue([]), 2000);
   };
 
   const removeFoto = (idx) => set('fotos', form.fotos.filter((_, i) => i !== idx));
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files.length) handleFotosUpload(files);
+  };
 
   const toggleComponente = (type, idx) => {
     const key = type === 'fms' ? 'componentes_fms' : 'componentes_cas';
@@ -278,43 +307,66 @@ export default function InstallationReportForm({ report, defaultType, user, onSu
 
         {/* Registro Fotográfico */}
         <Section title="Registro Fotográfico">
-          <div className="mb-4 flex gap-2 items-center">
-            <Input
-              value={newFotoLabel}
-              onChange={e => setNewFotoLabel(e.target.value)}
-              placeholder="Etiqueta (ej: QC1000 y GPS, Antena LTE, Cabina...)"
-              className="flex-1"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="gap-2"
-              disabled={uploadingFoto}
-              onClick={() => fotoInputRef.current?.click()}
-            >
-              <Upload className="w-4 h-4" />
-              {uploadingFoto ? 'Subiendo...' : 'Subir Foto'}
-            </Button>
+          {/* Drop zone */}
+          <div
+            onDrop={handleDrop}
+            onDragOver={e => { e.preventDefault(); setIsDragOver(true); }}
+            onDragLeave={() => setIsDragOver(false)}
+            onClick={() => fotoInputRef.current?.click()}
+            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+              isDragOver ? 'border-teal-400 bg-teal-50' : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50'
+            }`}
+          >
+            <ImagePlus className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+            <p className="text-sm font-medium text-slate-600">Arrastra fotos aquí o haz clic para seleccionar</p>
+            <p className="text-xs text-slate-400 mt-1">Puedes seleccionar varias fotos a la vez</p>
             <input
               ref={fotoInputRef}
               type="file"
               accept="image/*"
+              multiple
               className="hidden"
-              disabled={uploadingFoto}
-              onChange={e => { if (e.target.files?.[0]) handleFotoUpload(e.target.files[0]); e.target.value = ''; }}
+              onChange={e => { if (e.target.files?.length) handleFotosUpload(e.target.files); e.target.value = ''; }}
             />
           </div>
+
+          {/* Upload progress */}
+          {uploadQueue.length > 0 && (
+            <div className="mt-3 space-y-1">
+              {uploadQueue.map((q, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg">
+                  {q.status === 'uploading' && <Loader2 className="w-3.5 h-3.5 animate-spin text-teal-500" />}
+                  {q.status === 'done' && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                  {q.status === 'error' && <X className="w-3.5 h-3.5 text-red-500" />}
+                  <span className="truncate">{q.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Grid de fotos */}
           {form.fotos.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
               {form.fotos.map((foto, i) => (
                 <div key={i} className="relative group rounded-lg overflow-hidden border border-slate-200">
-                  <img src={foto.url} alt={foto.label} className="w-full h-32 object-cover" />
+                  <img src={foto.url} alt={foto.label} className="w-full h-28 object-cover" />
                   <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1">
-                    <p className="text-white text-xs font-medium truncate">{foto.label}</p>
+                    <input
+                      type="text"
+                      value={foto.label}
+                      onClick={e => e.stopPropagation()}
+                      onChange={e => {
+                        const updated = [...form.fotos];
+                        updated[i] = { ...updated[i], label: e.target.value };
+                        set('fotos', updated);
+                      }}
+                      className="w-full bg-transparent text-white text-xs font-medium outline-none placeholder-white/60 truncate"
+                      placeholder="Etiqueta..."
+                    />
                   </div>
                   <button type="button" onClick={() => removeFoto(i)}
                     className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    x
+                    <X className="w-3 h-3" />
                   </button>
                 </div>
               ))}
