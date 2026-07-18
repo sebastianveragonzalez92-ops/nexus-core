@@ -10,6 +10,9 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import EquipmentDocuments from './pages/EquipmentDocuments';
 import Tickets from './pages/Tickets';
 import InstallationReports from './pages/InstallationReports';
+import RegistrarEmpresa from './pages/RegistrarEmpresa';
+import Empresas from './pages/Empresas';
+import ConfiguracionTickets from './pages/ConfiguracionTickets';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +85,30 @@ const AuthenticatedApp = () => {
         element={
           <LayoutWrapper currentPageName="InstallationReports">
             <InstallationReports />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RegistrarEmpresa"
+        element={
+          <LayoutWrapper currentPageName="RegistrarEmpresa">
+            <RegistrarEmpresa />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/Empresas"
+        element={
+          <LayoutWrapper currentPageName="Empresas">
+            <Empresas />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/ConfiguracionTickets"
+        element={
+          <LayoutWrapper currentPageName="ConfiguracionTickets">
+            <ConfiguracionTickets />
           </LayoutWrapper>
         }
       />

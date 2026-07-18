@@ -2,6 +2,10 @@
   "name": "SupportTicket",
   "type": "object",
   "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "ID de la empresa (tenant) a la que pertenece el ticket"
+    },
     "user_email": {
       "type": "string",
       "description": "Email del usuario que abri\u00f3 el ticket"
@@ -16,37 +20,15 @@
     },
     "category": {
       "type": "string",
-      "enum": [
-        "bug",
-        "feature",
-        "billing",
-        "account",
-        "other"
-      ],
-      "default": "other",
-      "description": "Categor\u00eda del ticket"
+      "description": "Categor\u00eda del ticket (configurable por empresa)"
     },
     "priority": {
       "type": "string",
-      "enum": [
-        "baja",
-        "media",
-        "alta",
-        "urgente"
-      ],
-      "default": "media",
-      "description": "Prioridad"
+      "description": "Prioridad (configurable por empresa)"
     },
     "status": {
       "type": "string",
-      "enum": [
-        "abierto",
-        "en_progreso",
-        "resuelto",
-        "cerrado"
-      ],
-      "default": "abierto",
-      "description": "Estado del ticket"
+      "description": "Estado del ticket (configurable por empresa)"
     },
     "ubicacion": {
       "type": "string",
@@ -54,18 +36,11 @@
     },
     "tipo": {
       "type": "string",
-      "enum": [
-        "incidente",
-        "solicitud",
-        "consulta",
-        "cambio",
-        "otro"
-      ],
-      "description": "Tipo de ticket"
+      "description": "Tipo de ticket (configurable por empresa)"
     },
     "solucion": {
       "type": "string",
-      "description": "Soluci\u00f3n aplicada"
+      "description": "Soluci\u00f3n aplicada (configurable por empresa)"
     },
     "fecha_inicio": {
       "type": "string",
@@ -109,9 +84,9 @@
     }
   },
   "required": [
+    "company_id",
     "user_email",
     "subject",
-    "description",
-    "category"
+    "description"
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "name": "Company",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre de la empresa"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Identificador \u00fanico (ej: acme-mining)"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "URL del logo de la empresa"
+    },
+    "primary_color": {
+      "type": "string",
+      "description": "Color principal de la marca",
+      "default": "#4f46e5"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n de la empresa"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industria (ej: Miner\u00eda, Manufactura, Salud, Construcci\u00f3n)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "activa",
+        "inactiva",
+        "suspendida"
+      ],
+      "default": "activa",
+      "description": "Estado de la empresa en la plataforma"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "free",
+        "pro",
+        "enterprise"
+      ],
+      "default": "free",
+      "description": "Plan de suscripci\u00f3n"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email del usuario que registr\u00f3 la empresa"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Email de contacto principal"
+    },
+    "max_users": {
+      "type": "number",
+      "default": 10,
+      "description": "M\u00e1ximo de usuarios permitidos"
+    }
+  },
+  "required": [
+    "name",
+    "slug"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "name": "TicketConfig",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "ID de la empresa a la que pertenece esta configuraci\u00f3n"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Categor\u00edas de ticket configurables por empresa",
+      "default": []
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "description": "Clases Tailwind para el badge"
+          }
+        }
+      },
+      "description": "Niveles de prioridad configurables",
+      "default": []
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "description": "Clases Tailwind para el badge"
+          },
+          "dot": {
+            "type": "string",
+            "description": "Clase de color del punto"
+          }
+        }
+      },
+      "description": "Estados de ticket configurables",
+      "default": []
+    },
+    "tipos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Tipos de ticket configurables",
+      "default": []
+    },
+    "soluciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Tipos de soluci\u00f3n configurables",
+      "default": []
+    },
+    "updated_by_email": {
+      "type": "string",
+      "description": "Email del \u00faltimo editor"
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

@@ -6,16 +6,18 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Layers, Activity, Settings, 
-  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3, FileText, Ticket, ClipboardCheck
+  Menu, X, ChevronRight, Hexagon, Bot, BookOpen, Bell, Award, Wrench, Cpu, ClipboardList, BarChart3, FileText, Ticket, ClipboardCheck, Building2, SlidersHorizontal
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import ExtensionBlockerGuard from './components/ExtensionBlockerGuard';
 
-const getNavGroups = (userRole) => {
+const getNavGroups = (user) => {
+  const userRole = user?.role;
   const isAdmin = userRole === 'admin';
   const isSupervisor = userRole === 'supervisor';
   const isTecnico = userRole === 'tecnico';
+  const isPlatformAdmin = user?.is_platform_admin === true;
 
   const groups = [
     {
@@ -34,6 +36,7 @@ const getNavGroups = (userRole) => {
     { name: 'Checklists', page: 'Checklists', icon: ClipboardList },
     { name: 'Documentos', page: 'EquipmentDocuments', icon: FileText },
     { name: 'Tickets', page: 'Tickets', icon: Ticket },
+    { name: 'Config. Tickets', page: 'ConfiguracionTickets', icon: SlidersHorizontal },
     { name: 'Informes Instalación', page: 'InstallationReports', icon: FileText },
   ];
   
@@ -78,11 +81,14 @@ const getNavGroups = (userRole) => {
   });
 
   // Administración (solo admin y supervisor)
-  if (isAdmin || isSupervisor) {
+  if (isAdmin || isSupervisor || isPlatformAdmin) {
     const adminItems = [];
     if (isAdmin) {
       adminItems.push({ name: 'Panel Instructor', page: 'InstructorDashboard', icon: BookOpen });
       adminItems.push({ name: 'Usuarios', page: 'Settings', icon: Settings });
+    }
+    if (isPlatformAdmin) {
+      adminItems.push({ name: 'Empresas', page: 'Empresas', icon: Building2 });
     }
     if (isSupervisor) {
       adminItems.push({ name: 'Reportes', page: 'Activity', icon: Activity });
@@ -131,7 +137,7 @@ export default function Layout({ children, currentPageName }) {
   const brandColor = user?.company_primary_color || '#06b6d4';
   const brandName = user?.company_name || 'Nexus';
   const brandLogo = user?.company_logo;
-  const navGroups = getNavGroups(user?.role);
+  const navGroups = getNavGroups(user);
 
   useEffect(() => {
     setIsSidebarOpen(false);
