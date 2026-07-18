@@ -24,6 +24,7 @@ const getNavGroups = (user) => {
       label: null,
       items: [
         { name: 'Dashboard', page: 'Dashboard', icon: LayoutDashboard },
+        { name: 'Registrar Empresa', page: 'RegistrarEmpresa', icon: Building2 },
       ],
     },
   ];
