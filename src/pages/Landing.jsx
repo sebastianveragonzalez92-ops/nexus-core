@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import {
   ChevronRight, Menu, X, Hexagon, CheckCircle2, Clock,
   Star, Mail, Linkedin, Youtube, Wrench, BookOpen, BarChart3,
-  Shield, Zap, Cpu, FileCheck, Award, AlertTriangle, ArrowRight
+  Shield, Zap, Cpu, FileCheck, Award, AlertTriangle, ArrowRight, Building2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -80,6 +80,12 @@ export default function Landing() {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
+            <Link to="/RegistrarEmpresa">
+              <Button variant="ghost" size="sm" className="text-cyan-400 hover:text-cyan-300 hover:bg-slate-800 gap-1.5">
+                <Building2 className="w-3.5 h-3.5" />
+                Registrar Empresa
+              </Button>
+            </Link>
             <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-slate-800" onClick={handleLogin}>
               Ingresar
             </Button>
@@ -99,7 +105,13 @@ export default function Landing() {
                 {{ roles: 'Para quién', features: 'Características', pricing: 'Precios', faq: 'FAQ' }[id]}
               </button>
             ))}
-            <Button onClick={handleLogin} className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold mt-2">Comenzar gratis</Button>
+            <Link to="/RegistrarEmpresa" className="block">
+              <Button variant="outline" className="w-full border-cyan-800 text-cyan-400 hover:bg-slate-800 hover:text-cyan-300 gap-1.5 mb-2">
+                <Building2 className="w-4 h-4" />
+                Registrar mi Empresa
+              </Button>
+            </Link>
+            <Button onClick={handleLogin} className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold">Comenzar gratis</Button>
           </div>
         )}
       </nav>
@@ -132,14 +144,14 @@ export default function Landing() {
           </motion.p>
 
           <motion.div {...fadeUp(0.22)} className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link to={createPageUrl('Trial')}>
+            <Link to="/RegistrarEmpresa">
               <Button className="h-11 px-7 text-sm font-semibold bg-cyan-500 hover:bg-cyan-400 text-slate-950 gap-2">
-                Quiero probar gratis
-                <ArrowRight className="w-4 h-4" />
+                <Building2 className="w-4 h-4" />
+                Registrar mi Empresa
               </Button>
             </Link>
-            <Button variant="outline" className="h-11 px-7 text-sm border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 gap-2" onClick={() => scrollTo('features')}>
-              Ver video demo (2 min)
+            <Button variant="outline" className="h-11 px-7 text-sm border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 gap-2" onClick={handleLogin}>
+              Ingresar
             </Button>
           </motion.div>
 
