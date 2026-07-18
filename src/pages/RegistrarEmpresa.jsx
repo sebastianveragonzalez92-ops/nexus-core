@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Building2, Loader2, CheckCircle2, Upload } from 'lucide-react';
+import { Building2, Loader2, CheckCircle2, Upload, Settings2 } from 'lucide-react';
 import { DEFAULT_TICKET_CONFIG } from '@/lib/ticketConfigDefaults';
 import { useCompany } from '@/hooks/useCompany';
+import TicketConfigSection from '@/components/tickets/TicketConfigSection';
 
 const INDUSTRIES = ['Minería', 'Construcción', 'Manufactura', 'Salud', 'Energía', 'Transporte', 'Agricultura', 'Retail', 'Tecnología', 'Otra'];
 
@@ -35,6 +36,7 @@ export default function RegistrarEmpresa() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
+  const [ticketConfig, setTicketConfig] = useState(DEFAULT_TICKET_CONFIG);
 
   const set = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
 
@@ -69,7 +71,7 @@ export default function RegistrarEmpresa() {
       });
       await base44.entities.TicketConfig.create({
         company_id: company.id,
-        ...DEFAULT_TICKET_CONFIG,
+        ...ticketConfig,
         updated_by_email: user?.email,
       });
       await base44.auth.updateMe({ company_id: company.id });
@@ -164,9 +166,18 @@ export default function RegistrarEmpresa() {
           </div>
         </div>
 
+        {/* Ticket Config */}
+        <div className="pt-2 border-t border-slate-100">
+          <div className="flex items-center gap-2 mb-4">
+            <Settings2 className="w-4 h-4 text-indigo-600" />
+            <h3 className="text-sm font-semibold text-slate-700">Personaliza tus Tickets</h3>
+          </div>
+          <TicketConfigSection config={ticketConfig} onChange={setTicketConfig} />
+        </div>
+
         {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-2 border-t border-slate-100">
           <Button type="submit" disabled={saving || uploadingLogo} className="gap-2 bg-indigo-600 hover:bg-indigo-700">
             {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Creando...</> : 'Registrar empresa'}
           </Button>
